@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(cuid()) // unikatan string ID
+  email      String     @unique
+  password   String
+  name       String?
+  createdAt  DateTime   @default(now())
+  properties Property[]
+}
+
+model Property {
+  id        String   @id @default(cuid())
+  name      String
+  price     Float
+  area      Float? // kvadratura u m²
+  address   String?
+  image     String? // URL slike nekretnine
+  promoted  Boolean  @default(false) // izdvojena nekretnina
+  createdAt DateTime @default(now())
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+}
+
+model News {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  image       String? // URL slike vesti
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

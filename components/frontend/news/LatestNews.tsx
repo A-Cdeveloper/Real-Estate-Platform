@@ -1,0 +1,31 @@
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import NewsListItem from "./NewsListItem";
+
+const LatestNews = () => {
+  return (
+    <div className="lg:col-span-1">
+      <div className="sticky top-8">
+        <h2 className="text-3xl font-nunito font-bold text-foreground mb-6">
+          Latest News
+        </h2>
+        <div className="space-y-4">
+          <NewsListItem />
+          <NewsListItem />
+          <NewsListItem />
+          <NewsListItem />
+          <NewsListItem />
+        </div>
+
+        {/* See All News */}
+        <div className="mt-6">
+          <Button variant="outline" className="w-full font-nunito-sans" asChild>
+            <Link href="/news">See all news</Link>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LatestNews;
