@@ -10,17 +10,28 @@ export default async function HomePage() {
       {/* <Hero /> */}
 
       <section className="container mx-auto px-4 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-12">
-            <Suspense fallback={<Spinner />}>
-              <PromotedProprietes />
-            </Suspense>
-            <Suspense fallback={<Spinner />}>
-              <LatestProprietes />
-            </Suspense>
+        <div className="space-y-12">
+          {/* Row 1: Promoted Properties + Latest News */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <Suspense fallback={<Spinner />}>
+                <PromotedProprietes />
+              </Suspense>
+            </div>
+            <LatestNews />
           </div>
 
-          <LatestNews />
+          {/* Row 2: Latest Properties + Future Widget */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <Suspense fallback={<Spinner />}>
+                <LatestProprietes />
+              </Suspense>
+            </div>
+            <div className="lg:col-span-1">
+              {/* Future widget placeholder */}
+            </div>
+          </div>
         </div>
       </section>
     </>
