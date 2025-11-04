@@ -5,9 +5,9 @@ import Link from "next/link";
 
 const NewsListItem = () => {
   return (
-    <Card className="overflow-hidden py-3">
-      <div className="flex gap-4 px-4">
-        <div className="w-24 h-24 flex-shrink-0 relative overflow-hidden rounded-md bg-muted">
+    <Card className="py-2 rounded-none border-0 border-b border-border pb-4 bg-transparent shadow-none">
+      <div className="flex gap-4 px-2">
+        <div className="w-20 h-20 flex-shrink-0 relative overflow-hidden rounded-md bg-muted">
           <Image
             src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop"
             alt="News"
@@ -22,7 +22,7 @@ const NewsListItem = () => {
               <Calendar className="w-3 h-3" />
               <span>2025-01-01</span>
             </span>
-            <CardTitle className="font-nunito font-semibold text-base mb-2 line-clamp-2">
+            <CardTitle className="font-nunito font-semibold text-base mb-1 line-clamp-1">
               Latest Real Estate Market Trends
             </CardTitle>
             <p className="text-muted-foreground font-nunito-sans text-sm line-clamp-2">
