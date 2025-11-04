@@ -9,7 +9,7 @@ const LatestNews = () => {
         <h2 className="text-3xl font-nunito font-bold text-foreground mb-6">
           Latest News
         </h2>
-        <div className="space-y-1.5 h-[400px] overflow-y-auto pe-4">
+        <div className="space-y-1.5 h-[400px] overflow-y-auto pe-4 custom-scrollbar">
           <NewsListItem />
           <NewsListItem />
           <NewsListItem />
