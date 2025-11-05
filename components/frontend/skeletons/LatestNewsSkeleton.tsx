@@ -1,7 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { LATEST_NEWS_COUNT } from "@/lib/constants";
-import { Typography } from "@/components/ui/typography";
 
 const LatestNewsItemSkeleton = () => (
   <Card className="py-2 rounded-none border-0 border-b border-border pb-4 bg-transparent shadow-none">
@@ -19,13 +18,15 @@ const LatestNewsItemSkeleton = () => (
   </Card>
 );
 
-const LatestNewsSkeleton = () => {
+type LatestNewsSkeletonProps = {
+  showTitle?: boolean;
+};
+
+const LatestNewsSkeleton = ({ showTitle = true }: LatestNewsSkeletonProps) => {
   return (
     <div className="lg:col-span-1">
       <div className="sticky top-8">
-        <Typography variant="h2" className="mb-6">
-          Latest News
-        </Typography>
+        {showTitle && <Skeleton className="h-8 w-48 mb-6" />}
         <div className="space-y-1.5 h-[360px] overflow-y-auto pe-4 custom-scrollbar relative">
           {Array.from({ length: LATEST_NEWS_COUNT }).map((_, index) => (
             <LatestNewsItemSkeleton key={index} />

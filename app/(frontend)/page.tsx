@@ -4,7 +4,6 @@ import LatestProprietes from "@/components/frontend/proprietes/LatestProprietes"
 import PromotedProprietes from "@/components/frontend/proprietes/PromotedProprietes";
 import CarouselSkeleton from "@/components/frontend/skeletons/CarouselSkeleton";
 import { Suspense } from "react";
-import { Typography } from "@/components/ui/typography";
 import LatestNewsSkeleton from "@/components/frontend/skeletons/LatestNewsSkeleton";
 
 export default async function HomePage() {
@@ -16,21 +15,19 @@ export default async function HomePage() {
         <div className="space-y-12">
           {/* Row 1: Promoted Properties + Latest News */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <Typography variant="h2" className="mb-6">
-                Promoted Properties
-              </Typography>
-              <Suspense
-                fallback={
-                  <CarouselSkeleton
-                    itemsCount={3}
-                    itemClassName="basis-full md:basis-1/2 lg:basis-1/2"
-                  />
-                }
-              >
-                <PromotedProprietes />
-              </Suspense>
-            </div>
+            <Suspense
+              fallback={
+                <CarouselSkeleton
+                  itemsCount={3}
+                  itemClassName="basis-full md:basis-1/2 lg:basis-1/2"
+                  showTitle={true}
+                  colSpan="2"
+                />
+              }
+            >
+              <PromotedProprietes />
+            </Suspense>
+
             <Suspense fallback={<LatestNewsSkeleton />}>
               <LatestNews />
             </Suspense>
@@ -38,14 +35,13 @@ export default async function HomePage() {
 
           {/* Row 2: Latest Properties + Future Widget */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <Typography variant="h2" className="mb-6">
-                Latest Properties
-              </Typography>
-              <Suspense fallback={<CarouselSkeleton itemsCount={3} />}>
-                <LatestProprietes />
-              </Suspense>
-            </div>
+            <Suspense
+              fallback={
+                <CarouselSkeleton itemsCount={3} showTitle={true} colSpan="2" />
+              }
+            >
+              <LatestProprietes />
+            </Suspense>
             <div className="lg:col-span-1">
               {/* Future widget placeholder */}
             </div>

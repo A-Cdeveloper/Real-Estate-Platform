@@ -15,7 +15,6 @@ export async function getLatestProperties(
   take: number = LATEST_PROPERTIES_COUNT
 ) {
   try {
-    await wait(3000);
     const properties = await prisma.property.findMany({
       take,
       orderBy: { createdAt: "desc" },
@@ -33,7 +32,6 @@ export async function getLatestProperties(
 export async function getPromotedProperties(
   take: number = PROMOTED_PROPERTIES_COUNT
 ) {
-  await wait(6000);
   try {
     const properties = await prisma.property.findMany({
       take,
