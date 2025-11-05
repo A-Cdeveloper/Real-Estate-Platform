@@ -1,12 +1,12 @@
 import { getPropertyById } from "@/lib/queries/properties";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, MapPin, Square, Calendar, User, Phone } from "lucide-react";
+import { MapPin, Square, Calendar, User, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { notFound } from "next/navigation";
 import { Typography } from "@/components/ui/typography";
+import BackButton from "@/components/frontend/BackButton";
+import { Button } from "@/components/ui/button";
 
 type Params = Promise<{ id: string }>;
 
@@ -41,19 +41,17 @@ const RealtyDetailPage = async ({ params }: { params: Params }) => {
 
         {/* Back Button */}
         <div className="absolute top-6 left-6 z-10">
-          <Button variant="secondary" size="sm" asChild>
-            <Link href="/proprietes" className="font-nunito-sans">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Properties
-            </Link>
-          </Button>
+          <BackButton href="/proprietes" label="Back to Properties" />
         </div>
 
         {/* Property Title Overlay */}
         <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-8">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="flex items-center gap-3 mb-3">
-              <Typography variant="h1" className="text-4xl md:text-5xl text-white">
+              <Typography
+                variant="h1"
+                className="text-4xl md:text-5xl text-white"
+              >
                 {property.name}
               </Typography>
               {property.promoted && (
