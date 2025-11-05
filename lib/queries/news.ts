@@ -8,7 +8,6 @@ import { getPrismaErrorMessage } from "@/lib/prisma-errors";
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function getLatestNews(take: number = 5) {
-  await wait(3000);
   try {
     const news = await prisma.news.findMany({
       take,
