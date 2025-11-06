@@ -36,6 +36,9 @@ const Modal = ({
 
   return createPortal(
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Modal dialog"
       className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
       onClick={onClose}
     >
@@ -44,6 +47,7 @@ const Modal = ({
           variant="ghost"
           size="icon"
           className="absolute top-4 right-4 z-10 text-white hover:bg-white/20"
+          aria-label="Close modal"
           onClick={(e) => {
             e.stopPropagation();
             onClose();

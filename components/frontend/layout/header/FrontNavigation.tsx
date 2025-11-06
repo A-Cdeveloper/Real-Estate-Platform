@@ -4,7 +4,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const FrontNavigation = () => {
   return (
-    <nav className="container mx-auto px-4 lg:px-8">
+    <nav aria-label="Main navigation" className="container mx-auto px-4 lg:px-8">
       <div className="flex h-16 items-center justify-between">
         <Logo />
 

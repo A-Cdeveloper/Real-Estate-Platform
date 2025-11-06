@@ -19,8 +19,17 @@ const PropertyGallery = ({ property }: { property: PropertyWithGallery }) => {
         {property.gallery.map((image, index) => (
           <div
             key={image.id}
+            role="button"
+            tabIndex={0}
+            aria-label={`View image ${index + 1} of ${property.gallery.length} in gallery`}
             className="group relative cursor-pointer overflow-hidden rounded-lg"
             onClick={() => setSelectedIndex(index)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setSelectedIndex(index);
+              }
+            }}
           >
             <CustumImage
               src={image.url}

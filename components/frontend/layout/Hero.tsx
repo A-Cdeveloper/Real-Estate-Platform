@@ -39,27 +39,44 @@ const Hero = () => {
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="relative">
+                  <label htmlFor="address-input" className="sr-only">
+                    Enter address
+                  </label>
                   <input
+                    id="address-input"
                     type="text"
                     placeholder="Enter address"
+                    aria-label="Enter address"
                     className="w-full px-4 py-3 border border-input rounded-md bg-background font-nunito-sans placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
                 <div className="relative">
+                  <label htmlFor="location-input" className="sr-only">
+                    Location
+                  </label>
                   <input
+                    id="location-input"
                     type="text"
                     placeholder="Location"
+                    aria-label="Location"
                     className="w-full px-4 py-3 border border-input rounded-md bg-background font-nunito-sans placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
                 <div className="relative">
-                  <select className="w-full px-4 py-3 border border-input rounded-md bg-background font-nunito-sans text-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none">
+                  <label htmlFor="property-type-select" className="sr-only">
+                    Property type
+                  </label>
+                  <select
+                    id="property-type-select"
+                    aria-label="Property type"
+                    className="w-full px-4 py-3 border border-input rounded-md bg-background font-nunito-sans text-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none"
+                  >
                     <option>Property type</option>
                     <option>Apartment</option>
                     <option>House</option>
                     <option>Commercial</option>
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
                 </div>
               </div>
 

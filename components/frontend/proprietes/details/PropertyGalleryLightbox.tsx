@@ -55,6 +55,7 @@ const PropertyGalleryLightbox = ({
           variant="ghost"
           size="icon"
           className="absolute left-4 text-white hover:bg-white/20"
+          aria-label="Previous image"
           onClick={() => setIndex(index - 1)}
         >
           <ChevronLeft className="w-8 h-8" />
@@ -66,13 +67,18 @@ const PropertyGalleryLightbox = ({
           variant="ghost"
           size="icon"
           className="absolute right-4 text-white hover:bg-white/20"
+          aria-label="Next image"
           onClick={() => setIndex(index + 1)}
         >
           <ChevronRight className="w-8 h-8" />
         </Button>
       )}
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
+      <div
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         {index + 1} / {images.length}
       </div>
     </Modal>

@@ -17,6 +17,7 @@ const CustomLink = ({ href, children, className }: CustomLinkProps) => {
   return (
     <Link
       href={href}
+      aria-current={isActive ? "page" : undefined}
       className={cn(
         "text-foreground hover:text-primary transition-colors font-bold",
         className,
