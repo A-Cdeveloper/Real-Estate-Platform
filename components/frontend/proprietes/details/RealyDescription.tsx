@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 
 const RealyDescription = ({ description }: { description: string }) => {
+  if (!description) return null;
   return (
     <Card>
       <CardHeader>

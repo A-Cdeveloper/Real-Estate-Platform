@@ -86,6 +86,9 @@ export async function getPropertyById(id: string) {
             email: true,
           },
         },
+        gallery: {
+          orderBy: { order: "asc" },
+        },
       },
     });
 

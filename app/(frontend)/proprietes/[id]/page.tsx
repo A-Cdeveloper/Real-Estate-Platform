@@ -1,3 +1,4 @@
+import PropertyGallery from "@/components/frontend/proprietes/details/PropertyGallery";
 import RealtyTopImage from "@/components/frontend/proprietes/details/RealtyTopImage";
 import RealyAgent from "@/components/frontend/proprietes/details/RealyAgent";
 import RealyDescription from "@/components/frontend/proprietes/details/RealyDescription";
@@ -32,6 +33,9 @@ const RealtyDetailPage = async ({ params }: { params: Params }) => {
 
             {/* Description */}
             <RealyDescription description={property.description || ""} />
+
+            {/* Gallery */}
+            <PropertyGallery property={property} />
           </div>
 
           {/* Right Column - Contact & Owner Info */}

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PropertyWithOwner } from "@/types/properties";
 import { Mail, User } from "lucide-react";
+import Link from "next/link";
 
 const RealyAgent = ({ property }: { property: PropertyWithOwner }) => {
   return (
@@ -29,10 +30,10 @@ const RealyAgent = ({ property }: { property: PropertyWithOwner }) => {
           )}
           <div className="space-y-3">
             <Button className="w-full font-nunito-sans" size="lg" asChild>
-              <a href="mailto:contact@realestate.com">
+              <Link href="mailto:contact@realestate.com">
                 <Mail className="w-4 h-4 mr-2" />
                 Contact Now
-              </a>
+              </Link>
             </Button>
           </div>
         </CardContent>

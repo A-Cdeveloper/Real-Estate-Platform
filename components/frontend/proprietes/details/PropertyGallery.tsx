@@ -1,0 +1,49 @@
+"use client";
+
+import { useState } from "react";
+import { PropertyWithGallery } from "@/types/properties";
+import CustumImage from "@/components/frontend/CustumImage";
+import { ZoomIn } from "lucide-react";
+import PropertyGalleryLightbox from "./PropertyGalleryLightbox";
+
+const PropertyGallery = ({ property }: { property: PropertyWithGallery }) => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  if (!property.gallery || property.gallery.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {property.gallery.map((image, index) => (
+          <div
+            key={image.id}
+            className="group relative cursor-pointer overflow-hidden rounded-lg"
+            onClick={() => setSelectedIndex(index)}
+          >
+            <CustumImage
+              src={image.url}
+              alt={image.alt || property.name}
+              className="h-64"
+            />
+            {/* Overlay sa zoom ikonom */}
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <ZoomIn className="w-10 h-10 text-white" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {selectedIndex !== null && (
+        <PropertyGalleryLightbox
+          images={property.gallery}
+          startIndex={selectedIndex}
+          onClose={() => setSelectedIndex(null)}
+        />
+      )}
+    </>
+  );
+};
+
+export default PropertyGallery;

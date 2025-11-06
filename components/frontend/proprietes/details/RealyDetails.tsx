@@ -1,11 +1,11 @@
-import { Property } from "@prisma/client";
+import { PropertyWithOwner } from "@/types/properties";
 import { Square } from "lucide-react";
 import { Calendar } from "lucide-react";
 import { MapPin } from "lucide-react";
 import { formatLongDate } from "@/lib/utils/date";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const RealyDetails = ({ property }: { property: Property }) => {
+const RealyDetails = ({ property }: { property: PropertyWithOwner }) => {
   return (
     <Card>
       <CardHeader>
