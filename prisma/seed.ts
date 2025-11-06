@@ -3,7 +3,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Obrišemo postojeće podatke (idempotent seed)
-  // Prvo properties (zbog foreign key), pa users, pa news
+  // Prvo PropertyImage (zbog foreign key), pa properties, pa users, pa news
+  await prisma.propertyImage.deleteMany();
   await prisma.property.deleteMany();
   await prisma.user.deleteMany();
   await prisma.news.deleteMany();
@@ -24,6 +25,8 @@ async function main() {
       price: 95000,
       area: 65.5,
       address: "Zvezdara, Belgrade",
+      description:
+        "Savremen stan u novom objektu sa modernim nameštajem i opremom. Uključuje parking mesto, lift i video nadzor. Idealna lokacija sa dobrim saobraćajnim povezivanjem.",
       image:
         "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
       ownerId: user.id,
@@ -42,6 +45,8 @@ async function main() {
       price: 180000,
       area: 145.0,
       address: "Novi Sad, Liman",
+      description:
+        "Porodična kuća sa velikim dvorištem idealna za porodice sa decom. Uključuje garažu, šupu, i prelep baštu. Miran kraj sa dobrim školama u blizini.",
       image:
         "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop",
       ownerId: user.id,
@@ -51,6 +56,8 @@ async function main() {
       price: 320000,
       area: 180.0,
       address: "Dorćol, Belgrade",
+      description:
+        "Ekskluzivni penthouse sa panarom na centar Beograda. Prostran enterijer sa luksuznim završnim radovima, terasa sa prelepim pogledom, parking mesto i garaža. Idealna investicija za one koji traže najbolje.",
       image:
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop",
       promoted: true,
@@ -142,6 +149,8 @@ async function main() {
       price: 410000,
       area: 220.0,
       address: "Budva, Montenegro",
+      description:
+        "Luksuzna vila na obali sa privatnom plažom i bazénom. Spektakularan pogled na more, moderna oprema i elegantan enterijer. Idealna za odmor ili investiciju.",
       image:
         "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
       promoted: true,
@@ -170,6 +179,8 @@ async function main() {
       price: 295000,
       area: 185.0,
       address: "Belgrade Waterfront",
+      description:
+        "Moderna kancelarija u prestižnom objektu sa pogledom na reku. Savremena infrastruktura, parking mesto i odlična lokacija za poslovne aktivnosti.",
       image:
         "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop",
       promoted: true,
@@ -409,6 +420,8 @@ async function main() {
       price: 430000,
       area: 280.0,
       address: "Dedinje",
+      description:
+        "Ekskluzivna vila u najprestižnijem delu Beograda. Prostran enterijer, luksuzni završni radovi, veliko dvorište sa bazenom. Idealna za one koji traže najbolje.",
       image:
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop",
       promoted: true,
@@ -488,8 +501,51 @@ async function main() {
     },
   ];
 
-  // Insert svih 50
+  // Insert svih 50 properties
   await prisma.property.createMany({ data: properties });
+
+  // Dobijamo sve kreirane properties da bismo dodali gallery slike
+  const createdProperties = await prisma.property.findMany({
+    orderBy: { createdAt: "asc" },
+  });
+
+  // Gallery slike za properties (3-5 slika po property)
+  const galleryImages: Prisma.PropertyImageCreateManyInput[] = [];
+
+  createdProperties.forEach((property, index) => {
+    // Različiti broj slika za različite properties (3-5)
+    const imageCount = 3 + (index % 3); // 3, 4, ili 5 slika
+    const unsplashImages = [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop",
+    ];
+
+    for (let i = 0; i < imageCount; i++) {
+      galleryImages.push({
+        url: unsplashImages[(index * 5 + i) % unsplashImages.length],
+        alt: `${property.name} - Image ${i + 1}`,
+        caption: `Interior view ${i + 1} of ${property.name}`,
+        order: i,
+        propertyId: property.id,
+      });
+    }
+  });
+
+  // Insert svih gallery slika
+  await prisma.propertyImage.createMany({ data: galleryImages });
 
   // Kreiramo 10 vesti
   const news: Prisma.NewsCreateManyInput[] = [
@@ -570,7 +626,11 @@ async function main() {
 }
 
 main()
-  .then(() => console.log("✅ Seed completed with 50 properties and 10 news"))
+  .then(() =>
+    console.log(
+      "✅ Seed completed with 50 properties (with descriptions and gallery), and 10 news"
+    )
+  )
   .catch((e) => {
     console.error(e);
     process.exit(1);

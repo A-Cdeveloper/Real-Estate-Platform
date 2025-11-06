@@ -17,16 +17,31 @@ model User {
 }
 
 model Property {
-  id        String   @id @default(cuid())
-  name      String
-  price     Float
-  area      Float? // kvadratura u m²
-  address   String?
-  image     String? // URL slike nekretnine
-  promoted  Boolean  @default(false) // izdvojena nekretnina
-  createdAt DateTime @default(now())
-  ownerId   String
-  owner     User     @relation(fields: [ownerId], references: [id])
+  id          String          @id @default(cuid())
+  name        String
+  price       Float
+  area        Float? // kvadratura u m²
+  address     String?
+  description String?         @db.Text // opis nekretnine
+  image       String? // URL glavne slike nekretnine
+  promoted    Boolean         @default(false) // izdvojena nekretnina
+  createdAt   DateTime        @default(now())
+  ownerId     String
+  owner       User            @relation(fields: [ownerId], references: [id])
+  gallery     PropertyImage[] // galerija slika
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  url        String // URL slike
+  alt        String? // alt text za sliku
+  caption    String? // opis slike
+  order      Int      @default(0) // redosled prikaza
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@index([propertyId])
 }
 
 model News {
