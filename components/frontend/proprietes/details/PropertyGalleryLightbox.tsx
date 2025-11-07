@@ -2,10 +2,39 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/frontend/Modal";
 import { PropertyImage } from "@prisma/client";
+import { cn } from "@/lib/utils";
+
+type NavigationButtonProps = {
+  direction: "left" | "right";
+  icon: LucideIcon;
+  ariaLabel: string;
+  onClick: () => void;
+};
+
+const DirectionButton = ({
+  direction,
+  icon: Icon,
+  ariaLabel,
+  onClick,
+}: NavigationButtonProps) => {
+  return (
+    <Button
+      variant="ghost"
+      className={cn(
+        direction === "left" ? "left-40" : "right-40",
+        "absolute h-8 w-8 text-white/60 hover:!bg-transparent hover:!text-white p-0 [&_svg]:!w-8 [&_svg]:!h-8"
+      )}
+      aria-label={ariaLabel}
+      onClick={onClick}
+    >
+      <Icon className="w-8 h-8 flex-shrink-0" />
+    </Button>
+  );
+};
 
 type PropertyGalleryLightboxProps = {
   images: PropertyImage[];
@@ -51,27 +80,21 @@ const PropertyGalleryLightbox = ({
       </div>
 
       {index > 0 && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute left-4 text-white hover:bg-white/20"
-          aria-label="Previous image"
+        <DirectionButton
+          direction="left"
+          icon={ChevronLeft}
+          ariaLabel="Previous image"
           onClick={() => setIndex(index - 1)}
-        >
-          <ChevronLeft className="w-8 h-8" />
-        </Button>
+        />
       )}
 
       {index < images.length - 1 && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-4 text-white hover:bg-white/20"
-          aria-label="Next image"
+        <DirectionButton
+          direction="right"
+          icon={ChevronRight}
+          ariaLabel="Next image"
           onClick={() => setIndex(index + 1)}
-        >
-          <ChevronRight className="w-8 h-8" />
-        </Button>
+        />
       )}
 
       <div

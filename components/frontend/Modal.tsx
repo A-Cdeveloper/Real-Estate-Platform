@@ -1,10 +1,32 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+// CloseButton component is used to close the modal
+type CloseButtonProps = {
+  onClose: () => void;
+};
+
+const CloseButton = ({ onClose }: CloseButtonProps) => {
+  return (
+    <Button
+      variant="ghost"
+      className="absolute top-4 right-4 z-10 h-8 w-8 text-white/60 hover:!bg-transparent
+       hover:!text-white p-0 [&_svg]:!w-8 [&_svg]:!h-8"
+      aria-label="Close modal"
+      onClick={(e) => {
+        e.stopPropagation();
+        onClose();
+      }}
+    >
+      <X className="w-8 h-8 flex-shrink-0" />
+    </Button>
+  );
+};
 
 type ModalProps = {
   isOpen: boolean;
@@ -14,6 +36,8 @@ type ModalProps = {
   showCloseButton?: boolean;
 };
 
+// Modal component is used to display a modal
+
 const Modal = ({
   isOpen,
   onClose,
@@ -21,16 +45,21 @@ const Modal = ({
   className,
   showCloseButton = true,
 }: ModalProps) => {
+  // useEffectEvent is used to prevent the event from being triggered in the parent component
+  const onCloseEvent = useEffectEvent(() => {
+    onClose();
+  });
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseEvent();
     };
 
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -42,20 +71,7 @@ const Modal = ({
       className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
       onClick={onClose}
     >
-      {showCloseButton && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-4 right-4 z-10 text-white hover:bg-white/20"
-          aria-label="Close modal"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
-        >
-          <X className="w-6 h-6" />
-        </Button>
-      )}
+      {showCloseButton && <CloseButton onClose={onClose} />}
 
       <div
         className={cn("relative", className)}
