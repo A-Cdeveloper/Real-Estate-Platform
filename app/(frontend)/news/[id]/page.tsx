@@ -6,11 +6,28 @@ import CustumImage from "@/components/frontend/CustumImage";
 import LatestNews from "@/components/frontend/news/LatestNews";
 import LatestNewsSkeleton from "@/components/frontend/skeletons/LatestNewsSkeleton";
 import { Typography } from "@/components/ui/typography";
-import { getNewsById } from "@/lib/queries/news";
+import { getNewsById, getRecentNewsIds } from "@/lib/queries/news";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type Params = Promise<{ id: string }>;
+
+// ISG: Regenerate pages every hour (3600 seconds)
+export const revalidate = 3600;
+
+// Generate static params only for recent news items (last 100)
+// Older news will be generated on-demand when first accessed
+export async function generateStaticParams() {
+  try {
+    // Only pre-generate the most recent 30 news items
+    // Rest will be generated on-demand (ISG)
+    const ids = await getRecentNewsIds();
+    return ids.map((id) => ({ id }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,

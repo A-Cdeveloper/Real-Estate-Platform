@@ -4,9 +4,6 @@ import { getPrismaErrorMessage } from "@/lib/prisma-errors";
 /**
  * Get latest news
  */
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export async function getLatestNews(take: number = 5) {
   try {
     const news = await prisma.news.findMany({
@@ -39,6 +36,40 @@ export async function getAllNews(take: number = 12, skip: number = 0) {
       total,
       hasMore: skip + take < total,
     };
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(getPrismaErrorMessage(error));
+  }
+}
+
+/**
+ * Get all news IDs (for static generation)
+ */
+export async function getAllNewsIds() {
+  try {
+    const news = await prisma.news.findMany({
+      select: { id: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return news.map((item) => item.id);
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(getPrismaErrorMessage(error));
+  }
+}
+
+/**
+ * Get recent news IDs (for static generation - limited)
+ * Only generates static pages for the most recent news items
+ */
+export async function getRecentNewsIds(limit: number = 30) {
+  try {
+    const news = await prisma.news.findMany({
+      select: { id: true },
+      take: limit,
+      orderBy: { createdAt: "desc" },
+    });
+    return news.map((item) => item.id);
   } catch (error) {
     console.error("Database error:", error);
     throw new Error(getPrismaErrorMessage(error));

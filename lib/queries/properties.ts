@@ -8,9 +8,6 @@ import {
 /**
  * Get latest properties
  */
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export async function getLatestProperties(
   take: number = LATEST_PROPERTIES_COUNT
 ) {
@@ -71,10 +68,27 @@ export async function getAllProperties(take: number = 12, skip: number = 0) {
 }
 
 /**
+ * Get recent property IDs (for static generation - limited)
+ * Only generates static pages for the most recent properties
+ */
+export async function getRecentPropertyIds(limit: number = 50) {
+  try {
+    const properties = await prisma.property.findMany({
+      select: { id: true },
+      take: limit,
+      orderBy: { createdAt: "desc" },
+    });
+    return properties.map((item) => item.id);
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(getPrismaErrorMessage(error));
+  }
+}
+
+/**
  * Get property by ID
  */
 export async function getPropertyById(id: string) {
-  //await wait(3000);
   try {
     const property = await prisma.property.findUnique({
       where: { id },

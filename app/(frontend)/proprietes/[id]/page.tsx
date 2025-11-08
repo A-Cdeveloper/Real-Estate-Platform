@@ -5,10 +5,30 @@ import RealtyTopImage from "@/components/frontend/proprietes/details/RealtyTopIm
 import RealyAgent from "@/components/frontend/proprietes/details/RealyAgent";
 import RealyDescription from "@/components/frontend/proprietes/details/RealyDescription";
 import RealyDetails from "@/components/frontend/proprietes/details/RealyDetails";
-import { getPropertyById } from "@/lib/queries/properties";
+import {
+  getPropertyById,
+  getRecentPropertyIds,
+} from "@/lib/queries/properties";
 import { notFound } from "next/navigation";
 
 type Params = Promise<{ id: string }>;
+
+// ISG: Regenerate pages every 30 minutes (1800 seconds)
+export const revalidate = 1800;
+
+// Generate static params only for recent properties (last 50)
+// Older properties will be generated on-demand when first accessed
+export async function generateStaticParams() {
+  try {
+    // Only pre-generate the most recent 50 properties
+    // Rest will be generated on-demand (ISG)
+    const ids = await getRecentPropertyIds();
+    return ids.map((id) => ({ id }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,
