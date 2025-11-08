@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
+import { APP_NAME, SITE_URL } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Typography } from "@/components/ui/typography";
+
+export const metadata: Metadata = {
+  title: `Contact Us | ${APP_NAME}`,
+  description:
+    "Get in touch with Real Estate Pro. Visit our office in Toronto, call us at +1 (647) 987-4321, or send us a message. We're here to help with all your real estate needs.",
+  openGraph: {
+    title: `Contact Us | ${APP_NAME}`,
+    description:
+      "Get in touch with Real Estate Pro. Visit our office in Toronto, call us at +1 (647) 987-4321, or send us a message. We're here to help with all your real estate needs.",
+    url: `${SITE_URL}/contact`,
+    type: "website",
+  },
+};
 
 const ContactPage = () => {
   return (

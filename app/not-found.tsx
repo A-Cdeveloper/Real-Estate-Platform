@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+import { APP_NAME } from "@/lib/constants";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+
+export const metadata: Metadata = {
+  title: `404 - Page Not Found | ${APP_NAME}`,
+  description: "The page you are looking for does not exist.",
+};
 
 export default function NotFound() {
   return (

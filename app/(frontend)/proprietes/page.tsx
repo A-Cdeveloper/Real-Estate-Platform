@@ -1,14 +1,28 @@
+import type { Metadata } from "next";
+import { APP_NAME, SITE_URL, ITEMS_PER_PAGE } from "@/lib/constants";
 import RealtyListItem from "@/components/frontend/proprietes/RealtyListItem";
 import PaginationControls from "@/components/frontend/PaginationControls";
 import { getAllProperties } from "@/lib/queries/properties";
 import ProprietesMeta from "@/components/frontend/proprietes/ProprietesMeta";
 import { calculateSkip, getPaginationData } from "@/lib/utils/pagination";
-import { ITEMS_PER_PAGE } from "@/lib/constants";
 import PropertiesGridSkeleton from "@/components/frontend/skeletons/PropertiesGridSkeleton";
 import EmptyState from "@/components/frontend/EmptyState";
 
 import { Suspense } from "react";
 import { Typography } from "@/components/ui/typography";
+
+export const metadata: Metadata = {
+  title: `Properties | ${APP_NAME}`,
+  description:
+    "Browse our extensive collection of properties for sale and rent. Find your perfect home, apartment, or investment property with Real Estate Pro.",
+  openGraph: {
+    title: `Properties | ${APP_NAME}`,
+    description:
+      "Browse our extensive collection of properties for sale and rent. Find your perfect home, apartment, or investment property with Real Estate Pro.",
+    url: `${SITE_URL}/proprietes`,
+    type: "website",
+  },
+};
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 

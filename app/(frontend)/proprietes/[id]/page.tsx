@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { APP_NAME, SITE_URL } from "@/lib/constants";
 import PropertyGallery from "@/components/frontend/proprietes/details/PropertyGallery";
 import RealtyTopImage from "@/components/frontend/proprietes/details/RealtyTopImage";
 import RealyAgent from "@/components/frontend/proprietes/details/RealyAgent";
@@ -7,6 +9,43 @@ import { getPropertyById } from "@/lib/queries/properties";
 import { notFound } from "next/navigation";
 
 type Params = Promise<{ id: string }>;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const property = await getPropertyById(id);
+
+    const title = `${property.name} | ${APP_NAME}`;
+    const description =
+      property.description ||
+      `${property.name}${
+        property.address ? ` located at ${property.address}` : ""
+      }. Price: $${property.price.toLocaleString()}.${
+        property.area ? ` Area: ${property.area} m².` : ""
+      }`;
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url: `${SITE_URL}/proprietes/${id}`,
+        type: "website",
+      },
+    };
+  } catch {
+    return {
+      title: `Property | ${APP_NAME}`,
+      description: `View property details on ${APP_NAME}`,
+    };
+  }
+}
 
 const RealtyDetailPage = async ({ params }: { params: Params }) => {
   const { id } = await params;

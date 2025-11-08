@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { APP_NAME, SITE_URL } from "@/lib/constants";
 import BackButton from "@/components/frontend/BackButton";
 import NewsDate from "@/components/frontend/news/detail/NewsDate";
 import CustumImage from "@/components/frontend/CustumImage";
@@ -9,6 +11,40 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type Params = Promise<{ id: string }>;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const newsItem = await getNewsById(id);
+
+    const title = `${newsItem.title} | ${APP_NAME}`;
+    const description =
+      newsItem.description.length > 160
+        ? `${newsItem.description.substring(0, 157)}...`
+        : newsItem.description;
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url: `${SITE_URL}/news/${id}`,
+        type: "article",
+      },
+    };
+  } catch {
+    return {
+      title: `News | ${APP_NAME}`,
+      description: `Read news article on ${APP_NAME}`,
+    };
+  }
+}
 
 const NewsDetailPage = async ({ params }: { params: Params }) => {
   const { id } = await params;

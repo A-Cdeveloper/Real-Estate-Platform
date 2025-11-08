@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
+import { APP_NAME, SITE_URL } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
+
+export const metadata: Metadata = {
+  title: `Terms & Conditions | ${APP_NAME}`,
+  description:
+    "Review Real Estate Pro's Terms & Conditions. Understand your rights and responsibilities when using our platform, including property listings, account usage, and intellectual property.",
+  openGraph: {
+    title: `Terms & Conditions | ${APP_NAME}`,
+    description:
+      "Review Real Estate Pro's Terms & Conditions. Understand your rights and responsibilities when using our platform, including property listings, account usage, and intellectual property.",
+    url: `${SITE_URL}/terms`,
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 const TermsPage = () => {
   return (

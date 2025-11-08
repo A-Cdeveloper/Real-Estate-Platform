@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { APP_NAME, APP_DESCRIPTION, SITE_URL } from "@/lib/constants";
 //import Hero from "@/components/frontend/layout/Hero";
 import LatestNews from "@/components/frontend/news/LatestNews";
 import LatestProprietes from "@/components/frontend/proprietes/LatestProprietes";
@@ -6,6 +8,17 @@ import RealtyStats from "@/components/frontend/proprietes/RealtyStats";
 import CarouselSkeleton from "@/components/frontend/skeletons/CarouselSkeleton";
 import LatestNewsSkeleton from "@/components/frontend/skeletons/LatestNewsSkeleton";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: `${APP_NAME} | Find Your Perfect Property`,
+  description: APP_DESCRIPTION,
+  openGraph: {
+    title: `${APP_NAME} | Find Your Perfect Property`,
+    description: APP_DESCRIPTION,
+    url: SITE_URL,
+    type: "website",
+  },
+};
 
 export default async function HomePage() {
   return (

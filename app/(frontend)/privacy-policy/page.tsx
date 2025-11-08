@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
+import { APP_NAME, SITE_URL } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
+
+export const metadata: Metadata = {
+  title: `Privacy Policy | ${APP_NAME}`,
+  description:
+    "Read Real Estate Pro's Privacy Policy to understand how we collect, use, and protect your personal information when you use our platform.",
+  openGraph: {
+    title: `Privacy Policy | ${APP_NAME}`,
+    description:
+      "Read Real Estate Pro's Privacy Policy to understand how we collect, use, and protect your personal information when you use our platform.",
+    url: `${SITE_URL}/privacy-policy`,
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 const PrivacyPolicyPage = () => {
   return (

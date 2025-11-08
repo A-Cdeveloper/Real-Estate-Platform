@@ -1,5 +1,10 @@
-export const APP_NAME = "Real Estate";
-export const APP_DESCRIPTION = "Real Estate Website";
+export const APP_NAME = "Real Estate Pro";
+export const APP_DESCRIPTION =
+  "Find your perfect property with Real Estate Pro. Browse listings, explore neighborhoods, and connect with expert agents.";
+
+// SEO & Metadata
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://realestatepro.com";
 
 export const COPYRIGHT = {
   text: "All Rights Reserved",
