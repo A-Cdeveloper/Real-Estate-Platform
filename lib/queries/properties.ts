@@ -24,15 +24,16 @@ export async function getLatestProperties(
 }
 
 /**
- * Get promoted properties (sorted by price desc)
+ * Get promoted properties (where promoted: true, sorted by createdAt desc)
  */
 export async function getPromotedProperties(
   take: number = PROMOTED_PROPERTIES_COUNT
 ) {
   try {
     const properties = await prisma.property.findMany({
+      where: { promoted: true },
       take,
-      orderBy: { price: "desc" },
+      orderBy: { createdAt: "desc" },
     });
     return properties;
   } catch (error) {
