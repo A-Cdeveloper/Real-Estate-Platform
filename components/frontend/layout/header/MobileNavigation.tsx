@@ -14,6 +14,8 @@ const MobileNavigation = ({ isOpen, onClose }: MobileNavigationProps) => {
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
       }`}
+      aria-hidden={!isOpen}
+      role="menu"
     >
       <div className="flex flex-col [&>*:not(:last-child)]:border-b [&>*]:uppercase [&>*]:px-3 [&>*]:py-3 [&>*]:hover:bg-secondary">
         {NAVIGATION_LINKS.map((link) => (

@@ -31,7 +31,7 @@ const DirectionButton = ({
       aria-label={ariaLabel}
       onClick={onClick}
     >
-      <Icon className="w-8 h-8 flex-shrink-0" />
+      <Icon className="w-8 h-8 flex-shrink-0" aria-hidden="true" />
     </Button>
   );
 };

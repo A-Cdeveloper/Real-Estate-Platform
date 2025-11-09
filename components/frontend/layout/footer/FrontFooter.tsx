@@ -5,12 +5,19 @@ import MetaMenu from "./MetaMenu";
 
 const FrontFooter = () => {
   return (
-    <footer className="bg-foreground text-background mt-auto">
+    <footer
+      className="bg-foreground text-background mt-auto"
+      role="contentinfo"
+    >
       <div className="container mx-auto px-4 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Left Column */}
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
+            <Link
+              href="/"
+              className="flex items-center gap-2 mb-4"
+              aria-label={`${APP_NAME} homepage`}
+            >
               <span className="text-2xl font-nunito font-bold text-background">
                 {APP_NAME}
               </span>

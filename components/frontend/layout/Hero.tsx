@@ -83,7 +83,7 @@ const Hero = () => {
               {/* Search Buttons */}
               <div className="flex gap-4">
                 <Button size="lg" className="font-nunito-sans font-semibold">
-                  <Search className="w-5 h-5" />
+                  <Search className="w-5 h-5" aria-hidden="true" />
                   Search Property
                 </Button>
               </div>
