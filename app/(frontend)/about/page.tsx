@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { APP_NAME, SITE_URL } from "@/lib/constants";
 import CustumImage from "@/components/frontend/CustumImage";
 import { Typography } from "@/components/ui/typography";
+import { Award, Users } from "lucide-react";
+import AboutWidget from "@/components/frontend/about/AboutWidget";
 
 export const metadata: Metadata = {
   title: `About Us | ${APP_NAME}`,
@@ -39,24 +41,18 @@ const AboutPage = () => {
               investment portfolio, we are here to build a lasting partnership.
             </Typography>
             <div className="grid gap-6 sm:grid-cols-2">
-              <div className="rounded-lg border bg-card p-6 shadow-sm">
-                <Typography variant="h3" className="text-2xl">
-                  10+ Years
-                </Typography>
-                <Typography className="text-muted-foreground">
-                  Navigating the real-estate market with data-driven insights
-                  and local expertise.
-                </Typography>
-              </div>
-              <div className="rounded-lg border bg-card p-6 shadow-sm">
-                <Typography variant="h3" className="text-2xl">
-                  500+ Clients
-                </Typography>
-                <Typography className="text-muted-foreground">
-                  Families and investors we have supported through sales,
-                  rentals, and property management.
-                </Typography>
-              </div>
+              <AboutWidget
+                title="10+ Years of Experience"
+                description="Navigating the real-estate market with data-driven insights and local expertise."
+                icon={Award}
+                variant="primary"
+              />
+              <AboutWidget
+                title="500+ Satisfied Clients"
+                description="Families and investors we have supported through sales, rentals, and property management."
+                icon={Users}
+                variant="secondary"
+              />
             </div>
           </div>
           <CustumImage
