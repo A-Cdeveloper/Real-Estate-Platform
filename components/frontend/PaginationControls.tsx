@@ -32,7 +32,7 @@ export default function PaginationControls({
   };
 
   return (
-    <Pagination>
+    <Pagination className="border-t border-border/30 py-4 flex justify-end">
       <PaginationContent>
         {/* Previous Button */}
         <PaginationItem>

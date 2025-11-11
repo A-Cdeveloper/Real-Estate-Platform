@@ -51,7 +51,7 @@ const ProprietesWrapper = ({
       </div>
 
       <Activity mode={isOpen ? "visible" : "hidden"}>
-        <div className="rounded-2xl border border-border/60 bg-secondary/40 p-6 backdrop-blur-sm">
+        <div className="rounded-2xl border border-border bg-secondary p-6 backdrop-blur-sm">
           <PropertyTypeFilter
             initialParams={initialParams}
             clearRoute="/proprietes"

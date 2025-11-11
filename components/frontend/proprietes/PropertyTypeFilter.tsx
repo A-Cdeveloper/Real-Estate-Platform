@@ -70,7 +70,10 @@ const PropertyTypeFilter = ({
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           aria-label="Search by location"
-          className="w-full bg-white dark:bg-background"
+          className={cn(
+            "w-full bg-white dark:bg-background",
+            location.trim() && "border-primary"
+          )}
         />
 
         {/* Property Type Select */}
@@ -81,7 +84,10 @@ const PropertyTypeFilter = ({
         >
           <SelectTrigger
             id="property-type-select"
-            className="w-full bg-white dark:bg-background"
+            className={cn(
+              "w-full bg-white dark:bg-background",
+              type && "border-primary"
+            )}
             aria-label="Select property type"
           >
             <SelectValue placeholder="All Types" />
@@ -103,7 +109,10 @@ const PropertyTypeFilter = ({
           aria-label="Minimum price"
           min="0"
           step="1000"
-          className="w-full bg-white dark:bg-background"
+          className={cn(
+            "w-full bg-white dark:bg-background",
+            minPrice.trim() && "border-primary"
+          )}
         />
 
         {/* Max Price Input */}
@@ -116,7 +125,10 @@ const PropertyTypeFilter = ({
           aria-label="Maximum price"
           min="0"
           step="1000"
-          className="w-full bg-white dark:bg-background"
+          className={cn(
+            "w-full bg-white dark:bg-background",
+            maxPrice.trim() && "border-primary"
+          )}
         />
       </div>
 
