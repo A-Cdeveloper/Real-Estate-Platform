@@ -1,6 +1,6 @@
 import { Property } from "@prisma/client";
 import Image from "next/image";
-import BackButton from "@/components/frontend/BackButton";
+import BackButton from "@/components/shared/BackButton";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";

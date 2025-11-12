@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import LatestNewsItem from "./LatestNewsItem";
 import { Typography } from "@/components/ui/typography";
-import { getLatestNews } from "@/lib/queries/news";
+import { getLatestNews } from "@/server/queries/news";
 import { LATEST_NEWS_COUNT } from "@/lib/constants";
 import EmptyState from "../EmptyState";
 import { cn } from "@/lib/utils";

@@ -1,5 +1,5 @@
 import { Typography } from "@/components/ui/typography";
-import { getPropertyStats } from "@/lib/queries/properties";
+import { getPropertyStats } from "@/server/queries/properties";
 import { cn } from "@/lib/utils";
 
 const StatWidget = ({

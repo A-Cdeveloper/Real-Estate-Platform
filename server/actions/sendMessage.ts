@@ -1,7 +1,7 @@
 "use server";
 
-import { contactFormSchema } from "@/lib/schemas/contact";
-import { sendContactEmail } from "@/lib/mail/sendContactEmail";
+import { contactFormSchema } from "@/server/schemas/contact";
+import { sendContactEmail } from "@/server/mail/sendContactEmail";
 import { CONTACT_EMAIL } from "@/lib/constants";
 
 type InputData = {

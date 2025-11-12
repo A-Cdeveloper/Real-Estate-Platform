@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { APP_NAME, APP_DESCRIPTION, SITE_URL } from "@/lib/constants";
-//import Hero from "@/components/frontend/layout/Hero";
-import LatestNews from "@/components/frontend/news/LatestNews";
-import LatestProprietes from "@/components/frontend/proprietes/LatestProprietes";
-import PromotedProprietes from "@/components/frontend/proprietes/PromotedProprietes";
-import RealtyStats from "@/components/frontend/proprietes/RealtyStats";
+//import Hero from "@/features/frontend/layout/Hero";
+import LatestNews from "@/features/frontend/news/LatestNews";
+import LatestProprietes from "@/features/frontend/proprietes/LatestProprietes";
+import PromotedProprietes from "@/features/frontend/proprietes/PromotedProprietes";
+import RealtyStats from "@/features/frontend/proprietes/RealtyStats";
 import CarouselSkeleton from "@/components/frontend/skeletons/CarouselSkeleton";
 import LatestNewsSkeleton from "@/components/frontend/skeletons/LatestNewsSkeleton";
 import { Suspense } from "react";
-import Hero from "@/components/frontend/Hero";
+import Hero from "@/features/frontend/Hero";
 import RealtyStatsSkeleton from "@/components/frontend/skeletons/RealtyStatsSkeleton";
 
 export const metadata: Metadata = {

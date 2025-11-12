@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { APP_NAME, SITE_URL } from "@/lib/constants";
-import BackButton from "@/components/frontend/BackButton";
-import NewsDate from "@/components/frontend/news/detail/NewsDate";
-import CustumImage from "@/components/frontend/CustumImage";
-import LatestNews from "@/components/frontend/news/LatestNews";
+import BackButton from "@/components/shared/BackButton";
+import NewsDate from "@/features/frontend/news/detail/NewsDate";
+import CustumImage from "@/components/shared/CustumImage";
+import LatestNews from "@/features/frontend/news/LatestNews";
 import LatestNewsSkeleton from "@/components/frontend/skeletons/LatestNewsSkeleton";
 import { Typography } from "@/components/ui/typography";
-import { getNewsById, getRecentNewsIds } from "@/lib/queries/news";
+import { getNewsById, getRecentNewsIds } from "@/server/queries/news";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 

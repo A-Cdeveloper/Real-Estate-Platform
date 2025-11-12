@@ -3,7 +3,7 @@
 import { PropertyType } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useReducer, useState } from "react";
-import { propertyFiltersSchema } from "@/lib/schemas/propertyFilters";
+import { propertyFiltersSchema } from "@/server/schemas/propertyFilters";
 import type { PropertyFilters } from "@/types/properties";
 
 type FilterState = {

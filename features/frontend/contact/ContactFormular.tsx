@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Typography } from "@/components/ui/typography";
-import CustomInput from "@/components/frontend/CustomInput";
-import { sendMessageAction, type ActionState } from "../actions/sendMessage";
+import CustomInput from "@/components/shared/CustomInput";
+import { sendMessageAction, type ActionState } from "@/server/actions/sendMessage";
 import { useActionState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";

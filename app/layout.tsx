@@ -1,6 +1,6 @@
 import { nunito, nunitoSans } from "@/lib/fonts";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 export default function RootLayout({
   children,

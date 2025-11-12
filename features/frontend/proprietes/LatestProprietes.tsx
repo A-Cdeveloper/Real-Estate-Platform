@@ -1,7 +1,7 @@
-import { getLatestProperties } from "@/lib/queries/properties";
+import { getLatestProperties } from "@/server/queries/properties";
 import RealtyListItem from "./RealtyListItem";
-import CarouselCustum from "@/components/frontend/CarouselCustum";
-import EmptyState from "@/components/frontend/EmptyState";
+import CarouselCustum from "@/features/frontend/CarouselCustum";
+import EmptyState from "@/features/frontend/EmptyState";
 import { LATEST_PROPERTIES_COUNT } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
 

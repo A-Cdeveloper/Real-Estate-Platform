@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { APP_NAME, SITE_URL } from "@/lib/constants";
-import PropertyGallery from "@/components/frontend/proprietes/details/PropertyGallery";
-import RealtyTopImage from "@/components/frontend/proprietes/details/RealtyTopImage";
-import RealtyAgent from "@/components/frontend/proprietes/details/RealtyAgent";
-import RealyDescription from "@/components/frontend/proprietes/details/RealyDescription";
-import RealyDetails from "@/components/frontend/proprietes/details/RealyDetails";
+import PropertyGallery from "@/features/frontend/proprietes/details/PropertyGallery";
+import RealtyTopImage from "@/features/frontend/proprietes/details/RealtyTopImage";
+import RealtyAgent from "@/features/frontend/proprietes/details/RealtyAgent";
+import RealyDescription from "@/features/frontend/proprietes/details/RealyDescription";
+import RealyDetails from "@/features/frontend/proprietes/details/RealyDetails";
 import {
   getPropertyById,
   getRecentPropertyIds,
-} from "@/lib/queries/properties";
+} from "@/server/queries/properties";
 import { notFound } from "next/navigation";
-import RealtyLocationMap from "@/components/frontend/proprietes/details/RealtyLocationMap";
+import RealtyLocationMap from "@/features/frontend/proprietes/details/RealtyLocationMap";
 
 type Params = Promise<{ id: string }>;
 

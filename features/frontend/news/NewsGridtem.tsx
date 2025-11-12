@@ -2,7 +2,7 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { News } from "@prisma/client";
 import Link from "next/link";
 import NewsDate from "./detail/NewsDate";
-import CustumImage from "@/components/frontend/CustumImage";
+import CustumImage from "@/components/shared/CustumImage";
 
 const NewsGridtem = ({ newsItem }: { newsItem: News }) => {
   return (

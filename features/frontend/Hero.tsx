@@ -1,6 +1,5 @@
-import { Card } from "../ui/card";
-
-import { Typography } from "../ui/typography";
+import { Card } from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
 import Image from "next/image";
 import PropertyTypeFilter from "./proprietes/PropertyTypeFilter";
 

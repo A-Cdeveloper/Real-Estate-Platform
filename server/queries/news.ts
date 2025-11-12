@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
-import { getPrismaErrorMessage } from "@/lib/prisma-errors";
+import prisma from "@/server/prisma";
+import { getPrismaErrorMessage } from "@/server/prisma-errors";
 
 /**
  * Get latest news

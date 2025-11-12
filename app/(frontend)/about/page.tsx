@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { APP_NAME, SITE_URL } from "@/lib/constants";
-import CustumImage from "@/components/frontend/CustumImage";
+import CustumImage from "@/components/shared/CustumImage";
 import { Typography } from "@/components/ui/typography";
 import { Award, Users } from "lucide-react";
-import AboutWidget from "@/components/frontend/about/AboutWidget";
+import AboutWidget from "@/features/frontend/about/AboutWidget";
 
 export const metadata: Metadata = {
   title: `About Us | ${APP_NAME}`,

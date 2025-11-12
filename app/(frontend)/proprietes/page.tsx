@@ -2,8 +2,8 @@ import PropertiesGridSkeleton from "@/components/frontend/skeletons/PropertiesGr
 import { APP_NAME, SITE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 
-import ProprietesWrapper from "@/components/frontend/proprietes/ProprietesWrapper";
-import ProprietesList from "@/components/frontend/proprietes/ProprietesList";
+import ProprietesWrapper from "@/features/frontend/proprietes/ProprietesWrapper";
+import ProprietesList from "@/features/frontend/proprietes/ProprietesList";
 import { Typography } from "@/components/ui/typography";
 import { Suspense } from "react";
 

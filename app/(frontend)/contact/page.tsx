@@ -1,6 +1,6 @@
-import ContactData from "@/components/frontend/contact/ContactData";
-import ContactFormular from "@/components/frontend/contact/ContactFormular";
-import ContactMap from "@/components/frontend/contact/ContactMap";
+import ContactData from "@/features/frontend/contact/ContactData";
+import ContactFormular from "@/features/frontend/contact/ContactFormular";
+import ContactMap from "@/features/frontend/contact/ContactMap";
 import { Typography } from "@/components/ui/typography";
 import { APP_NAME, CONTACT_PHONE, SITE_URL } from "@/lib/constants";
 import type { Metadata } from "next";

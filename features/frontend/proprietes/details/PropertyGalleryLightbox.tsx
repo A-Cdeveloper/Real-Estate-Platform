@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Modal from "@/components/frontend/Modal";
+import Modal from "@/components/shared/Modal";
 import { PropertyImage } from "@prisma/client";
 import { cn } from "@/lib/utils";
 

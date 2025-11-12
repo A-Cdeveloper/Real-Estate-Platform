@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { APP_NAME, SITE_URL, NEWS_PER_PAGE } from "@/lib/constants";
-import EmptyState from "@/components/frontend/EmptyState";
-import NewsGridtem from "@/components/frontend/news/NewsGridtem";
+import EmptyState from "@/features/frontend/EmptyState";
+import NewsGridtem from "@/features/frontend/news/NewsGridtem";
 import { Typography } from "@/components/ui/typography";
-import { getAllNews } from "@/lib/queries/news";
-import PaginationControls from "@/components/frontend/PaginationControls";
+import { getAllNews } from "@/server/queries/news";
+import PaginationControls from "@/components/shared/PaginationControls";
 import { calculateSkip, getPaginationData } from "@/lib/utils/pagination";
 import { Suspense } from "react";
 import NewsGridSkeleton from "@/components/frontend/skeletons/NewsGridSkeleton";

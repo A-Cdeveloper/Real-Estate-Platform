@@ -6,12 +6,12 @@
 
 import { calculateSkip, getPaginationData } from "@/lib/utils/pagination";
 import { parsePropertySearchParams } from "@/lib/utils/parseSearchParams";
-import { getAllProperties } from "@/lib/queries/properties";
+import { getAllProperties } from "@/server/queries/properties";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
-import EmptyState from "@/components/frontend/EmptyState";
-import ProprietesMeta from "@/components/frontend/proprietes/ProprietesMeta";
-import RealtyListItem from "@/components/frontend/proprietes/RealtyListItem";
-import PaginationControls from "@/components/frontend/PaginationControls";
+import EmptyState from "@/features/frontend/EmptyState";
+import ProprietesMeta from "@/features/frontend/proprietes/ProprietesMeta";
+import RealtyListItem from "@/features/frontend/proprietes/RealtyListItem";
+import PaginationControls from "@/components/shared/PaginationControls";
 
 const ProprietesList = async ({
   params,

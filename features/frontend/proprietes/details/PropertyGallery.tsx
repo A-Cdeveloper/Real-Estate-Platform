@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PropertyWithGallery } from "@/types/properties";
-import CustumImage from "@/components/frontend/CustumImage";
+import CustumImage from "@/components/shared/CustumImage";
 import { ZoomIn } from "lucide-react";
 import PropertyGalleryLightbox from "./PropertyGalleryLightbox";
 
@@ -37,7 +37,10 @@ const PropertyGallery = ({ property }: { property: PropertyWithGallery }) => {
               className="h-64"
             />
             {/* Overlay sa zoom ikonom */}
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" aria-hidden="true">
+            <div
+              className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+              aria-hidden="true"
+            >
               <ZoomIn className="w-10 h-10 text-white" aria-hidden="true" />
             </div>
           </div>

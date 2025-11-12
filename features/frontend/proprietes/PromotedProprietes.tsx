@@ -1,7 +1,7 @@
-import CarouselCustum from "@/components/frontend/CarouselCustum";
-import { getPromotedProperties } from "@/lib/queries/properties";
+import CarouselCustum from "@/features/frontend/CarouselCustum";
+import { getPromotedProperties } from "@/server/queries/properties";
 import RealtyListItem from "./RealtyListItem";
-import EmptyState from "@/components/frontend/EmptyState";
+import EmptyState from "@/features/frontend/EmptyState";
 import { PROMOTED_PROPERTIES_COUNT } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
 

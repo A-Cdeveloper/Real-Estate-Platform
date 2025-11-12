@@ -1,7 +1,7 @@
 import { render } from "@react-email/render";
 import { transporter } from "./transporter";
 import ContactEmail from "./templates/ContactEmail";
-import { APP_NAME } from "../constants";
+import { APP_NAME } from "@/lib/constants";
 
 type SendContactEmailParams = {
   name: string;

@@ -1,11 +1,11 @@
-import prisma from "@/lib/prisma";
-import { getPrismaErrorMessage } from "@/lib/prisma-errors";
+import prisma from "@/server/prisma";
+import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import {
   LATEST_PROPERTIES_COUNT,
   PROMOTED_PROPERTIES_COUNT,
 } from "@/lib/constants";
 import { PropertyFilters, PropertySort } from "@/types/properties";
-import { parsePropertySort } from "../utils/sortingParcer";
+import { parsePropertySort } from "@/lib/utils/sortingParcer";
 
 /**
  * Get latest properties
