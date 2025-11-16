@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useEffectEvent } from "react";
 import { toast } from "sonner";
+import FormWrapper from "./FormWrapper";
 
 const LoginForm = () => {
   const [state, formAction, pending] = useActionState(loginAction, null);
@@ -28,8 +29,7 @@ const LoginForm = () => {
   }, [state]);
 
   return (
-    <div className="rounded-2xl border bg-secondary/30 p-8 shadow-sm w-full max-w-[350px]">
-      <h2 className="mb-6 text-2xl font-bold font-nunito">Login</h2>
+    <FormWrapper title="Login">
       <form className="grid gap-4" action={formAction}>
         <div>
           <CustomInput
@@ -86,7 +86,7 @@ const LoginForm = () => {
           )}
         </Button>
       </form>
-    </div>
+    </FormWrapper>
   );
 };
 

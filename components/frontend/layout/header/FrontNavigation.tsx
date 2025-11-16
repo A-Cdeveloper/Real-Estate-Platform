@@ -6,7 +6,7 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import DesktopNavigation from "./DesktopNavigation";
-import Logo from "./Logo";
+import Logo from "@/components/shared/Logo";
 import MobileNavigation from "./MobileNavigation";
 
 const FrontNavigation = () => {
