@@ -11,7 +11,7 @@ import type { NextRequest } from "next/server";
  * 4. If route is /login - checks if user is already logged in
  */
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // 1. Get request pathname (e.g., "/dashboard", "/login", "/contact")
   const pathname = request.nextUrl.pathname;
 
@@ -33,7 +33,13 @@ export function middleware(request: NextRequest) {
   // Route groups don't appear in URL, so we check the pathname
   const isBackendRoute = pathname.startsWith("/dashboard");
 
-  // 5. If backend route and no session → redirect to /login
+  // 5. Check if route is in (auth) group
+  const isAuthRoute =
+    pathname === "/login" ||
+    pathname === "/forgot-password" ||
+    pathname.startsWith("/reset-password");
+
+  // 6. If backend route and no session → redirect to /login
   if (isBackendRoute && !session) {
     const loginUrl = new URL("/login", request.url);
     // Add returnTo parameter to know where to redirect user after login
@@ -41,12 +47,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 6. If /login route and has session → redirect to /dashboard
-  if (pathname === "/login" && session) {
+  // 7. If auth route and has session → redirect to /dashboard
+  // (User is already logged in, no need to access auth pages)
+  if (isAuthRoute && session) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 7. If all checks pass → allow access
+  // 8. If all checks pass → allow access
   return NextResponse.next();
 }
 
@@ -58,6 +65,8 @@ export function middleware(request: NextRequest) {
  * Pattern explanation:
  * - `/dashboard/:path*` - all routes starting with /dashboard
  * - `/login` - exactly /login route
+ * - `/forgot-password` - exactly /forgot-password route
+ * - `/reset-password/:path*` - all routes starting with /reset-password
  *
  * This means middleware will NOT run for:
  * - / (home page)
@@ -66,5 +75,10 @@ export function middleware(request: NextRequest) {
  * - etc. (all (frontend) routes)
  */
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: [
+    "/dashboard/:path*",
+    "/login",
+    "/forgot-password",
+    "/reset-password/:path*",
+  ],
 };
