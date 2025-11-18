@@ -22,6 +22,10 @@ export type LoginUser = {
   role: Role;
 };
 
+export type CurrentUser = LoginUser & {
+  name: string | null;
+};
+
 // Login response types
 export type LoginSuccessResponse = SuccessResponse<{ user: LoginUser }>;
 export type LoginErrorResponse = ErrorResponse<{
