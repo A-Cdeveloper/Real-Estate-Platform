@@ -31,7 +31,15 @@ export function proxy(request: NextRequest) {
 
   // 4. Check if route is in (backend) group
   // Route groups don't appear in URL, so we check the pathname
-  const isBackendRoute = pathname.startsWith("/dashboard");
+  const protectedBackendRoutes = [
+    "/dashboard",
+    "/settings",
+    "/users",
+    "/proprietes-area",
+  ];
+  const isBackendRoute = protectedBackendRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
 
   // 5. Check if route is in (auth) group
   const isAuthRoute =
@@ -77,6 +85,9 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
+    "/settings/:path*",
+    "/users/:path*",
+    "/proprietes-area/:path*",
     "/login",
     "/forgot-password",
     "/reset-password/:path*",
