@@ -25,7 +25,7 @@ export default function Error({
           <AlertTriangle className="w-16 h-16 text-destructive" />
         </div>
         <Typography variant="h2" className="mb-2">
-          Došlo je do greške.
+          Something went wrong.
         </Typography>
 
         {error.message && (
@@ -38,10 +38,10 @@ export default function Error({
 
         <div className="flex gap-4 justify-center">
           <Button onClick={reset} className="font-nunito-sans">
-            Pokušaj ponovo
+            Try again
           </Button>
           <Button variant="outline" asChild className="font-nunito-sans">
-            <Link href="/">Nazad na početnu</Link>
+            <Link href="/">Back to homepage</Link>
           </Button>
         </div>
       </div>
