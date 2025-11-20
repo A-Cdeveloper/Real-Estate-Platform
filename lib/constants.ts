@@ -1,3 +1,6 @@
+// User Role Options (using Prisma Role enum)
+import { Role } from "@prisma/client";
+
 export const APP_NAME = "Real Estate";
 export const APP_DESCRIPTION =
   "Find your perfect property with Real Estate Pro. Browse listings, explore neighborhoods, and connect with expert agents.";
@@ -30,3 +33,14 @@ export const NAVIGATION_LINKS = [
   { href: "/proprietes", label: "Proprietes" },
   { href: "/contact", label: "Contact" },
 ] as const;
+
+export const USER_ROLE_OPTIONS = [
+  { value: Role.ADMIN, label: "Admin" },
+  { value: Role.AGENT, label: "Agent" },
+];
+
+// User Status Options
+export const USER_STATUS_OPTIONS = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+];
