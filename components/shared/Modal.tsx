@@ -34,6 +34,7 @@ type ModalProps = {
   children: React.ReactNode;
   className?: string;
   showCloseButton?: boolean;
+  disableClose?: boolean;
 };
 
 // Modal component is used to display a modal
@@ -44,6 +45,7 @@ const Modal = ({
   children,
   className,
   showCloseButton = true,
+  disableClose = false,
 }: ModalProps) => {
   // useEffectEvent is used to prevent the event from being triggered in the parent component
   const onCloseEvent = useEffectEvent(() => {
@@ -52,14 +54,14 @@ const Modal = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCloseEvent();
+      if (e.key === "Escape" && !disableClose) onCloseEvent();
     };
 
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }
-  }, [isOpen]);
+  }, [isOpen, disableClose]);
 
   if (!isOpen) return null;
 
@@ -69,7 +71,7 @@ const Modal = ({
       aria-modal="true"
       aria-label="Modal dialog"
       className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
-      onClick={onClose}
+      onClick={disableClose ? undefined : onClose}
     >
       {showCloseButton && <CloseButton onClose={onClose} />}
 
