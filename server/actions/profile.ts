@@ -2,13 +2,15 @@
 
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
-import { revalidatePath } from "next/cache";
+import { ProfileActionState, UpdateProfile } from "@/types/profile";
 import { CurrentUser } from "@/types/user";
-import { UpdateProfile, ProfileActionState } from "@/types/profile";
+import { revalidatePath } from "next/cache";
 import { hashPassword } from "../auth/password";
+import { deleteSession, getSession } from "../auth/session";
 import { updateProfileSchema } from "../schemas/profile";
 import { formatZodErrors } from "../utils/zod";
-import { getSession } from "../auth/session";
+
+//const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Server Action: Update user profile (no role change)
@@ -99,3 +101,32 @@ export async function updateProfile(
   }
 }
 
+/**
+ * Server Action: Delete user profile
+ */
+
+//
+
+export async function deleteProfile() {
+  const session = await getSession();
+  const userId = session?.userId;
+  if (!userId) {
+    return {
+      success: false,
+      error: "Unauthorized. Please log in.",
+    };
+  }
+
+  try {
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+    await deleteSession();
+    revalidatePath("/profile");
+    revalidatePath("/users");
+    return { success: true };
+  } catch (error) {
+    console.error("Database error:", error);
+    return { success: false, error: getPrismaErrorMessage(error) };
+  }
+}
