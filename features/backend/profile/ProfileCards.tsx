@@ -58,42 +58,47 @@ const ProfileCardItem = ({
  */
 const ProfileCards = ({ currentUser }: { currentUser: CurrentUser }) => {
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="w-full xl:w-2/3 flex flex-col lg:flex-row gap-4">
       {/* Account Information Card */}
-      <ProfileCard title="Account Information" icon={User2}>
-        <ProfileCardItem title="Full Name">
-          <p className="text-base font-semibold">
-            {currentUser.name || "Not set"}
-          </p>
-        </ProfileCardItem>
-        <ProfileCardItem title="Email Address">
-          <p className="text-base font-semibold">{currentUser.email}</p>
-        </ProfileCardItem>
-        <ProfileCardItem title="Role">
-          <Badge variant="outline" className="w-fit">
-            {currentUser.role.charAt(0) +
-              currentUser.role.slice(1).toLowerCase()}
-          </Badge>
-        </ProfileCardItem>
-      </ProfileCard>
+      <div className="w-full lg:w-1/2">
+        <ProfileCard title="Account Information" icon={User2}>
+          <ProfileCardItem title="Full Name">
+            <p className="text-base font-semibold">
+              {currentUser.name || "Not set"}
+            </p>
+          </ProfileCardItem>
+          <ProfileCardItem title="Email Address">
+            <p className="text-base font-semibold">{currentUser.email}</p>
+          </ProfileCardItem>
+          <ProfileCardItem title="Role">
+            <Badge variant="outline" className="w-fit">
+              {currentUser.role.charAt(0) +
+                currentUser.role.slice(1).toLowerCase()}
+            </Badge>
+          </ProfileCardItem>
+        </ProfileCard>
+      </div>
 
-      <ProfileCard title="Activity Information" icon={Calendar}>
-        <ProfileCardItem title="Created At">
-          <p className="text-base">{formatLongDate(currentUser.createdAt)}</p>
-        </ProfileCardItem>
-        <ProfileCardItem title="Last Login">
-          <p className="text-base">
-            {currentUser.lastLogin
-              ? formatLongDate(currentUser.lastLogin)
-              : "Never"}
-          </p>
-        </ProfileCardItem>
-        <ProfileCardItem title="Account Status">
-          <Badge variant="outline" className="w-fit">
-            {currentUser.isActive ? "Online" : "Offline"}
-          </Badge>
-        </ProfileCardItem>
-      </ProfileCard>
+      {/* Activity Information Card */}
+      <div className="w-full lg:w-1/2">
+        <ProfileCard title="Activity Information" icon={Calendar}>
+          <ProfileCardItem title="Created At">
+            <p className="text-base">{formatLongDate(currentUser.createdAt)}</p>
+          </ProfileCardItem>
+          <ProfileCardItem title="Last Login">
+            <p className="text-base">
+              {currentUser.lastLogin
+                ? formatLongDate(currentUser.lastLogin)
+                : "Never"}
+            </p>
+          </ProfileCardItem>
+          <ProfileCardItem title="Account Status">
+            <Badge variant="outline" className="w-fit">
+              {currentUser.isActive ? "Online" : "Offline"}
+            </Badge>
+          </ProfileCardItem>
+        </ProfileCard>
+      </div>
     </div>
   );
 };

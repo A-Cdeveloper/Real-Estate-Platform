@@ -23,7 +23,7 @@ const ProfileActionsButtons = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 justify-end">
+    <div className="flex flex-col sm:flex-row gap-3 justify-end w-full xl:w-2/3">
       <IconButton
         variant="outline"
         className="w-full sm:w-auto"
@@ -43,4 +43,3 @@ const ProfileActionsButtons = ({
 };
 
 export default ProfileActionsButtons;
-
