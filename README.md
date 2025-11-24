@@ -40,6 +40,18 @@ This project is a comprehensive real estate application that demonstrates modern
 - Full keyboard navigation support
 - ARIA attributes for accessibility
 
+**Settings Management (Admin)**
+
+- Application-wide settings configuration
+- Auto-save on blur for each field
+- Per-field error handling (errors don't clear each other)
+- Settings fields: app name, description, address, phone, email
+- Logo uploader (placeholder - to be implemented)
+- Map preview (placeholder - to be implemented)
+- Singleton pattern (single settings record)
+- Partial update support for efficient data saving
+- Real-time validation with Zod schemas
+
 **Performance**
 
 - Server Components for optimal performance
@@ -149,73 +161,166 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```
 ├── app/
-│   ├── (frontend)/              # Frontend application routes
-│   │   ├── page.tsx             # Homepage
-│   │   ├── proprietes/          # Property routes
-│   │   │   ├── page.tsx         # Properties listing
-│   │   │   └── [id]/            # Property detail page
-│   │   ├── news/                # News routes
-│   │   │   ├── page.tsx         # News listing
-│   │   │   └── [id]/            # News detail page
-│   │   ├── about/               # About page
-│   │   ├── contact/             # Contact page
-│   │   ├── terms/               # Terms of service
-│   │   └── privacy-policy/      # Privacy policy
+│   ├── (auth)/                   # Authentication routes
+│   │   ├── login/                # Login page
+│   │   ├── forgot-password/      # Password reset request
+│   │   ├── reset-password/       # Password reset form
+│   │   └── layout.tsx           # Auth layout
+│   ├── (backend)/                # Backend/admin routes
+│   │   ├── dashboard/            # Dashboard page
+│   │   ├── profile/               # User profile page
+│   │   ├── settings/             # Settings page
+│   │   ├── users/                # Users management
+│   │   ├── proprietes-area/      # Properties management
+│   │   ├── notifications/        # Notifications
+│   │   └── layout.tsx            # Backend layout
+│   ├── (frontend)/               # Frontend application routes
+│   │   ├── page.tsx              # Homepage
+│   │   ├── proprietes/           # Property routes
+│   │   │   ├── page.tsx          # Properties listing
+│   │   │   └── [id]/             # Property detail page
+│   │   ├── news/                 # News routes
+│   │   │   ├── page.tsx          # News listing
+│   │   │   └── [id]/             # News detail page
+│   │   ├── about/                # About page
+│   │   ├── contact/              # Contact page
+│   │   ├── terms/                # Terms of service
+│   │   ├── privacy-policy/       # Privacy policy
+│   │   └── layout.tsx            # Frontend layout
 │   ├── layout.tsx                # Root layout
 │   ├── loading.tsx               # Global loading UI
-│   └── not-found.tsx            # 404 page
+│   ├── error.tsx                  # Global error boundary
+│   └── not-found.tsx             # 404 page
 ├── features/
 │   ├── frontend/                 # Frontend feature components
-│   │   ├── proprietes/          # Property components
+│   │   ├── proprietes/           # Property components
 │   │   │   ├── hooks/            # Custom hooks (usePropertyFilters)
-│   │   │   ├── PropertyTypeFilter.tsx
+│   │   │   ├── details/          # Property detail components
+│   │   │   ├── LatestProprietes.tsx
+│   │   │   ├── PromotedProprietes.tsx
 │   │   │   ├── ProprietesWrapper.tsx
 │   │   │   └── ...               # Other property components
 │   │   ├── news/                 # News components
+│   │   │   ├── detail/           # News detail components
+│   │   │   ├── LatestNews.tsx
+│   │   │   └── NewsGridtem.tsx
 │   │   ├── contact/              # Contact components
-│   │   └── ...                   # Other frontend features
+│   │   │   ├── ContactData.tsx
+│   │   │   ├── ContactFormular.tsx
+│   │   │   └── ContactMap.tsx
+│   │   ├── about/                # About components
+│   │   ├── Hero.tsx              # Homepage hero section
+│   │   ├── CarouselCustum.tsx    # Custom carousel
+│   │   └── EmptyState.tsx        # Empty state component
 │   └── backend/                  # Backend feature components (admin panel)
+│       ├── profile/              # User profile management
+│       │   ├── edit/             # Edit profile form
+│       │   │   └── EditProfile.tsx
+│       │   ├── delete/           # Delete confirmation
+│       │   │   └── DeleteConfirm.tsx
+│       │   ├── ProfileCards.tsx
+│       │   ├── ProfileContent.tsx
+│       │   ├── ProfileActionsButtons.tsx
+│       │   └── ProfileView.tsx
+│       └── settings/             # Application settings
+│           ├── SettingsForm.tsx  # Settings form with auto-save
+│           └── SettingsView.tsx  # Settings page view
 ├── components/
+│   ├── auth/                     # Authentication components
+│   │   ├── LoginForm.tsx
+│   │   ├── ForgotPasswordForm.tsx
+│   │   ├── ResetPasswordForm.tsx
+│   │   ├── PasswordInput.tsx
+│   │   └── FormWrapper.tsx
+│   ├── backend/                  # Backend-specific components
+│   │   └── layout/               # Backend layout components
+│   │       ├── header/           # Header components
+│   │       ├── sidebar/          # Sidebar components
+│   │       ├── PageHeader.tsx
+│   │       └── MainContent.tsx
 │   ├── frontend/                 # Frontend-specific components
-│   │   ├── layout/               # Layout components (Header, Footer)
+│   │   ├── layout/               # Layout components
+│   │   │   ├── header/           # Header components
+│   │   │   └── footer/           # Footer components
 │   │   └── skeletons/            # Loading skeletons
 │   ├── shared/                   # Shared reusable components
-│   │   ├── EmptyState.tsx
 │   │   ├── Modal.tsx
 │   │   ├── Spinner.tsx
 │   │   ├── CustomInput.tsx
+│   │   ├── CustomSelect.tsx
+│   │   ├── IconButton.tsx
+│   │   ├── ErrorFormMessages.tsx
 │   │   ├── BackButton.tsx
 │   │   ├── PaginationControls.tsx
-│   │   └── CustumImage.tsx
+│   │   ├── CustumImage.tsx
+│   │   └── Logo.tsx
 │   └── ui/                       # shadcn/ui components
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── input.tsx
+│       ├── select.tsx
+│       ├── textarea.tsx
+│       └── ...                   # Other UI components
 ├── server/
 │   ├── actions/                  # Server actions
-│   │   ├── properties.ts
-│   │   └── sendMessage.ts
+│   │   ├── auth.ts               # Authentication actions
+│   │   ├── properties.ts         # Property actions
+│   │   ├── profile.ts            # Profile management actions
+│   │   ├── settings.ts           # Settings update action
+│   │   ├── users.ts              # User management actions
+│   │   └── sendMessage.ts       # Contact form action
 │   ├── queries/                  # Database query functions
 │   │   ├── properties.ts
-│   │   └── news.ts
+│   │   ├── news.ts
+│   │   ├── settings.ts          # Settings query function
+│   │   └── users.ts
+│   ├── auth/                     # Authentication utilities
+│   │   ├── session.ts            # Session management
+│   │   ├── password.ts           # Password hashing
+│   │   ├── resetToken.ts         # Password reset tokens
+│   │   └── getCurrentUserFromSession.ts
 │   ├── mail/                     # Email functionality
 │   │   ├── sendContactEmail.tsx
-│   │   ├── templates/
+│   │   ├── sendPasswordResetEmail.tsx
+│   │   ├── templates/           # Email templates
 │   │   └── transporter.ts
 │   ├── prisma/                   # Prisma configuration
 │   │   ├── schema.prisma         # Database schema
 │   │   ├── seed.ts               # Database seeder
 │   │   └── migrations/           # Database migrations
 │   ├── schemas/                  # Zod validation schemas
+│   │   ├── auth.ts               # Authentication schemas
 │   │   ├── contact.ts
-│   │   └── propertyFilters.ts
+│   │   ├── profile.ts            # Profile validation schemas
+│   │   ├── propertyFilters.ts
+│   │   ├── settings.ts           # Settings validation schemas
+│   │   └── user.ts               # User validation schemas
+│   ├── utils/                    # Server utility functions
+│   │   └── zod.ts                # Zod error formatting
 │   ├── prisma.ts                 # Prisma client instance
 │   └── prisma-errors.ts          # Prisma error handling
+├── hooks/                        # Custom React hooks
+│   └── useOutsideClick.ts
 ├── lib/
 │   ├── utils/                    # Utility functions
+│   │   ├── date.ts              # Date formatting
+│   │   ├── pagination.ts         # Pagination utilities
+│   │   ├── parseSearchParams.ts # URL search params parsing
+│   │   └── sortingParcer.ts     # Sorting utilities
 │   ├── constants.ts              # Application constants
-│   └── fonts.ts                  # Font configuration
+│   ├── fonts.ts                  # Font configuration
+│   └── utils.ts                  # General utilities
 ├── providers/                    # React context providers
 │   └── ThemeProvider.tsx
-├── types/                         # TypeScript type definitions
-└── public/                        # Static assets
+├── types/                        # TypeScript type definitions
+│   ├── action-state.ts           # Generic action state type
+│   ├── auth.ts                   # Authentication types
+│   ├── profile.ts                # Profile types
+│   ├── properties.ts             # Property types
+│   ├── settings.ts               # Settings types
+│   └── user.ts                   # User types
+└── public/                       # Static assets
+    └── fonts/                    # Custom fonts
 ```
 
 ## Database Schema
@@ -272,6 +377,19 @@ Enum values:
 - `image` - News article image URL
 - `createdAt` - Article creation timestamp
 - `updatedAt` - Article last update timestamp
+
+### Settings
+
+- `id` - Unique identifier
+- `appName` - Application name
+- `appDescription` - Application description
+- `address` - Contact address
+- `phone` - Contact phone number
+- `email` - Contact email address
+- `logo` - Logo URL or path (optional)
+- `createdAt` - Settings creation timestamp
+- `updatedAt` - Settings last update timestamp
+- **Note**: Singleton pattern - only one settings record exists
 
 ## Available Scripts
 
@@ -347,6 +465,21 @@ The application implements a comprehensive filtering system:
 - Custom hooks for complex state logic (`usePropertyFilters`)
 - Utility functions for parsing and transforming data (`parsePropertySearchParams`)
 - Zod schemas for runtime validation
+
+### Settings Management
+
+The application includes a comprehensive settings management system:
+
+- **Auto-save on Blur**: Each field saves automatically when user leaves the field (onBlur event)
+- **Partial Updates**: Only changed fields are sent to the server, reducing network traffic
+- **Per-field Error Handling**: Validation errors are tracked per field and don't interfere with each other
+- **Form Layout**: Two-column grid layout (left: logo placeholder, app name, description, phone, email; right: address, map placeholder)
+- **Singleton Pattern**: Database ensures only one settings record exists
+- **Type Safety**: Full TypeScript support with `UpdateSettings`, `PartialUpdateSettings`, and `CurrentSettings` types
+- **Validation**: Zod schemas validate both partial (single field) and full (all fields) updates
+- **Server Actions**: Uses Next.js server actions with `useTransition` for loading states
+- **Cache Invalidation**: `revalidatePath` ensures UI updates after successful saves
+- **Pending Features**: Logo uploader and map preview are placeholders for future implementation
 
 ## License
 
