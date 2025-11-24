@@ -1,4 +1,3 @@
-// @ts-expect-error - Settings type exists in Prisma Client, TypeScript cache issue
 import type { Settings } from "@prisma/client";
 import { ActionState } from "./action-state";
 
@@ -11,6 +10,7 @@ export type CurrentSettings = Settings;
 
 // Update Settings type (exclude auto-managed fields)
 export type UpdateSettings = Omit<Settings, "id" | "createdAt" | "updatedAt">;
+export type PartialUpdateSettings = Partial<UpdateSettings>;
 
 // Settings Action State for server actions
 export type SettingsActionState<TData = unknown> = ActionState<

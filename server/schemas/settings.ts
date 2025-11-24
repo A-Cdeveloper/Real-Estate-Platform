@@ -4,7 +4,7 @@ import { emailSchema } from "./auth";
 /**
  * Update Settings schema - for application-wide configuration
  */
-export const updateSettingsSchema = z.object({
+export const updateSettingsFormSchema = z.object({
   appName: z
     .string()
     .min(1, "App name is required")
@@ -25,4 +25,7 @@ export const updateSettingsSchema = z.object({
   logo: z.string().nullish(), // Optional logo URL or path (can be null or undefined)
 });
 
-export type UpdateSettingsFormData = z.infer<typeof updateSettingsSchema>;
+export type UpdateSettingsFormData = z.infer<typeof updateSettingsFormSchema>;
+
+// Partial schema for single-field updates (auto-save)
+export const updateSettingsSchema = updateSettingsFormSchema.partial();
