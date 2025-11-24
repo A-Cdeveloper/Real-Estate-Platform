@@ -6,7 +6,10 @@ import { emailSchema } from "./auth";
  */
 export const updateProfileSchema = z.object({
   email: emailSchema,
-  name: z.string().nullable(),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")

@@ -15,6 +15,7 @@ import { Loader2, X } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { updateProfile } from "@/server/actions/profile";
 import { toast } from "sonner";
+import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
 
 /**
  * EditProfile component
@@ -68,27 +69,35 @@ const EditProfile = ({
       </CardHeader>
       <CardContent>
         <form className="space-y-5" action={formAction}>
-          <CustomInput
-            id="profile-full-name"
-            label="Full Name"
-            placeholder="Enter your full name"
-            defaultValue={currentUser.name ?? ""}
-            labelClassName="text-sm font-medium text-muted-foreground"
-            disabled={pending}
-            name="name"
-          />
-
-          <CustomInput
-            id="profile-email"
-            type="email"
-            label="Email Address"
-            placeholder="name@example.com"
-            defaultValue={currentUser.email}
-            labelClassName="text-sm font-medium text-muted-foreground"
-            name="email"
-            disabled={pending}
-          />
-
+          <div>
+            <CustomInput
+              id="profile-full-name"
+              label="Full Name"
+              placeholder="Enter your full name"
+              defaultValue={currentUser.name ?? ""}
+              labelClassName="text-sm font-medium text-muted-foreground"
+              disabled={pending}
+              name="name"
+            />
+            <ErrorFormMessages state={state} fieldName="name" fieldId="name" />
+          </div>
+          <div>
+            <CustomInput
+              id="profile-email"
+              type="email"
+              label="Email Address"
+              placeholder="name@example.com"
+              defaultValue={currentUser.email}
+              labelClassName="text-sm font-medium text-muted-foreground"
+              name="email"
+              disabled={pending}
+            />
+            <ErrorFormMessages
+              state={state}
+              fieldName="email"
+              fieldId="email"
+            />
+          </div>
           <div className="space-y-2">
             <label
               htmlFor="profile-password"
@@ -101,6 +110,11 @@ const EditProfile = ({
               name="password"
               placeholder="Enter new password"
               disabled={pending}
+            />
+            <ErrorFormMessages
+              state={state}
+              fieldName="password"
+              fieldId="password"
             />
           </div>
 
