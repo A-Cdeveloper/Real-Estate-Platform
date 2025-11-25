@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 enum PropertyType {
@@ -19,17 +18,18 @@ enum Role {
 }
 
 model User {
-  id                        String     @id @default(cuid()) // unikatan string ID
-  email                     String     @unique
-  password                  String
-  name                      String?
-  role                      Role
-  isActive                  Boolean    @default(true)
-  lastLogin                 DateTime?
-  passwordResetToken        String?
-  passwordResetTokenExpiry  DateTime?
-  createdAt                 DateTime   @default(now())
-  properties                Property[]
+  id                       String     @id @default(cuid()) // unikatan string ID
+  email                    String     @unique
+  password                 String
+  name                     String?
+  role                     Role
+  isActive                 Boolean    @default(true)
+  lastLogin                DateTime?
+  passwordResetToken       String?
+  passwordResetTokenExpiry DateTime?
+  createdAt                DateTime   @default(now())
+  properties               Property[]
+
   @@map("user")
 }
 
@@ -85,7 +85,7 @@ model Settings {
   address        String
   phone          String
   email          String
-  logo           String?  // URL or path to logo image
+  logo           String? // URL or path to logo image
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

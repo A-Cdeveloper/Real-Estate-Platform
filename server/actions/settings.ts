@@ -10,7 +10,10 @@ import {
 import { formatZodErrors } from "../utils/zod";
 import { revalidatePath } from "next/cache";
 import { SettingsActionState } from "@/types/settings";
-
+import { pinata } from "../pinata/config";
+/**
+ * App settings update
+ */
 export async function updateSettings(
   data: PartialUpdateSettings
 ): Promise<SettingsActionState<CurrentSettings>> {
@@ -71,3 +74,69 @@ export async function updateSettings(
     };
   }
 }
+
+/**
+ * Upload logo
+ */
+export const uploadLogo = async (file: File): Promise<string | null> => {
+  try {
+    // First, upload the file to IPFS
+    const uploadResult = await pinata.upload.public.file(file);
+    const cid = uploadResult.cid;
+
+    // Get file ID from upload result (if available) or use CID
+    const fileId = uploadResult.id || cid;
+
+    // Add file to group
+    await pinata.groups.public.addFiles({
+      groupId: "a4469711-f453-4073-a7d9-aa429a5d2601",
+      files: [fileId],
+    });
+
+    // Convert CID to URL using gateway
+    const url = await pinata.gateways.public.convert(cid);
+
+    // Update settings with logo URL
+    const existingSettings = await prisma.settings.findFirst();
+    if (existingSettings) {
+      await prisma.settings.update({
+        where: { id: existingSettings.id },
+        data: { logo: url },
+      });
+      revalidatePath("/settings");
+    }
+
+    return url;
+  } catch (error) {
+    console.error("Error uploading logo:", error);
+    return null;
+  }
+};
+
+/**
+ * Server Action: Remove logo
+ */
+
+export const removeLogo = async () => {
+  const existingSettings = await prisma.settings.findFirst();
+  if (!existingSettings) {
+    return {
+      success: false,
+      error: "Settings not found. Please create settings first.",
+    };
+  }
+  try {
+    await prisma.settings.update({
+      where: { id: existingSettings.id },
+      data: { logo: "" },
+    });
+    revalidatePath("/settings");
+    return { success: true };
+  } catch (error) {
+    console.error("Database error:", error);
+    return {
+      success: false,
+      error: getPrismaErrorMessage(error),
+    };
+  }
+};

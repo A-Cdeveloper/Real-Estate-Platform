@@ -18,12 +18,16 @@ const nextConfig: NextConfig = {
         : false,
   },
 
-  // Image optimization - dozvoli Unsplash kao eksterni domen
+  // Image optimization - dozvoli eksterne domene
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "pink-magnificent-cephalopod-824.mypinata.cloud",
       },
     ],
   },
