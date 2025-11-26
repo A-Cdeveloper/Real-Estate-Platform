@@ -1,0 +1,2 @@
+-- This migration was already applied manually
+-- Placeholder to maintain migration history
