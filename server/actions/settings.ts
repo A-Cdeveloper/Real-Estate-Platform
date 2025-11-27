@@ -12,6 +12,7 @@ import { revalidatePath } from "next/cache";
 import { SettingsActionState } from "@/types/settings";
 import { pinata } from "../pinata/config";
 import { LOGO_ALLOWED_TYPES, LOGO_MAX_FILE_SIZE } from "@/lib/constants";
+import { reverseGeocode } from "@/lib/geocoding";
 /**
  * App settings update
  */
@@ -40,12 +41,16 @@ export async function updateSettings(
     }
 
     // Merge partial update with existing settings
+    // Note: logo_dark, logo_light, and address are updated via separate actions
     const updateData = {
       appName: data.appName ?? existingSettings.appName,
       appDescription: data.appDescription ?? existingSettings.appDescription,
-      address: data.address ?? existingSettings.address,
       phone: data.phone ?? existingSettings.phone,
       email: data.email ?? existingSettings.email,
+      lat: data.lat ?? existingSettings.lat,
+      lng: data.lng ?? existingSettings.lng,
+      // Keep these for validation, but they're updated via separate actions
+      address: data.address ?? existingSettings.address,
       logo_dark: data.logo_dark ?? existingSettings.logo_dark,
       logo_light: data.logo_light ?? existingSettings.logo_light,
     };
@@ -157,5 +162,39 @@ export const removeLogo = async (type: "dark" | "light") => {
       success: false,
       error: getPrismaErrorMessage(error),
     };
+  }
+};
+
+/**
+ * Server Action: Update location
+ */
+export const updateLocation = async (
+  lat: number,
+  lng: number
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const existingSettings = await prisma.settings.findFirst();
+    if (!existingSettings) {
+      return { success: false, error: "Settings not found" };
+    }
+
+    // Get address from reverse geocoding
+    const address = await reverseGeocode(lat, lng);
+
+    // Update both coordinates and address in a single database call
+    await prisma.settings.update({
+      where: { id: existingSettings.id },
+      data: {
+        lat,
+        lng,
+        ...(address && { address }), // Only update address if geocoding was successful
+      },
+    });
+
+    revalidatePath("/settings");
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating location:", error);
+    return { success: false, error: "Failed to update location" };
   }
 };

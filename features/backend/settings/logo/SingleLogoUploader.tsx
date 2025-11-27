@@ -1,14 +1,12 @@
-"use client";
-
+import React, { useState, useRef, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { removeLogo, uploadLogo } from "@/server/actions/settings";
 import { cn } from "@/lib/utils";
-import { LOGO_ALLOWED_TYPES, LOGO_MAX_FILE_SIZE } from "@/lib/constants";
 import { Loader2, TrashIcon, UploadIcon } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
+import { uploadLogo, removeLogo } from "@/server/actions/settings";
+import { LOGO_ALLOWED_TYPES, LOGO_MAX_FILE_SIZE } from "@/lib/constants";
 
 type LogoType = "dark" | "light";
 
@@ -185,19 +183,4 @@ const SingleLogoUploader = ({ type, logo }: SingleLogoUploaderProps) => {
   );
 };
 
-const LogoUploader = ({
-  logo_dark,
-  logo_light,
-}: {
-  logo_dark: string | null;
-  logo_light: string | null;
-}) => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <SingleLogoUploader type="dark" logo={logo_dark} />
-      <SingleLogoUploader type="light" logo={logo_light} />
-    </div>
-  );
-};
-
-export default LogoUploader;
+export default SingleLogoUploader;

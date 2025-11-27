@@ -5,8 +5,12 @@ import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
 import { Textarea } from "@/components/ui/textarea";
 import { updateSettings } from "@/server/actions/settings";
 import { UpdateSettings, PartialUpdateSettings } from "@/types/settings";
-import { useState, useTransition } from "react";
-import LogoUploader from "./LogoUploader";
+import { Suspense, useState, useTransition } from "react";
+import dynamic from "next/dynamic";
+import { Spinner } from "@/components/shared/Spinner";
+
+const LocationMap = dynamic(() => import("./map/LocationMap"), { ssr: false });
+const LogosUploader = dynamic(() => import("./logo/LogosUploader"));
 
 const SettingsForm = ({ settings }: { settings: UpdateSettings }) => {
   const [pending, startTransition] = useTransition();
@@ -44,10 +48,13 @@ const SettingsForm = ({ settings }: { settings: UpdateSettings }) => {
   };
 
   return (
-    <div className="w-full xl:w-2/3">
+    <div className="w-full xl:w-3/4">
       <form className="grid grid-cols-2 gap-4">
         <div className="space-y-4">
-          <LogoUploader logo_dark={settings.logo_dark ?? null} logo_light={settings.logo_light ?? null} />
+          <LogosUploader
+            logo_dark={settings.logo_dark ?? null}
+            logo_light={settings.logo_light ?? null}
+          />
           <div>
             <CustomInput
               id="app-name"
@@ -119,28 +126,13 @@ const SettingsForm = ({ settings }: { settings: UpdateSettings }) => {
             />
           </div>
         </div>
-        <div className="space-y-4">
-          <CustomInput
-            id="address"
-            placeholder="Enter address"
-            defaultValue={settings.address}
-            name="address"
-            onBlur={(e) => handleBlur("address", e.target.value)}
-            disabled={pending}
+        <Suspense fallback={<Spinner className="size-4" />}>
+          <LocationMap
+            lat={settings.lat ?? null}
+            lng={settings.lng ?? null}
+            address={settings.address ?? null}
           />
-          <ErrorFormMessages
-            state={{
-              success: false,
-              errors: { address: errors.address },
-            }}
-            fieldName="address"
-            fieldId="address"
-          />
-
-          <div className="h-64 rounded-md border border-dashed text-sm text-muted-foreground">
-            Map preview will be implemented later.
-          </div>
-        </div>
+        </Suspense>
       </form>
     </div>
   );

@@ -15,8 +15,8 @@ export const updateSettingsFormSchema = z.object({
     .max(500, "App description must be less than 500 characters"),
   address: z
     .string()
-    .min(1, "Address is required")
-    .max(200, "Address must be less than 200 characters"),
+    .max(200, "Address must be less than 200 characters")
+    .nullish(), // Optional - updated via map click (reverse geocoding)
   lat: z.number().optional(),
   lng: z.number().optional(),
   phone: z
