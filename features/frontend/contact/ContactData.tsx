@@ -1,12 +1,13 @@
 import { Typography } from "@/components/ui/typography";
-import {
-  APP_NAME,
-  CONTACT_ADDRESS,
-  CONTACT_EMAIL,
-  CONTACT_PHONE,
-} from "@/lib/constants";
+import { getSettings } from "@/server/queries/settings";
 
-const ContactData = () => {
+const ContactData = async () => {
+  const settings = await getSettings();
+  const appName = settings?.appName || "Real Estate";
+  const address = settings?.address || "Address not available";
+  const phone = settings?.phone || "";
+  const email = settings?.email || "";
+
   return (
     <aside
       className="rounded-2xl border bg-secondary/30 p-8 shadow-sm"
@@ -17,31 +18,35 @@ const ContactData = () => {
       </Typography>
       <address className="mt-4 space-y-1 text-sm text-muted-foreground not-italic">
         <Typography variant="h3" className="font-semibold text-foreground">
-          {APP_NAME}
+          {appName}
         </Typography>
-        <Typography variant="p">{CONTACT_ADDRESS}</Typography>
+        <Typography variant="p">{address}</Typography>
       </address>
       <div className="mt-6 space-y-1 text-sm text-muted-foreground">
-        <p>
-          <span className="font-semibold text-foreground">Phone:</span>{" "}
-          <a
-            href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
-            className="text-primary hover:underline"
-            aria-label={`Call us at ${CONTACT_PHONE}`}
-          >
-            {CONTACT_PHONE}
-          </a>
-        </p>
-        <p>
-          <span className="font-semibold text-foreground">Email:</span>{" "}
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="text-primary hover:underline"
-            aria-label={`Email us at ${CONTACT_EMAIL}`}
-          >
-            {CONTACT_EMAIL}
-          </a>
-        </p>
+        {phone && (
+          <p>
+            <span className="font-semibold text-foreground">Phone:</span>{" "}
+            <a
+              href={`tel:${phone.replace(/\s/g, "")}`}
+              className="text-primary hover:underline"
+              aria-label={`Call us at ${phone}`}
+            >
+              {phone}
+            </a>
+          </p>
+        )}
+        {email && (
+          <p>
+            <span className="font-semibold text-foreground">Email:</span>{" "}
+            <a
+              href={`mailto:${email}`}
+              className="text-primary hover:underline"
+              aria-label={`Email us at ${email}`}
+            >
+              {email}
+            </a>
+          </p>
+        )}
         <p>
           <span className="font-semibold text-foreground">Working hours:</span>{" "}
           <time>Monday – Friday, 9:00 – 18:00</time>

@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import { APP_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 import CustumImage from "@/components/shared/CustumImage";
 import { Typography } from "@/components/ui/typography";
 import { Award, Users } from "lucide-react";
 import AboutWidget from "@/features/frontend/about/AboutWidget";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: `About Us | ${APP_NAME}`,
-  description:
-    "Learn about Real Estate Pro's mission, values, and team. With over 10 years of experience and 500+ satisfied clients, we're here to help you find your perfect property.",
-  openGraph: {
-    title: `About Us | ${APP_NAME}`,
-    description:
-      "Learn about Real Estate Pro's mission, values, and team. With over 10 years of experience and 500+ satisfied clients, we're here to help you find your perfect property.",
-    url: `${SITE_URL}/about`,
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await generatePageMetadata(
+    "About Us",
+    "Learn about our mission, values, and team. With over 10 years of experience and 500+ satisfied clients, we're here to help you find your perfect property.",
+    `${SITE_URL}/about`
+  );
+}
 
 const AboutPage = () => {
   return (

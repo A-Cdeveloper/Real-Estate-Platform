@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { APP_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 import BackButton from "@/components/shared/BackButton";
 import NewsDate from "@/features/frontend/news/detail/NewsDate";
 import CustumImage from "@/components/shared/CustumImage";
@@ -9,6 +9,7 @@ import { Typography } from "@/components/ui/typography";
 import { getNewsById, getRecentNewsIds } from "@/server/queries/news";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { getSettings } from "@/server/queries/settings";
 
 type Params = Promise<{ id: string }>;
 
@@ -37,9 +38,13 @@ export async function generateMetadata({
   const { id } = await params;
 
   try {
-    const newsItem = await getNewsById(id);
+    const [newsItem, settings] = await Promise.all([
+      getNewsById(id),
+      getSettings(),
+    ]);
 
-    const title = `${newsItem.title} | ${APP_NAME}`;
+    const appName = settings?.appName || "Real Estate";
+    const title = `${newsItem.title} | ${appName}`;
     const description =
       newsItem.description.length > 160
         ? `${newsItem.description.substring(0, 157)}...`
@@ -56,9 +61,11 @@ export async function generateMetadata({
       },
     };
   } catch {
+    const settings = await getSettings();
+    const appName = settings?.appName || "Real Estate";
     return {
-      title: `News | ${APP_NAME}`,
-      description: `Read news article on ${APP_NAME}`,
+      title: `News | ${appName}`,
+      description: `Read news article on ${appName}`,
     };
   }
 }

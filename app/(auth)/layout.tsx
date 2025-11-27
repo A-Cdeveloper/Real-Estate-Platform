@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 
-import { APP_DESCRIPTION, APP_NAME } from "@/lib/constants";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { generateBaseMetadata } from "@/lib/metadata";
 
 // Lazy load Toaster - only loads when needed (when toast is triggered)
 const Toaster = dynamic(() =>
   import("@/components/ui/sonner").then((mod) => mod.Toaster)
 );
 
-export const metadata: Metadata = {
-  title: `${APP_NAME} - Login`,
-  description: APP_DESCRIPTION,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const baseMetadata = await generateBaseMetadata();
+  return {
+    title: `${baseMetadata.title} - Login`,
+    description: baseMetadata.description,
+  };
+}
 
 export default function AuthRootLayout({
   children,

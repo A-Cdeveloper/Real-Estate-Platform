@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
-import { APP_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: `Privacy Policy | ${APP_NAME}`,
-  description:
-    "Read Real Estate Pro's Privacy Policy to understand how we collect, use, and protect your personal information when you use our platform.",
-  openGraph: {
-    title: `Privacy Policy | ${APP_NAME}`,
-    description:
-      "Read Real Estate Pro's Privacy Policy to understand how we collect, use, and protect your personal information when you use our platform.",
-    url: `${SITE_URL}/privacy-policy`,
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    ...(await generatePageMetadata(
+      "Privacy Policy",
+      "Read our Privacy Policy to understand how we collect, use, and protect your personal information when you use our platform.",
+      `${SITE_URL}/privacy-policy`
+    )),
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 const PrivacyPolicyPage = () => {
   return (

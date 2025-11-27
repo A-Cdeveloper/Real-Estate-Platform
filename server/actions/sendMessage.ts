@@ -3,7 +3,7 @@
 import { contactFormSchema } from "@/server/schemas/contact";
 import { sendContactEmail } from "@/server/mail/sendContactEmail";
 import { formatZodErrors } from "@/server/utils/zod";
-import { CONTACT_EMAIL } from "@/lib/constants";
+import { getSettings } from "@/server/queries/settings";
 
 export type InputData = {
   name: string;
@@ -49,12 +49,32 @@ export async function sendMessageAction(
   const { name, email, phone, message } = result.data;
 
   try {
+    const settings = await getSettings();
+    const contactEmail = settings?.email;
+
+    if (!contactEmail) {
+      return {
+        success: false,
+        errors: {
+          _general: [
+            "Contact email not configured. Please contact administrator.",
+          ],
+        },
+        data: {
+          name,
+          email,
+          phone,
+          message,
+        },
+      };
+    }
+
     await sendContactEmail({
       name,
       email,
       phone,
       message,
-      to: CONTACT_EMAIL,
+      to: contactEmail,
     });
 
     return { success: true, message: "Message sent successfully!" };

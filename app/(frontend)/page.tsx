@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { APP_NAME, APP_DESCRIPTION, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 //import Hero from "@/features/frontend/layout/Hero";
 import LatestNews from "@/features/frontend/news/LatestNews";
 import LatestProprietes from "@/features/frontend/proprietes/LatestProprietes";
@@ -10,17 +10,15 @@ import LatestNewsSkeleton from "@/components/frontend/skeletons/LatestNewsSkelet
 import { Suspense } from "react";
 import Hero from "@/features/frontend/Hero";
 import RealtyStatsSkeleton from "@/components/frontend/skeletons/RealtyStatsSkeleton";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: `${APP_NAME} | Find Your Perfect Property`,
-  description: APP_DESCRIPTION,
-  openGraph: {
-    title: `${APP_NAME} | Find Your Perfect Property`,
-    description: APP_DESCRIPTION,
-    url: SITE_URL,
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await generatePageMetadata(
+    "Find Your Perfect Property",
+    undefined,
+    SITE_URL
+  );
+}
 
 export default async function HomePage() {
   return (

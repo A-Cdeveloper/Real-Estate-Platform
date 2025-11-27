@@ -14,6 +14,8 @@ type ContactEmailProps = {
   email: string;
   phone?: string;
   message: string;
+  appName: string;
+  logoLight: string;
 };
 
 export const ContactEmail = ({
@@ -21,6 +23,8 @@ export const ContactEmail = ({
   email,
   phone,
   message,
+  appName,
+  logoLight,
 }: ContactEmailProps) => {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -30,7 +34,7 @@ export const ContactEmail = ({
 
       <Body style={main}>
         <Container style={logoContainer}>
-          <Img src={`${siteUrl}/real-estate-logo.png`} alt="Logo" width="140" />
+          <Img src={`${siteUrl}${logoLight}`} alt="Logo" width="140" />
         </Container>
         <Container style={container}>
           <Section style={section}>
@@ -55,7 +59,7 @@ export const ContactEmail = ({
       </Body>
       <Container style={footer}>
         <Text style={footerText}>
-          {COPYRIGHT.text} {COPYRIGHT.year} {COPYRIGHT.company}.
+          {COPYRIGHT.text} {COPYRIGHT.year} {appName}.
         </Text>
       </Container>
     </Html>

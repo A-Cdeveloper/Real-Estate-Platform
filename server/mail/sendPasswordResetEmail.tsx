@@ -1,7 +1,7 @@
 import { render } from "@react-email/render";
 import { transporter } from "./transporter";
 import PasswordResetEmail from "./templates/PasswordResetEmail";
-import { APP_NAME } from "@/lib/constants";
+import { getSettings } from "@/server/queries/settings";
 
 type SendPasswordResetEmailParams = {
   email: string;
@@ -12,14 +12,21 @@ export async function sendPasswordResetEmail({
   email,
   resetToken,
 }: SendPasswordResetEmailParams) {
+  const settings = await getSettings();
+  const appName = settings?.appName || "Real Estate";
+
   const emailHtml = await render(
-    <PasswordResetEmail resetToken={resetToken} />
+    <PasswordResetEmail
+      resetToken={resetToken}
+      appName={appName}
+      logoLight={settings?.logo_light || "/real-estate-logo.png"}
+    />
   );
 
   const mailOptions = {
-    from: `${APP_NAME} <${process.env.EMAIL_USER}>`,
+    from: `${appName} <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: `Reset Your Password - ${APP_NAME}`,
+    subject: `Reset Your Password - ${appName}`,
     html: emailHtml,
   };
 
@@ -31,4 +38,3 @@ export async function sendPasswordResetEmail({
     throw error;
   }
 }
-

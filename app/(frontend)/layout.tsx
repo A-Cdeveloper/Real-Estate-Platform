@@ -3,17 +3,16 @@ import dynamic from "next/dynamic";
 
 import FrontFooter from "@/components/frontend/layout/footer/FrontFooter";
 import FrontHeader from "@/components/frontend/layout/header/FrontHeader";
-import { APP_NAME, APP_DESCRIPTION } from "@/lib/constants";
+import { generateBaseMetadata } from "@/lib/metadata";
 
 // Lazy load Toaster - only loads when needed (when toast is triggered)
 const Toaster = dynamic(() =>
   import("@/components/ui/sonner").then((mod) => mod.Toaster)
 );
 
-export const metadata: Metadata = {
-  title: APP_NAME,
-  description: APP_DESCRIPTION,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await generateBaseMetadata();
+}
 
 export default function RootLayout({
   children,

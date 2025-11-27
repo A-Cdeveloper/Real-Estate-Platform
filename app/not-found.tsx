@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { APP_NAME } from "@/lib/constants";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: `404 - Page Not Found | ${APP_NAME}`,
-  description: "The page you are looking for does not exist.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await generatePageMetadata(
+    "404 - Page Not Found",
+    "The page you are looking for does not exist."
+  );
+}
 
 export default function NotFound() {
   return (

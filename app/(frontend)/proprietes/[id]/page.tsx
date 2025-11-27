@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { APP_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 import PropertyGallery from "@/features/frontend/proprietes/details/PropertyGallery";
 import RealtyTopImage from "@/features/frontend/proprietes/details/RealtyTopImage";
 import RealtyAgent from "@/features/frontend/proprietes/details/RealtyAgent";
@@ -11,6 +11,7 @@ import {
 } from "@/server/queries/properties";
 import { notFound } from "next/navigation";
 import RealtyLocationMap from "@/features/frontend/proprietes/details/RealtyLocationMap";
+import { getSettings } from "@/server/queries/settings";
 
 type Params = Promise<{ id: string }>;
 
@@ -39,9 +40,13 @@ export async function generateMetadata({
   const { id } = await params;
 
   try {
-    const property = await getPropertyById(id);
+    const [property, settings] = await Promise.all([
+      getPropertyById(id),
+      getSettings(),
+    ]);
 
-    const title = `${property.name} | ${APP_NAME}`;
+    const appName = settings?.appName || "Real Estate";
+    const title = `${property.name} | ${appName}`;
     const description =
       property.description ||
       `${property.name}${
@@ -61,9 +66,11 @@ export async function generateMetadata({
       },
     };
   } catch {
+    const settings = await getSettings();
+    const appName = settings?.appName || "Real Estate";
     return {
-      title: `Property | ${APP_NAME}`,
-      description: `View property details on ${APP_NAME}`,
+      title: `Property | ${appName}`,
+      description: `View property details on ${appName}`,
     };
   }
 }

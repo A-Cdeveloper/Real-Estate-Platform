@@ -1,9 +1,13 @@
 import Link from "next/link";
-import { APP_NAME, COPYRIGHT } from "@/lib/constants";
+import { COPYRIGHT } from "@/lib/constants";
 import SocialLinks from "./SocialLinks";
 import MetaMenu from "./MetaMenu";
+import { getSettings } from "@/server/queries/settings";
 
-const FrontFooter = () => {
+const FrontFooter = async () => {
+  const settings = await getSettings();
+  const appName = settings?.appName || "Real Estate";
+
   return (
     <footer
       className="bg-foreground text-background mt-auto"
@@ -16,10 +20,10 @@ const FrontFooter = () => {
             <Link
               href="/"
               className="flex items-center gap-2 mb-4"
-              aria-label={`${APP_NAME} homepage`}
+              aria-label={`${appName} homepage`}
             >
               <span className="text-2xl font-nunito font-bold text-background">
-                {APP_NAME}
+                {appName}
               </span>
             </Link>
             <p className="text-background/80 font-nunito-sans mb-4 max-w-md">
@@ -52,7 +56,7 @@ const FrontFooter = () => {
         {/* Copyright */}
         <div className="pt-8 border-t border-background/20">
           <p className="text-background/60 font-nunito-sans text-sm">
-            {COPYRIGHT.text} {COPYRIGHT.year} {COPYRIGHT.company}
+            {COPYRIGHT.text} {COPYRIGHT.year} {appName}
           </p>
         </div>
       </div>

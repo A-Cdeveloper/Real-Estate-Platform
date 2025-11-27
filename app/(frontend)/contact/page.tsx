@@ -2,19 +2,19 @@ import ContactData from "@/features/frontend/contact/ContactData";
 import ContactFormular from "@/features/frontend/contact/ContactFormular";
 import ContactMap from "@/features/frontend/contact/ContactMap";
 import { Typography } from "@/components/ui/typography";
-import { APP_NAME, CONTACT_PHONE, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/metadata";
+import { getSettings } from "@/server/queries/settings";
 
-export const metadata: Metadata = {
-  title: `Contact Us | ${APP_NAME}`,
-  description: `Get in touch with ${APP_NAME}. Visit our office, call us at ${CONTACT_PHONE}, or send us a message. We're here to help with all your real estate needs.`,
-  openGraph: {
-    title: `Contact Us | ${APP_NAME}`,
-    description: `Get in touch with ${APP_NAME}. Visit our office, call us at ${CONTACT_PHONE}, or send us a message. We're here to help with all your real estate needs.`,
-    url: `${SITE_URL}/contact`,
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const description = settings
+    ? `Get in touch with ${settings.appName}. Visit our office, call us at ${settings.phone}, or send us a message. We're here to help with all your real estate needs.`
+    : "Get in touch with us. Visit our office, call us, or send us a message. We're here to help with all your real estate needs.";
+
+  return await generatePageMetadata("Contact Us", description, `${SITE_URL}/contact`);
+}
 
 const ContactPage = () => {
   return (

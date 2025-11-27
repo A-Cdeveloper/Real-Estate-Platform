@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
-import { APP_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: `Terms & Conditions | ${APP_NAME}`,
-  description:
-    "Review Real Estate Pro's Terms & Conditions. Understand your rights and responsibilities when using our platform, including property listings, account usage, and intellectual property.",
-  openGraph: {
-    title: `Terms & Conditions | ${APP_NAME}`,
-    description:
-      "Review Real Estate Pro's Terms & Conditions. Understand your rights and responsibilities when using our platform, including property listings, account usage, and intellectual property.",
-    url: `${SITE_URL}/terms`,
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    ...(await generatePageMetadata(
+      "Terms & Conditions",
+      "Review our Terms & Conditions. Understand your rights and responsibilities when using our platform, including property listings, account usage, and intellectual property.",
+      `${SITE_URL}/terms`
+    )),
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 const TermsPage = () => {
   return (

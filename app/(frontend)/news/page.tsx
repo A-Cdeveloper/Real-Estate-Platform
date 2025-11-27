@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { News } from "@prisma/client";
-import { APP_NAME, SITE_URL, NEWS_PER_PAGE } from "@/lib/constants";
+import { SITE_URL, NEWS_PER_PAGE } from "@/lib/constants";
 import EmptyState from "@/features/frontend/EmptyState";
 import NewsGridtem from "@/features/frontend/news/NewsGridtem";
 import { Typography } from "@/components/ui/typography";
@@ -9,19 +9,15 @@ import PaginationControls from "@/components/shared/PaginationControls";
 import { calculateSkip, getPaginationData } from "@/lib/utils/pagination";
 import { Suspense } from "react";
 import NewsGridSkeleton from "@/components/frontend/skeletons/NewsGridSkeleton";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: `News | ${APP_NAME}`,
-  description:
-    "Stay updated with the latest real estate news, market trends, and property insights from Real Estate Pro.",
-  openGraph: {
-    title: `News | ${APP_NAME}`,
-    description:
-      "Stay updated with the latest real estate news, market trends, and property insights from Real Estate Pro.",
-    url: `${SITE_URL}/news`,
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await generatePageMetadata(
+    "News",
+    "Stay updated with the latest real estate news, market trends, and property insights.",
+    `${SITE_URL}/news`
+  );
+}
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 

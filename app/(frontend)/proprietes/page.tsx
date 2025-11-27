@@ -1,24 +1,20 @@
 import PropertiesGridSkeleton from "@/components/frontend/skeletons/PropertiesGridSkeleton";
-import { APP_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 
 import ProprietesWrapper from "@/features/frontend/proprietes/ProprietesWrapper";
 import ProprietesList from "@/features/frontend/proprietes/ProprietesList";
 import { Typography } from "@/components/ui/typography";
 import { Suspense } from "react";
+import { generatePageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: `Properties | ${APP_NAME}`,
-  description:
-    "Browse our extensive collection of properties for sale and rent. Find your perfect home, apartment, or investment property with Real Estate Pro.",
-  openGraph: {
-    title: `Properties | ${APP_NAME}`,
-    description:
-      "Browse our extensive collection of properties for sale and rent. Find your perfect home, apartment, or investment property with Real Estate Pro.",
-    url: `${SITE_URL}/proprietes`,
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await generatePageMetadata(
+    "Properties",
+    "Browse our extensive collection of properties for sale and rent. Find your perfect home, apartment, or investment property.",
+    `${SITE_URL}/proprietes`
+  );
+}
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 

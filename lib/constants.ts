@@ -1,16 +1,6 @@
 // User Role Options (using Prisma Role enum)
 import { Role } from "@prisma/client";
 
-export const APP_NAME = "Real Estate";
-export const APP_DESCRIPTION =
-  "Find your perfect property with Real Estate Pro. Browse listings, explore neighborhoods, and connect with expert agents.";
-
-// Contact Information
-export const CONTACT_ADDRESS =
-  "Bulevar Mihajla Pupina 45, 11000 Beograd, Serbia";
-export const CONTACT_PHONE = "+381 63 999999999";
-export const CONTACT_EMAIL = "aleksandar@e-seo.info";
-
 // SEO & Metadata
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://realestatepro.com";
@@ -18,7 +8,6 @@ export const SITE_URL =
 export const COPYRIGHT = {
   text: "All Rights Reserved",
   year: new Date().getFullYear(),
-  company: APP_NAME,
 };
 
 export const ITEMS_PER_PAGE = 12;

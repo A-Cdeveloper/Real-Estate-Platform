@@ -1,4 +1,4 @@
-import { COPYRIGHT, APP_NAME } from "@/lib/constants";
+import { COPYRIGHT } from "@/lib/constants";
 import {
   Body,
   Button,
@@ -12,9 +12,15 @@ import {
 
 type PasswordResetEmailProps = {
   resetToken: string;
+  appName: string;
+  logoLight: string;
 };
 
-export const PasswordResetEmail = ({ resetToken }: PasswordResetEmailProps) => {
+export const PasswordResetEmail = ({
+  resetToken,
+  appName,
+  logoLight,
+}: PasswordResetEmailProps) => {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const resetUrl = `${siteUrl}/reset-password?token=${resetToken}`;
 
@@ -23,13 +29,13 @@ export const PasswordResetEmail = ({ resetToken }: PasswordResetEmailProps) => {
       <Head />
       <Body style={main}>
         <Container style={logoContainer}>
-          <Img src={`${siteUrl}/real-estate-logo.png`} alt="Logo" width="140" />
+          <Img src={`${siteUrl}${logoLight}`} alt="Logo" width="140" />
         </Container>
         <Container style={container}>
           <Section style={section}>
             <Text style={heading}>Reset Your Password</Text>
             <Text style={text}>
-              You requested to reset your password for your {APP_NAME} account.
+              You requested to reset your password for your {appName} account.
               Click the button below to reset your password:
             </Text>
             <Button style={button} href={resetUrl}>
@@ -47,7 +53,7 @@ export const PasswordResetEmail = ({ resetToken }: PasswordResetEmailProps) => {
         </Container>
         <Container style={footer}>
           <Text style={footerText}>
-            {COPYRIGHT.text} {COPYRIGHT.year} {COPYRIGHT.company}.
+            {COPYRIGHT.text} {COPYRIGHT.year} {appName}.
           </Text>
         </Container>
       </Body>

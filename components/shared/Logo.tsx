@@ -1,23 +1,36 @@
+"use client";
+
 import Link from "next/link";
-import { APP_NAME } from "@/lib/constants";
 import Image from "next/image";
+
+type LogoProps = {
+  width?: number;
+  height?: number;
+  appName: string;
+  logoLight: string;
+  logoDark: string;
+};
 
 const Logo = ({
   width = 100,
   height = 100,
-}: {
-  width?: number;
-  height?: number;
-}) => {
+  appName,
+  logoLight,
+  logoDark,
+}: LogoProps) => {
+  // Fallback to default logos if empty string or null/undefined
+  const lightLogo = logoLight || "/real-estate-logo.png";
+  const darkLogo = logoDark || "/real-estate-logo_light.png";
+
   return (
     <Link
       href="/"
       className="flex items-center gap-2"
-      aria-label={`${APP_NAME} homepage`}
+      aria-label={`${appName} homepage`}
     >
       {/* Light theme logo */}
       <Image
-        src="/real-estate-logo.png"
+        src={lightLogo}
         alt=""
         width={width}
         height={height}
@@ -26,14 +39,14 @@ const Logo = ({
       />
       {/* Dark theme logo */}
       <Image
-        src="/real-estate-logo_light.png"
+        src={darkLogo}
         alt=""
         width={width}
         height={height}
         className="hidden dark:block min-w-[100px]"
         aria-hidden="true"
       />
-      <span className="sr-only">{APP_NAME}</span>
+      <span className="sr-only">{appName}</span>
     </Link>
   );
 };

@@ -6,10 +6,13 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import DesktopNavigation from "./DesktopNavigation";
-import Logo from "@/components/shared/Logo";
 import MobileNavigation from "./MobileNavigation";
 
-const FrontNavigation = () => {
+type FrontNavigationProps = {
+  logo: React.ReactNode;
+};
+
+const FrontNavigation = ({ logo }: FrontNavigationProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { refEl } = useOutsideClick(() => {
@@ -25,7 +28,7 @@ const FrontNavigation = () => {
       className="container mx-auto px-4 lg:px-8"
     >
       <div className="flex h-16 items-center justify-between">
-        <Logo />
+        {logo}
 
         <div className="flex items-center gap-4 md:gap-10">
           <DesktopNavigation />

@@ -1,7 +1,7 @@
 import { render } from "@react-email/render";
 import { transporter } from "./transporter";
 import ContactEmail from "./templates/ContactEmail";
-import { APP_NAME } from "@/lib/constants";
+import { getSettings } from "@/server/queries/settings";
 
 type SendContactEmailParams = {
   name: string;
@@ -18,12 +18,22 @@ export async function sendContactEmail({
   message,
   to,
 }: SendContactEmailParams) {
+  const settings = await getSettings();
+  const appName = settings?.appName || "Real Estate";
+
   const emailHtml = await render(
-    <ContactEmail name={name} email={email} phone={phone} message={message} />
+    <ContactEmail
+      name={name}
+      email={email}
+      phone={phone}
+      message={message}
+      appName={appName}
+      logoLight={settings?.logo_light || "/real-estate-logo.png"}
+    />
   );
 
   const mailOptions = {
-    from: `${APP_NAME} <${process.env.EMAIL_USER}>`,
+    from: `${appName} <${process.env.EMAIL_USER}>`,
     to,
     subject: `New Contact Form Message`,
     html: emailHtml,
