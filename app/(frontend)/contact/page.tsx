@@ -13,10 +13,15 @@ export async function generateMetadata(): Promise<Metadata> {
     ? `Get in touch with ${settings.appName}. Visit our office, call us at ${settings.phone}, or send us a message. We're here to help with all your real estate needs.`
     : "Get in touch with us. Visit our office, call us, or send us a message. We're here to help with all your real estate needs.";
 
-  return await generatePageMetadata("Contact Us", description, `${SITE_URL}/contact`);
+  return await generatePageMetadata(
+    "Contact Us",
+    description,
+    `${SITE_URL}/contact`
+  );
 }
 
-const ContactPage = () => {
+const ContactPage = async () => {
+  const settings = await getSettings();
   return (
     <section className="container mx-auto px-4 lg:px-8 py-16">
       <div className="mx-auto max-w-6xl space-y-12">
@@ -33,7 +38,10 @@ const ContactPage = () => {
 
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:items-start">
           <div className="space-y-8">
-            <ContactMap />
+            <ContactMap
+              lat={settings?.lat ?? null}
+              lng={settings?.lng ?? null}
+            />
             <ContactFormular />
           </div>
 
