@@ -1,0 +1,105 @@
+import { Column } from "@/components/shared/GenericTable";
+import { Badge } from "@/components/ui/badge";
+import { formatLongDate } from "@/lib/utils/date";
+import { UserWithProperties } from "@/types/user";
+import { Building2, Mail, User as UserIcon } from "lucide-react";
+import Link from "next/link";
+import ActionsCell from "./ActionsCell";
+
+const getRoleBadgeVariant = (role: string) => {
+  return role === "ADMIN" ? "default" : "secondary";
+};
+/**
+ * Columns for the users table
+ * @returns {Column<UserWithProperties>[]} Columns for the users table
+ */
+
+export const columns: Column<UserWithProperties>[] = [
+  {
+    key: "online",
+    label: "",
+    render: (user) => {
+      return (
+        <Badge
+          className="w-fit"
+          variant={user.isOnline ? "success" : "destructive"}
+        >
+          {user.isOnline ? "Online" : "Offline"}
+        </Badge>
+      );
+    },
+  },
+  {
+    key: "name",
+    label: "Name",
+    render: (user) => (
+      <div className="flex items-center gap-2">
+        <UserIcon className="size-4 text-muted-foreground" />
+        <span className="text-white">{user.name || "N/A"}</span>
+      </div>
+    ),
+  },
+  {
+    key: "email",
+    label: "Email",
+    render: (user) => (
+      <div className="flex items-center gap-2">
+        <Mail className="size-4 text-muted-foreground" />
+        <Link href={`mailto:${user.email}`} className="text-sm">
+          {user.email}
+        </Link>
+      </div>
+    ),
+  },
+  {
+    key: "role",
+    label: "Role",
+    render: (user) => {
+      return (
+        <Badge className="w-fit" variant={getRoleBadgeVariant(user.role)}>
+          {user.role.charAt(0) + user.role.slice(1).toLowerCase()}
+        </Badge>
+      );
+    },
+  },
+  {
+    key: "status",
+    label: "Status",
+    render: (user) => (
+      <span className="text-sm font-medium">
+        {user.isActive ? "Active" : "Inactive"}
+      </span>
+    ),
+  },
+
+  {
+    key: "createdAt",
+    label: "Created",
+    render: (user) => formatLongDate(user.createdAt),
+  },
+  {
+    key: "propertyCount",
+    label: "Properties",
+    render: (user) => (
+      <div className="flex items-center gap-2">
+        <Building2 className="size-4 text-muted-foreground" />
+        <span className="text-sm font-medium">{user.propertyCount}</span>
+      </div>
+    ),
+  },
+  {
+    key: "edit/delete",
+    label: "",
+    render: (user) => (
+      <ActionsCell
+        user={user}
+        onEdit={() => {
+          console.log("Edit user", user);
+        }}
+        onDelete={() => {
+          console.log("Delete user", user);
+        }}
+      />
+    ),
+  },
+];

@@ -32,8 +32,6 @@ const EditProfile = ({
 }) => {
   const [state, formAction, pending] = useActionState(updateProfile, null);
 
-  console.log(state);
-
   // Show toast notification and close form on success
   useEffect(() => {
     if (state?.success) {
