@@ -1,4 +1,4 @@
-export default function DashboardPage() {
+export default async function DashboardPage() {
   return (
     <div className="text-sm text-muted-foreground">
       <p className="text-xl font-semibold text-foreground">
