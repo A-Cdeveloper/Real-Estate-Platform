@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 type PasswordInputProps = {
   id: string;
   name: string;
+  label?: string;
+  labelClassName?: string;
   placeholder?: string;
   defaultValue?: string;
   value?: string;
@@ -21,6 +23,8 @@ type PasswordInputProps = {
 const PasswordInput = ({
   id,
   name,
+  label,
+  labelClassName,
   placeholder,
   defaultValue,
   value,
@@ -35,6 +39,8 @@ const PasswordInput = ({
     <div className="relative">
       <CustomInput
         id={id}
+        label={label}
+        labelClassName={labelClassName}
         type={showPassword ? "text" : "password"}
         name={name}
         placeholder={placeholder}
@@ -49,7 +55,7 @@ const PasswordInput = ({
         type="button"
         variant="ghost"
         size="icon"
-        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+        className="absolute right-1 bottom-1 h-7 w-7"
         onClick={() => setShowPassword(!showPassword)}
         aria-label={showPassword ? "Hide password" : "Show password"}
         disabled={disabled}
