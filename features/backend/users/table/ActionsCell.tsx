@@ -1,3 +1,4 @@
+"use client";
 import Modal from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

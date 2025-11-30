@@ -1,16 +1,16 @@
-"use client";
-
 import GenericTable from "@/components/shared/GenericTable";
-import { UserWithProperties } from "@/types/user";
+import { CurrentUser, UserWithProperties } from "@/types/user";
 import AddNewUser from "./add-edit/AddNewUser";
-import { columns } from "./table/columns";
+import { getColumns } from "./table/columns";
 
 const AllUsers = ({
   users,
   total,
+  currentUser,
 }: {
   users: UserWithProperties[];
   total: number;
+  currentUser: CurrentUser | null;
 }) => {
   return (
     <div className="space-y-4 w-full xl:w-3/4">
@@ -21,7 +21,7 @@ const AllUsers = ({
 
       <GenericTable
         data={users}
-        columns={columns}
+        columns={getColumns(currentUser)}
         className="text-sm text-muted-foreground w-full"
       />
     </div>

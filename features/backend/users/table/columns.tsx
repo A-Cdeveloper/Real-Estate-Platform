@@ -1,20 +1,24 @@
 import { Column } from "@/components/shared/GenericTable";
 import { Badge } from "@/components/ui/badge";
 import { formatLongDate } from "@/lib/utils/date";
+import { CurrentUser } from "@/types/user";
 import { UserWithProperties } from "@/types/user";
-import { Building2, Mail, User as UserIcon } from "lucide-react";
+import { Building2, Mail, User2Icon, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import ActionsCell from "./ActionsCell";
 
 const getRoleBadgeVariant = (role: string) => {
   return role === "ADMIN" ? "default" : "secondary";
 };
+
 /**
  * Columns for the users table
+ * @param currentUser - The currently logged-in user
  * @returns {Column<UserWithProperties>[]} Columns for the users table
  */
-
-export const columns: Column<UserWithProperties>[] = [
+export const getColumns = (
+  currentUser: CurrentUser | null
+): Column<UserWithProperties>[] => [
   {
     key: "online",
     label: "",
@@ -90,6 +94,16 @@ export const columns: Column<UserWithProperties>[] = [
   {
     key: "edit/delete",
     label: "",
-    render: (user) => <ActionsCell key={user.id} user={user} />,
+    render: (user) => {
+      return currentUser?.id === user.id ? (
+        <div className="flex items-center justify-center">
+          <Link href={`/profile`} className="text-sm hover:text-primary">
+            <User2Icon className="size-5 text-muted-foreground" />
+          </Link>
+        </div>
+      ) : (
+        <ActionsCell key={user.id} user={user} />
+      );
+    },
   },
 ];
