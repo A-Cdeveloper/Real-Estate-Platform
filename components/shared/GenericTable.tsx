@@ -1,4 +1,3 @@
-import { getCurrentUserFromSession } from "@/server/auth/getCurrentUserFromSession";
 import React from "react";
 
 export type Column<T> = {
@@ -11,14 +10,15 @@ export type GenericTableProps<T> = {
   data: T[];
   columns: Column<T>[];
   className?: string;
+  currentUserId?: string | null;
 };
 
-const GenericTable = async <T,>({
+const GenericTable = <T,>({
   data,
   columns,
   className,
+  currentUserId,
 }: GenericTableProps<T>) => {
-  const currentUser = await getCurrentUserFromSession();
   return (
     <div className="overflow-x-auto rounded-lg">
       <table className={className}>
@@ -38,7 +38,7 @@ const GenericTable = async <T,>({
           {data.map((item) => (
             <tr
               key={(item as unknown as { id: string }).id}
-              className={`border-b hover:bg-muted/50 transition-colors ${currentUser?.id === (item as unknown as { id: string }).id ? "bg-muted-foreground/20 hover:!bg-muted-foreground/20" : ""}`}
+              className={`border-b hover:bg-muted/50 transition-colors ${currentUserId === (item as unknown as { id: string }).id ? "bg-muted-foreground/20 hover:!bg-muted-foreground/20" : ""}`}
             >
               {columns.map((col) => (
                 <td key={col.key} className="py-3 px-4">

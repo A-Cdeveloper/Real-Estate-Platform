@@ -1,7 +1,6 @@
 import { Column } from "@/components/shared/GenericTable";
 import { Badge } from "@/components/ui/badge";
 import { formatLongDate } from "@/lib/utils/date";
-import { CurrentUser } from "@/types/user";
 import { UserWithProperties } from "@/types/user";
 import { Building2, Mail, User2Icon, User as UserIcon } from "lucide-react";
 import Link from "next/link";
@@ -13,11 +12,11 @@ const getRoleBadgeVariant = (role: string) => {
 
 /**
  * Columns for the users table
- * @param currentUser - The currently logged-in user
+ * @param currentUserId - The currently logged-in user id
  * @returns {Column<UserWithProperties>[]} Columns for the users table
  */
 export const getColumns = (
-  currentUser: CurrentUser | null
+  currentUserId?: string | null
 ): Column<UserWithProperties>[] => [
   {
     key: "online",
@@ -95,7 +94,7 @@ export const getColumns = (
     key: "edit/delete",
     label: "",
     render: (user) => {
-      return currentUser?.id === user.id ? (
+      return currentUserId === user.id ? (
         <div className="flex items-center justify-center">
           <Link href={`/profile`} className="text-sm hover:text-primary">
             <User2Icon className="size-5 text-muted-foreground" />

@@ -13,7 +13,11 @@ const UsersPage = async () => {
   return (
     <div>
       <PageHeader title="Users" icon={Users} />
-      <AllUsers users={users} total={total} currentUser={currentUser} />
+      <AllUsers
+        users={users}
+        total={total}
+        currentUserId={currentUser?.id as string}
+      />
     </div>
   );
 };
