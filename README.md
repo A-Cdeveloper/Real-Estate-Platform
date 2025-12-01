@@ -57,6 +57,22 @@ This project is a comprehensive real estate application that demonstrates modern
 - Real-time validation with Zod schemas
 - Server-side file validation for logo uploads
 
+**User Management (Admin)**
+
+- Complete user management system with create, edit, and delete functionality
+- Server-side pagination for efficient data loading
+- Server-side sorting by role, isActive, propertyCount, and createdAt
+- Generic table component (`GenericTable`) for reusable data display
+- Sortable columns with visual indicators (up/down arrows)
+- Current user highlighting in the users table
+- User role management (ADMIN, AGENT)
+- User activation/deactivation toggle
+- Property count display per user
+- Optimized with React.memo to prevent unnecessary re-renders
+- Type-safe operations with TypeScript generics
+- Server actions for user CRUD operations with Zod validation
+- Session-based current user detection
+
 **Performance**
 
 - Server Components for optimal performance
@@ -230,6 +246,15 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │       │   ├── ProfileContent.tsx
 │       │   ├── ProfileActionsButtons.tsx
 │       │   └── ProfileView.tsx
+│       ├── users/                # User management
+│       │   ├── add-edit/         # Add/Edit user form
+│       │   │   ├── AddNewUser.tsx
+│       │   │   └── UserForm.tsx  # Generic form for create/edit
+│       │   ├── table/            # Users table components
+│       │   │   ├── columns.tsx   # Table column definitions
+│       │   │   ├── ActionsCell.tsx # Edit/Delete actions
+│       │   │   └── sortableColumns.ts # Sortable columns config
+│       │   └── AllUsers.tsx       # Main users list component
 │       └── settings/             # Application settings
 │           ├── SettingsForm.tsx  # Settings form with auto-save
 │           ├── SettingsView.tsx  # Settings page view
@@ -264,6 +289,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── ErrorFormMessages.tsx
 │   │   ├── BackButton.tsx
 │   │   ├── PaginationControls.tsx
+│   │   ├── GenericTable.tsx      # Generic reusable table component
 │   │   ├── CustumImage.tsx
 │   │   ├── Logo.tsx
 │   │   ├── LogoWithSettings.tsx  # Server component wrapper for Logo
@@ -504,6 +530,10 @@ The application implements a comprehensive filtering system:
 - Request-level memoization with React `cache()` for settings queries
 - Dynamic metadata generation for improved SEO
 - Shared map component for backend and frontend (code reuse)
+- React.memo for preventing unnecessary re-renders (AllUsers component)
+- Server-side pagination and sorting for efficient data loading
+- Type-safe generic components with TypeScript constraints
+- Optimized event handlers with useCallback hooks
 
 ### Code Organization
 
@@ -516,6 +546,25 @@ The application implements a comprehensive filtering system:
 - Zod schemas for runtime validation
 - Shared components for cross-cutting concerns (MapDisplay, LogoWithSettings)
 - Helper functions for metadata generation and geocoding
+
+### User Management
+
+The application includes a complete user management system for administrators:
+
+- **Server-Side Operations**: All user operations (create, update, delete) use Next.js server actions
+- **Generic Form Component**: `UserForm` component handles both create and edit modes with conditional rendering
+- **Server-Side Pagination**: Efficient data loading with configurable page size (default: 10 users per page)
+- **Server-Side Sorting**: Sortable by role, isActive, propertyCount, and createdAt with URL-based state management
+- **Generic Table Component**: Reusable `GenericTable` component with TypeScript generics (`T extends { id: string }`)
+- **Sortable Columns**: Configurable sortable columns with visual indicators (ChevronUp/ChevronDown icons)
+- **Current User Highlighting**: Visual distinction for the currently logged-in user in the table
+- **Property Count Aggregation**: Uses Prisma `_count` for efficient property counting per user
+- **Performance Optimization**: `React.memo` on `AllUsers` component prevents re-renders when modals open
+- **Type Safety**: Full TypeScript support with proper type constraints and validation
+- **Zod Validation**: Server-side validation for all user operations with detailed error messages
+- **Session Management**: Current user detection via session cookies
+- **Role-Based Access**: Admin-only access with `adminGuard` middleware
+- **Helper Functions**: `parseUserFormData` and `toCurrentUser` for code reusability and DRY principles
 
 ### Settings Management
 
