@@ -33,12 +33,14 @@ const AllUsers = React.memo(
           currentUserId={currentUserId}
           className="text-sm text-muted-foreground w-full"
         />
-        <PaginationControls
-          currentPage={page}
-          totalPages={totalPages}
-          baseUrl="/users"
-          queryParams={{ sort: sort || "role_asc" }}
-        />
+        {totalPages > 1 && (
+          <PaginationControls
+            currentPage={page}
+            totalPages={totalPages}
+            baseUrl="/users"
+            queryParams={{ sort: sort || "role_asc" }}
+          />
+        )}
       </div>
     );
   }

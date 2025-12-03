@@ -48,7 +48,6 @@ const CustumImage = ({
         priority={priority}
         unoptimized={unoptimized}
         sizes={sizes}
-        quality={85}
       />
     </div>
   );
