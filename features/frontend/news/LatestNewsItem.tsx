@@ -3,13 +3,14 @@ import { News } from "@prisma/client";
 import Link from "next/link";
 import NewsDate from "./detail/NewsDate";
 import CustumImage from "@/components/shared/CustumImage";
+import { DEFAULT_NEWS_IMAGE } from "@/lib/constants";
 
 const LatestNewsItem = ({ newsItem }: { newsItem: News }) => {
   return (
     <Card className="py-4 rounded-none border-0 border-b border-border bg-transparent shadow-none hover:bg-muted transition-colors">
       <Link href={`/news/${newsItem.id}`} className="flex gap-4 px-2">
         <CustumImage
-          src={newsItem.image || "/default-news.jpg"}
+          src={newsItem.image || DEFAULT_NEWS_IMAGE}
           alt={newsItem.title}
           className="w-25 h-25 flex-shrink-0 border border-border"
         />

@@ -3,13 +3,14 @@ import { News } from "@prisma/client";
 import Link from "next/link";
 import NewsDate from "./detail/NewsDate";
 import CustumImage from "@/components/shared/CustumImage";
+import { DEFAULT_NEWS_IMAGE } from "@/lib/constants";
 
 const NewsGridtem = ({ newsItem }: { newsItem: News }) => {
   return (
     <Card className="group overflow-hidden hover:shadow-md transition-shadow p-0 hover:bg-muted">
       <Link href={`/news/${newsItem.id}`}>
         <CustumImage
-          src={newsItem.image || "/default-news.jpg"}
+          src={newsItem.image || DEFAULT_NEWS_IMAGE}
           alt={newsItem.title}
           className="h-56 w-full rounded-none"
         />
