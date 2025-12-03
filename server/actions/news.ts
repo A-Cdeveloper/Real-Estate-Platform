@@ -221,3 +221,26 @@ export const uploadNewsImage = async (
 
   return url;
 };
+
+/**
+ * Remove a news image
+ * @param newsId - The ID of the news item
+ * @returns The result of the removal
+ */
+export const removeNewsImage = async (newsId: string) => {
+  await ensureAdminAccess();
+  try {
+    await prisma.news.update({
+      where: { id: newsId },
+      data: { image: null },
+    });
+    revalidatePath("/news");
+    return { success: true };
+  } catch (error) {
+    console.error("Database error:", error);
+    return {
+      success: false,
+      error: getPrismaErrorMessage(error),
+    };
+  }
+};
