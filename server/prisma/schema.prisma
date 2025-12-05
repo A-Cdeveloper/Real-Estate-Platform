@@ -14,6 +14,12 @@ enum PropertyType {
   Commercial
 }
 
+enum PropertyStatus {
+  APPROVED
+  IN_REVIEW
+  REJECTED
+}
+
 enum Role {
   ADMIN
   AGENT
@@ -47,6 +53,7 @@ model Property {
   lng         Float? // longitude koordinata
   description String?         @db.Text // opis nekretnine
   image       String? // URL glavne slike nekretnine
+  status      PropertyStatus  @default(IN_REVIEW) // status odobrenja nekretnine
   promoted    Boolean         @default(false) // izdvojena nekretnina
   createdAt   DateTime        @default(now())
   ownerId     String
