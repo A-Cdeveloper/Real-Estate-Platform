@@ -5,7 +5,6 @@
  */
 
 import React from "react";
-import { PropertySort, PROPERTY_SORT_OPTIONS } from "@/types/properties";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Select,
@@ -15,12 +14,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const PROPERTY_SORT_OPTIONS = [
+  "createdAt_desc",
+  "createdAt_asc",
+  "price_asc",
+  "price_desc",
+  "area_asc",
+  "area_desc",
+] as const;
+
 /**
  * Get the label for a sort option
  * @param sort - The sort option
  * @returns The label for the sort option
  */
-const getSortLabel = (sort: PropertySort): string => {
+const getSortLabel = (sort: string): string => {
   const [field, order] = sort.split("_");
 
   if (field === "createdAt") {
@@ -39,10 +47,10 @@ const getSortLabel = (sort: PropertySort): string => {
 const PropertySortSelect = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentSort = (searchParams.get("sort") as PropertySort) || undefined;
+  const currentSort = searchParams.get("sort") || undefined;
 
   const handleSortChange = (value: string) => {
-    const sortValue = value as PropertySort | undefined;
+    const sortValue = value || undefined;
 
     // Preserve existing query params
     const params = new URLSearchParams(searchParams.toString());

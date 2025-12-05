@@ -24,8 +24,8 @@ export const getColumns = (): Column<PropertyWithOwner>[] => [
     },
   },
   {
-    key: "title",
-    label: "Title",
+    key: "name",
+    label: "Name",
     render: (property) => {
       return (
         <div className="flex items-center gap-2">

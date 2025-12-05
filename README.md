@@ -379,7 +379,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── date.ts              # Date formatting
 │   │   ├── pagination.ts         # Pagination utilities
 │   │   ├── parseSearchParams.ts # URL search params parsing
-│   │   ├── sortingParcer.ts     # Sorting utilities
 │   │   ├── social.ts            # Social media platform utilities
 │   │   └── file.ts              # File validation utilities
 │   ├── constants.ts              # Application constants

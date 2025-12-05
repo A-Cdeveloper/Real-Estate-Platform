@@ -4,9 +4,9 @@ import {
   LATEST_PROPERTIES_COUNT,
   PROMOTED_PROPERTIES_COUNT,
 } from "@/lib/constants";
-import { PropertyFilters, PropertySort } from "@/types/properties";
-import { parsePropertySort } from "@/lib/utils/sortingParcer";
+import { PropertyFilters } from "@/types/properties";
 import { PropertyStatus } from "@prisma/client";
+import { parseSort } from "@/lib/utils/parseSort";
 
 /**
  * Get latest properties
@@ -113,7 +113,7 @@ export async function getAllProperties({
   page?: number;
   limit?: number;
   filters?: PropertyFilters;
-  sort?: PropertySort;
+  sort?: string;
   includeRelations?: boolean;
   status?: PropertyStatus;
 }): Promise<{
@@ -147,8 +147,7 @@ export async function getAllProperties({
         status ?? (includeRelations ? undefined : PropertyStatus.APPROVED),
     };
 
-    const { field, order } = parsePropertySort(sort);
-    const orderBy = { [field]: order } as { [key: string]: "asc" | "desc" };
+    const orderBy = parseSort(sort);
 
     // Build query - use conditional logic for include relations
     const [properties, total] = await Promise.all([

@@ -2,6 +2,7 @@ import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { News } from "@prisma/client";
 import { NEWS_PER_PAGE } from "@/lib/constants";
+import { parseSort } from "@/lib/utils/parseSort";
 
 /**
  * Get latest news
@@ -43,12 +44,7 @@ export async function getAllNews({
   totalPages: number;
 }> {
   try {
-    const [field, order] = sort.split("_");
-    let orderBy: { [key: string]: "asc" | "desc" } = { createdAt: "desc" };
-
-    if (field) {
-      orderBy = { [field]: order as "asc" | "desc" };
-    }
+    const orderBy = parseSort(sort);
 
     const [news, total] = await Promise.all([
       prisma.news.findMany({

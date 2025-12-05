@@ -40,32 +40,3 @@ export type PropertyFilters = {
   minPrice?: string;
   maxPrice?: string;
 };
-
-/**
- * Property sort options array
- * Single source of truth for sort values
- */
-export const PROPERTY_SORT_OPTIONS = [
-  "createdAt_desc",
-  "createdAt_asc",
-  "price_asc",
-  "price_desc",
-  "area_asc",
-  "area_desc",
-] as const;
-
-/**
- * Type for property sorting
- * Generated from PROPERTY_SORT_OPTIONS array
- * Format: field_order (e.g., "price_asc", "area_desc")
- */
-export type PropertySort = (typeof PROPERTY_SORT_OPTIONS)[number];
-
-/**
- * Result type for parsed sort string
- * Used by parsePropertySort function
- */
-export type SortResult = {
-  field: "price" | "area" | "createdAt";
-  order: "asc" | "desc";
-};

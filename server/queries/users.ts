@@ -2,6 +2,7 @@ import prisma from "@/server/prisma";
 import { CurrentUser, UserWithProperties } from "@/types/user";
 import { getPrismaErrorMessage } from "../prisma-errors";
 import { ensureAdminAccess } from "../auth/ensureAdminAccess";
+import { parseSort } from "@/lib/utils/parseSort";
 
 /**
  * Fetches all users with the fields needed for backend profile views, including property counts.
@@ -27,14 +28,16 @@ export const getUsers = async ({
   totalPages: number;
 }> => {
   await ensureAdminAccess();
-  const [field, order] = sort.split("_");
-
-  const orderBy =
-    field === "propertyCount"
-      ? { properties: { _count: order as "asc" | "desc" } }
-      : { [field]: order as "asc" | "desc" };
 
   try {
+    const [field, order] = sort.split("_");
+    const baseOrderBy = parseSort(sort, "role", "asc");
+
+    // Special case for propertyCount - needs nested _count structure
+    const orderBy =
+      field === "propertyCount"
+        ? { properties: { _count: order as "asc" | "desc" } }
+        : baseOrderBy;
     const [users, total] = await Promise.all([
       prisma.user.findMany({
         orderBy: [orderBy],
@@ -59,7 +62,7 @@ export const getUsers = async ({
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit) || 1,
+      totalPages: Math.ceil(total / limit),
     };
   } catch (error) {
     console.error("Database error:", error);

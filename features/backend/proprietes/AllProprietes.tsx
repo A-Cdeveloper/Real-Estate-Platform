@@ -2,8 +2,8 @@
 import { PropertyWithOwner } from "@/types/properties";
 import { getColumns } from "./table/columns";
 import GenericTable from "@/components/shared/GenericTable";
-import { sortableColumns } from "../news/table/sortableColumns";
 import PaginationControls from "@/components/shared/PaginationControls";
+import { sortableColumns } from "./table/sortableColumns";
 
 type AllProprietesProps = {
   properties: PropertyWithOwner[];

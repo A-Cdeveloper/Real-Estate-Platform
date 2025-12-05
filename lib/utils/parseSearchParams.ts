@@ -1,5 +1,5 @@
 import { PropertyType } from "@prisma/client";
-import { PropertyFilters, PropertySort } from "@/types/properties";
+import { PropertyFilters } from "@/types/properties";
 
 type SearchParams = { [key: string]: string | undefined };
 
@@ -7,7 +7,7 @@ type SearchParamsResult = {
   page: number;
   filters: PropertyFilters;
   queryParams: Record<string, string>;
-  sort?: PropertySort;
+  sort?: string;
 };
 
 /**
@@ -21,7 +21,7 @@ export function parsePropertySearchParams(
   const location = params.location;
   const minPrice = params.minPrice;
   const maxPrice = params.maxPrice;
-  const sort = params.sort as PropertySort | undefined;
+  const sort = params.sort as string | undefined;
 
   // Create filters object
   const filters: PropertyFilters = {
