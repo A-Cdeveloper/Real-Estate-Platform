@@ -52,22 +52,70 @@ export async function getPromotedProperties(
 
 /**
  * Get all properties with pagination and filters
+ *
+ * This function can be used in two modes:
+ * 1. Frontend mode (default): Returns only APPROVED properties without relations
+ * 2. Backend mode: Returns all properties (any status) with owner and gallery relations
+ *
  * @param page - The page number (default: 1)
  * @param limit - The number of properties per page (default: 12)
- * @param filters - The filters to apply
+ * @param filters - Optional filters to apply (type, location, price range)
  * @param sort - The sorting order (default: "createdAt_desc")
- * @returns The properties with pagination info
+ * @param includeRelations - If true, includes owner and gallery relations.
+ *                           Used by backend to display full property data.
+ *                           Default: false (frontend doesn't need relations)
+ * @param status - Optional status filter. If not provided:
+ *                 - Frontend: defaults to APPROVED (only shows approved properties)
+ *                 - Backend: undefined (shows all properties regardless of status)
+ *
+ * @returns Object containing:
+ *   - properties: Array of properties (with or without relations based on includeRelations)
+ *   - total: Total number of properties matching the filters
+ *   - page: Current page number
+ *   - limit: Number of items per page
+ *   - totalPages: Total number of pages
+ *
+ * @example
+ * // Frontend usage (default - only APPROVED properties, no relations)
+ * const { properties } = await getAllProperties({
+ *   page: 1,
+ *   limit: 12,
+ *   filters: { type: "Apartment" },
+ *   sort: "price_asc"
+ * });
+ *
+ * @example
+ * // Backend usage (all properties with relations)
+ * const { properties } = await getAllProperties({
+ *   page: 1,
+ *   limit: 10,
+ *   includeRelations: true
+ *   // status not provided = shows all statuses (APPROVED, IN_REVIEW, REJECTED)
+ * });
+ *
+ * @example
+ * // Backend usage (only IN_REVIEW properties with relations)
+ * const { properties } = await getAllProperties({
+ *   page: 1,
+ *   limit: 10,
+ *   includeRelations: true,
+ *   status: PropertyStatus.IN_REVIEW
+ * });
  */
 export async function getAllProperties({
   page = 1,
   limit = 12,
   filters,
   sort = "createdAt_desc",
+  includeRelations = false,
+  status,
 }: {
   page?: number;
   limit?: number;
   filters?: PropertyFilters;
   sort?: PropertySort;
+  includeRelations?: boolean;
+  status?: PropertyStatus;
 }): Promise<{
   properties: Awaited<ReturnType<typeof prisma.property.findMany>>;
   total: number;
@@ -79,6 +127,7 @@ export async function getAllProperties({
     const minPrice = filters?.minPrice ? Number(filters.minPrice) : undefined;
     const maxPrice = filters?.maxPrice ? Number(filters.maxPrice) : undefined;
 
+    // Build where clause with filters
     const where = {
       ...(filters?.type && { type: filters.type }),
       ...(filters?.location && {
@@ -90,19 +139,44 @@ export async function getAllProperties({
           ...(maxPrice && { lte: maxPrice }),
         },
       }),
-      status: PropertyStatus.APPROVED,
+      // Status filter logic:
+      // - If status is explicitly provided, use it
+      // - If not provided and includeRelations is false (frontend), default to APPROVED
+      // - If not provided and includeRelations is true (backend), don't filter by status (show all)
+      status:
+        status ?? (includeRelations ? undefined : PropertyStatus.APPROVED),
     };
 
     const { field, order } = parsePropertySort(sort);
     const orderBy = { [field]: order } as { [key: string]: "asc" | "desc" };
 
+    // Build query - use conditional logic for include relations
     const [properties, total] = await Promise.all([
-      prisma.property.findMany({
-        where,
-        orderBy,
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
+      includeRelations
+        ? prisma.property.findMany({
+            where,
+            orderBy,
+            skip: (page - 1) * limit,
+            take: limit,
+            include: {
+              owner: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+              gallery: {
+                orderBy: { order: "asc" },
+              },
+            },
+          })
+        : prisma.property.findMany({
+            where,
+            orderBy,
+            skip: (page - 1) * limit,
+            take: limit,
+          }),
       prisma.property.count({ where }),
     ]);
 

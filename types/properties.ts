@@ -27,6 +27,8 @@ export type PropertyWithGallery = Prisma.PropertyGetPayload<{
   };
 }>;
 
+export type FullProperty = PropertyWithOwner & PropertyWithGallery;
+
 /**
  * Type for property filters
  * Used in usePropertyFilters hook and getAllProperties query
