@@ -21,10 +21,7 @@ const LatestNews = async ({
 
   if (latestNews.length === 0) {
     return (
-      <EmptyState
-        title="No latest news found"
-        message="There are no latest news available at this time."
-      />
+      <EmptyState title="There are no latest news available at this time." />
     );
   }
 

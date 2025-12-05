@@ -59,12 +59,7 @@ const NewsList = async ({ page }: { page: number }) => {
   const end = Math.min(start + NEWS_PER_PAGE - 1, total);
 
   if (news.length === 0) {
-    return (
-      <EmptyState
-        title="No news found"
-        message="There are no news available at this time."
-      />
-    );
+    return <EmptyState title="There are no news available at this time." />;
   }
 
   return (
