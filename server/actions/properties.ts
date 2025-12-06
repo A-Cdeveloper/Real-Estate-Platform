@@ -94,3 +94,36 @@ export async function deleteProperty(id: string) {
     };
   }
 }
+
+/**
+ * Server Action: Promote a property
+ * @param id - The ID of the property
+ * @returns The result of the promotion
+ */
+export async function promoteProperty(id: string) {
+  const property = await prisma.property.findUnique({
+    where: { id },
+  });
+  if (!property) {
+    return { success: false, error: "Property not found" };
+  }
+
+  const newPromoted = !property.promoted;
+  try {
+    await prisma.property.update({
+      where: { id },
+      data: { promoted: newPromoted },
+    });
+    revalidatePath("/");
+    revalidatePath("/proprietes");
+    revalidatePath(`/proprietes/${id}`);
+    revalidatePath(`/proprietes-area`);
+    return { success: true, promoted: newPromoted };
+  } catch (error) {
+    console.error("Database error:", error);
+    return {
+      success: false,
+      error: getPrismaErrorMessage(error),
+    };
+  }
+}

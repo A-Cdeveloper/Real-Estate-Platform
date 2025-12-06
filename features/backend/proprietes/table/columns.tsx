@@ -6,6 +6,12 @@ import { DEFAULT_NEWS_IMAGE } from "@/lib/constants";
 import { PropertyWithOwner } from "@/types/properties";
 import ActionsCell from "./ActionsCell";
 
+import { Badge } from "@/components/ui/badge";
+import { promoteProperty } from "@/server/actions/properties";
+import { PropertyStatus } from "@prisma/client";
+import { Star } from "lucide-react";
+import { toast } from "sonner";
+
 /**
  * Columns for the news table
  * @returns {Column<News>[]} Columns for the news table
@@ -52,7 +58,23 @@ export const getColumns = (): Column<PropertyWithOwner>[] => [
   {
     key: "status",
     label: "Status",
-    render: (property) => <span>{property.status || "N/A"}</span>,
+    render: (property) => {
+      return (
+        <Badge
+          className="w-fit"
+          variant={
+            property.status === PropertyStatus.APPROVED
+              ? "success"
+              : property.status === PropertyStatus.IN_REVIEW
+                ? "warning"
+                : "destructive"
+          }
+        >
+          {property.status.charAt(0) + property.status.slice(1).toLowerCase() ||
+            "N/A"}
+        </Badge>
+      );
+    },
   },
   {
     key: "owner",
@@ -63,6 +85,34 @@ export const getColumns = (): Column<PropertyWithOwner>[] => [
     key: "createdAt",
     label: "Created",
     render: (property) => formatLongDate(property.createdAt),
+  },
+  {
+    key: "promoted",
+    label: "Promoted",
+    render: (property) => {
+      if (property.status !== PropertyStatus.APPROVED) {
+        return null;
+      }
+      return (
+        <button
+          onClick={async () => {
+            const result = await promoteProperty(property.id);
+            if (result.success) {
+              toast.success(
+                `Property ${result.promoted ? "promoted" : "unpromoted"} successfully`
+              );
+            } else {
+              toast.error(result.error);
+            }
+          }}
+          className="cursor-pointer outline-none border-none"
+        >
+          <Star
+            className={`size-4 ${property.promoted ? "fill-yellow-500" : "fill-gray-500"} mx-auto`}
+          />
+        </button>
+      );
+    },
   },
 
   {

@@ -15,7 +15,7 @@ const ProprietesArea = async ({
   // Backend needs all properties (any status) with owner and gallery relations
   const { properties, total, page, totalPages } = await getAllProperties({
     page: Number(params.page) || 1,
-    limit: Number(params.limit) || 10,
+    limit: Number(params.limit) || 20,
     sort: (params.sort as string) || "status_desc",
     includeRelations: true, // Include owner and gallery for backend table display
     // status not provided = shows all properties (APPROVED, IN_REVIEW, REJECTED)
