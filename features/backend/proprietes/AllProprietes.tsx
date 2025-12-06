@@ -1,10 +1,12 @@
 "use client";
-import { PropertyWithOwner } from "@/types/properties";
-import { getColumns } from "./table/columns";
 import GenericTable from "@/components/shared/GenericTable";
 import PaginationControls from "@/components/shared/PaginationControls";
+import { Button } from "@/components/ui/button";
+import { PropertyWithOwner } from "@/types/properties";
+import { Building } from "lucide-react";
+import Link from "next/link";
+import { getColumns } from "./table/columns";
 import { sortableColumns } from "./table/sortableColumns";
-import AddProperty from "./add/AddProperty";
 
 type AllProprietesProps = {
   properties: PropertyWithOwner[];
@@ -28,7 +30,12 @@ const AllProprietes = ({
       <div className="border-y border-border p-2">#FILTER</div>
       <div className="flex items-center justify-between">
         <span className="text-sm">Total: {total}</span>
-        <AddProperty />
+        <Link href="/proprietes-area/add">
+          <Button>
+            <Building className="size-4 mr-2" />
+            Add Property
+          </Button>
+        </Link>
       </div>
       <GenericTable
         data={properties}
