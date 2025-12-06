@@ -4,6 +4,7 @@ import { getColumns } from "./table/columns";
 import GenericTable from "@/components/shared/GenericTable";
 import PaginationControls from "@/components/shared/PaginationControls";
 import { sortableColumns } from "./table/sortableColumns";
+import AddProperty from "./add/AddProperty";
 
 type AllProprietesProps = {
   properties: PropertyWithOwner[];
@@ -22,9 +23,10 @@ const AllProprietes = ({
 }: AllProprietesProps) => {
   return (
     <div className="space-y-4 w-full xl:w-3/4">
+      <div className="border-y border-border p-2">#FILTER</div>
       <div className="flex items-center justify-between">
         <span className="text-sm">Total: {total}</span>
-        {/* <AddNews /> */}
+        <AddProperty />
       </div>
       <GenericTable
         data={properties}
