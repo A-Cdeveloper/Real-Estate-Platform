@@ -3,27 +3,86 @@
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { revalidatePath } from "next/cache";
+import {
+  createPropertySchema,
+  CreatePropertyFormData,
+} from "../schemas/property";
+import { formatZodErrors } from "../utils/zod";
+import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
+import { PropertyActionState } from "@/types/properties";
+import { PropertyType } from "@prisma/client";
+
+/**
+ * Helper function to parse property form data from FormData
+ * @param formData - The form data containing the property information
+ * @returns The parsed property data
+ */
+function parsePropertyFormData(formData: FormData) {
+  return {
+    name: formData.get("name"),
+    type: formData.get("type"),
+    price: formData.get("price"),
+    area: formData.get("area"),
+    address: formData.get("address"),
+    description: formData.get("description"),
+    image: formData.get("image"),
+  };
+}
 
 /**
  * Server Action: Create a new property
- * @param data - The data to create the property with
+ * @param prevState - The previous state of the property
+ * @param formData - The form data containing the property information
  * @returns The result of the creation
+ *
  */
-export async function createProperty(data: {
-  name: string;
-  price: number;
-  area?: number;
-  address?: string;
-  image?: string;
-  ownerId: string;
-}) {
+export async function createProperty(
+  prevState: PropertyActionState<CreatePropertyFormData> | null,
+  formData: FormData
+): Promise<PropertyActionState<CreatePropertyFormData> | null> {
+  const currentUser = await getCurrentUserFromSession();
+  if (!currentUser) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const rawData = parsePropertyFormData(formData);
+  const result = createPropertySchema.safeParse(rawData);
+
+  if (!result.success) {
+    return {
+      success: false,
+      errors: formatZodErrors(result.error),
+      data: {
+        name: (rawData.name as string) || "",
+        type: rawData.type as PropertyType,
+        description: (rawData.description as string) || "",
+        price: Number(rawData.price) || 0,
+        area: Number(rawData.area) || 0,
+        address: (rawData.address as string) || "",
+        image: (rawData.image as string) || undefined,
+      },
+    };
+  }
+
+  const { name, type, price, area, address, description, image } = result.data;
+
   try {
     const property = await prisma.property.create({
-      data,
+      data: {
+        name,
+        type: type as PropertyType,
+        price,
+        area,
+        address,
+        description,
+        image: image || null,
+        ownerId: currentUser.id,
+      },
     });
 
     revalidatePath("/");
     revalidatePath("/proprietes");
+    revalidatePath("/proprietes-area");
 
     return { success: true, property };
   } catch (error) {
@@ -31,6 +90,15 @@ export async function createProperty(data: {
     return {
       success: false,
       error: getPrismaErrorMessage(error),
+      data: {
+        name: (rawData.name as string) || "",
+        type: type as PropertyType,
+        description: (rawData.description as string) || "",
+        price: Number(rawData.price) || 0,
+        area: Number(rawData.area) || 0,
+        address: (rawData.address as string) || "",
+        image: (rawData.image as string) || undefined,
+      },
     };
   }
 }

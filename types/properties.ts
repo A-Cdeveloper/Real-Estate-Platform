@@ -1,4 +1,5 @@
-import { Prisma, PropertyType } from "@prisma/client";
+import { Prisma, Property, PropertyType } from "@prisma/client";
+import { ActionState } from "./action-state";
 
 /**
  * Type for property with owner information (id, name, email) and gallery images
@@ -40,3 +41,19 @@ export type PropertyFilters = {
   minPrice?: string;
   maxPrice?: string;
 };
+
+/**
+ * Types for property actions
+ */
+
+export type AddProperty = Pick<
+  Property,
+  "name" | "type" | "price" | "area" | "address" | "image" | "description"
+>;
+export type UpdateProperty = AddProperty & { id: string };
+export type DeleteProperty = Pick<Property, "id">;
+
+export type PropertyActionState<TData = unknown> = ActionState<
+  TData,
+  { property?: Property }
+>;
