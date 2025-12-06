@@ -36,6 +36,7 @@ export function proxy(request: NextRequest) {
     "/settings",
     "/users",
     "/proprietes-area",
+    "/news-editor",
     "/notifications",
     "/profile",
   ];

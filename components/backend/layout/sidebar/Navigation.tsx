@@ -44,8 +44,9 @@ const Navigation = ({ links }: { links: SidebarLink[] }) => {
 
       {links.map((item) => {
         const Icon = icons[item.icon as keyof typeof icons];
+        const baseHref = item.href.split("?")[0];
         const isActive =
-          pathname === item.href || pathname.startsWith(item.href + "/");
+          pathname === baseHref || pathname.startsWith(baseHref + "/");
 
         return (
           <Link
