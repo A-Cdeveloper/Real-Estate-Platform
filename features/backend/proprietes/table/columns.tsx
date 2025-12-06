@@ -16,7 +16,7 @@ import { toast } from "sonner";
  * Columns for the news table
  * @returns {Column<News>[]} Columns for the news table
  */
-export const getColumns = (): Column<PropertyWithOwner>[] => [
+export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
   {
     key: "image",
     label: "",
@@ -36,7 +36,7 @@ export const getColumns = (): Column<PropertyWithOwner>[] => [
     render: (property) => {
       return (
         <h2 className="text-white max-w-[120px] line-clamp-2">
-          {property.name || "N/A"}
+          {property.name || "N/A"} ({property.owner.name || "N/A"})
         </h2>
       );
     },
@@ -76,44 +76,54 @@ export const getColumns = (): Column<PropertyWithOwner>[] => [
       );
     },
   },
-  {
-    key: "owner",
-    label: "Owner",
-    render: (property) => <span>{property.owner.name || "N/A"}</span>,
-  },
+  ...(isAdmin
+    ? [
+        {
+          key: "owner",
+          label: "Owner",
+          render: (property: PropertyWithOwner) => (
+            <span>{property.owner.name || "N/A"}</span>
+          ),
+        },
+      ]
+    : []),
   {
     key: "createdAt",
     label: "Created",
     render: (property) => formatLongDate(property.createdAt),
   },
-  {
-    key: "promoted",
-    label: "Promoted",
-    render: (property) => {
-      if (property.status !== PropertyStatus.APPROVED) {
-        return null;
-      }
-      return (
-        <button
-          onClick={async () => {
-            const result = await promoteProperty(property.id);
-            if (result.success) {
-              toast.success(
-                `Property ${result.promoted ? "promoted" : "unpromoted"} successfully`
-              );
-            } else {
-              toast.error(result.error);
+  ...(isAdmin
+    ? [
+        {
+          key: "promoted",
+          label: "Promoted",
+          render: (property: PropertyWithOwner) => {
+            if (property.status !== PropertyStatus.APPROVED) {
+              return null;
             }
-          }}
-          className="cursor-pointer outline-none border-none"
-        >
-          <Star
-            className={`size-4 ${property.promoted ? "fill-yellow-500" : "fill-gray-500"} mx-auto`}
-          />
-        </button>
-      );
-    },
-  },
+            return (
+              <button
+                onClick={async () => {
+                  const result = await promoteProperty(property.id);
+                  if (result.success) {
+                    toast.success(
+                      `Property ${result.promoted ? "promoted" : "unpromoted"} successfully`
+                    );
+                  } else {
+                    toast.error(result.error);
+                  }
+                }}
+                className="cursor-pointer outline-none border-none"
+              >
+                <Star
+                  className={`size-4 ${property.promoted ? "fill-yellow-500" : "fill-gray-500"} mx-auto`}
+                />
+              </button>
+            );
+          },
+        },
+      ]
+    : []),
 
   {
     key: "edit/delete",

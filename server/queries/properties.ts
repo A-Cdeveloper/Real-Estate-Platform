@@ -109,6 +109,7 @@ export async function getAllProperties({
   sort = "createdAt_desc",
   includeRelations = false,
   status,
+  ownerId,
 }: {
   page?: number;
   limit?: number;
@@ -116,6 +117,7 @@ export async function getAllProperties({
   sort?: string;
   includeRelations?: boolean;
   status?: PropertyStatus;
+  ownerId?: string;
 }): Promise<{
   properties: Awaited<ReturnType<typeof prisma.property.findMany>>;
   total: number;
@@ -145,6 +147,7 @@ export async function getAllProperties({
       // - If not provided and includeRelations is true (backend), don't filter by status (show all)
       status:
         status ?? (includeRelations ? undefined : PropertyStatus.APPROVED),
+      ...(ownerId && { ownerId }),
     };
 
     const orderBy = parseSort(sort);

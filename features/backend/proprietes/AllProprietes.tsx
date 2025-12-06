@@ -12,6 +12,7 @@ type AllProprietesProps = {
   page: number;
   totalPages: number;
   sort: string;
+  isAdmin: boolean;
 };
 
 const AllProprietes = ({
@@ -20,6 +21,7 @@ const AllProprietes = ({
   page,
   totalPages,
   sort,
+  isAdmin,
 }: AllProprietesProps) => {
   return (
     <div className="space-y-4 w-full xl:w-3/4">
@@ -30,7 +32,7 @@ const AllProprietes = ({
       </div>
       <GenericTable
         data={properties}
-        columns={getColumns()}
+        columns={getColumns(isAdmin)}
         defaultSortField="status"
         sortableColumns={sortableColumns}
         className="text-sm text-muted-foreground w-full"
