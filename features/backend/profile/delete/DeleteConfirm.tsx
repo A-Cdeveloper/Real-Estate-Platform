@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import IconButton from "@/components/shared/IconButton";
+import IconButton from "@/components/shared/ui/IconButton";
 import { Loader2, X } from "lucide-react";
 import { deleteProfile } from "@/server/actions/profile";
 import { toast } from "sonner";

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 import PasswordInput from "@/components/auth/PasswordInput";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 import { Button } from "@/components/ui/button";
 import { resetPasswordAction } from "@/server/actions/auth";
 import FormWrapper from "./FormWrapper";

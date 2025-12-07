@@ -1,5 +1,5 @@
 "use client";
-import Modal from "@/components/shared/Modal";
+import Modal from "@/components/shared/ui/Modal";
 import { Button } from "@/components/ui/button";
 import { BookPlus } from "lucide-react";
 import { useState } from "react";

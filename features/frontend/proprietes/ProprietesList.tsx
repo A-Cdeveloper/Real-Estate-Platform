@@ -10,7 +10,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants";
 import EmptyState from "@/features/frontend/EmptyState";
 import ProprietesMeta from "@/features/frontend/proprietes/ProprietesMeta";
 import RealtyListItem from "@/features/frontend/proprietes/RealtyListItem";
-import PaginationControls from "@/components/shared/PaginationControls";
+import PaginationControls from "@/components/shared/pagination/PaginationControls";
 import { Property } from "@prisma/client";
 
 const ProprietesList = async ({

@@ -5,7 +5,7 @@ import { CurrentUser } from "@/types/user";
 import EditProfile from "./edit/EditProfile";
 import ProfileActionsButtons from "./ProfileActionsButtons";
 import DeleteConfirm from "./delete/DeleteConfirm";
-import Modal from "@/components/shared/Modal";
+import Modal from "@/components/shared/ui/Modal";
 
 /**
  * ProfileContent component

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PropertyWithGallery } from "@/types/properties";
-import CustumImage from "@/components/shared/CustumImage";
+import CustumImage from "@/components/shared/ui/CustumImage";
 import { ZoomIn } from "lucide-react";
 import PropertyGalleryLightbox from "./PropertyGalleryLightbox";
 import { PropertyImage } from "@prisma/client";

@@ -1,6 +1,6 @@
 "use client";
-import GenericTable from "@/components/shared/GenericTable";
-import PaginationControls from "@/components/shared/PaginationControls";
+import GenericTable from "@/components/shared/ui/GenericTable";
+import PaginationControls from "@/components/shared/pagination/PaginationControls";
 import { Button } from "@/components/ui/button";
 import { PropertyWithOwner } from "@/types/properties";
 import { Building } from "lucide-react";

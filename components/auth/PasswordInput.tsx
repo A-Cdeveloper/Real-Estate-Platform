@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import CustomInput from "@/components/shared/CustomInput";
+import CustomInput from "@/components/shared/form/CustomInput";
 import { cn } from "@/lib/utils";
 
 type PasswordInputProps = {

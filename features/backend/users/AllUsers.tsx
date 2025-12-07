@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import GenericTable from "@/components/shared/GenericTable";
+import GenericTable from "@/components/shared/ui/GenericTable";
 import { UserWithProperties } from "@/types/user";
 import AddNewUser from "./add-edit/AddNewUser";
 import { getColumns } from "./table/columns";
-import PaginationControls from "@/components/shared/PaginationControls";
+import PaginationControls from "@/components/shared/pagination/PaginationControls";
 import { sortableColumns } from "./table/sortableColumns";
 
 type AllUsersProps = {

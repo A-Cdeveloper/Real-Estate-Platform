@@ -1,8 +1,8 @@
 "use client";
 
 import PasswordInput from "@/components/auth/PasswordInput";
-import CustomInput from "@/components/shared/CustomInput";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
+import CustomInput from "@/components/shared/form/CustomInput";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 import { Button } from "@/components/ui/button";
 import { loginAction } from "@/server/actions/auth";
 import { Loader2 } from "lucide-react";

@@ -1,5 +1,5 @@
-import CustumImage from "@/components/shared/CustumImage";
-import { Column } from "@/components/shared/GenericTable";
+import CustumImage from "@/components/shared/ui/CustumImage";
+import { Column } from "@/components/shared/ui/GenericTable";
 import { formatLongDate } from "@/lib/utils/date";
 
 import { DEFAULT_NEWS_IMAGE } from "@/lib/constants";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
-import CustumImage from "@/components/shared/CustumImage";
+import CustumImage from "@/components/shared/ui/CustumImage";
 import { Typography } from "@/components/ui/typography";
 import { Award, Users } from "lucide-react";
 import AboutWidget from "@/features/frontend/about/AboutWidget";

@@ -3,7 +3,7 @@ import { Property } from "@prisma/client";
 import { MapPin } from "lucide-react";
 import { Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import CustumImage from "@/components/shared/CustumImage";
+import CustumImage from "@/components/shared/ui/CustumImage";
 import Link from "next/link";
 
 const RealtyListItem = ({ property }: { property: Property }) => {

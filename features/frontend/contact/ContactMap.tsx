@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 
 // Dynamically import MapDisplay to avoid SSR issues
 const MapDisplayClient = dynamic(
-  () => import("@/components/shared/MapDisplay"),
+  () => import("@/components/shared/map/MapDisplay"),
   {
     ssr: false,
   }

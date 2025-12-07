@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Typography } from "@/components/ui/typography";
-import CustomInput from "@/components/shared/CustomInput";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
+import CustomInput from "@/components/shared/form/CustomInput";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 import { sendMessageAction } from "@/server/actions/sendMessage";
 import { useActionState, useEffect } from "react";
 import { Loader2 } from "lucide-react";

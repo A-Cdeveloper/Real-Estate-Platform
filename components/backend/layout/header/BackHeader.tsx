@@ -1,4 +1,4 @@
-import LogoWithSettings from "@/components/shared/LogoWithSettings";
+import LogoWithSettings from "@/components/shared/ui/LogoWithSettings";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getCurrentUserFromSession } from "@/server/auth/getCurrentUserFromSession";
 import { Role } from "@prisma/client";

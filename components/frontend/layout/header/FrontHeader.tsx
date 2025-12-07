@@ -1,5 +1,5 @@
 import FrontNavigation from "./FrontNavigation";
-import LogoWithSettings from "@/components/shared/LogoWithSettings";
+import LogoWithSettings from "@/components/shared/ui/LogoWithSettings";
 
 const FrontHeader = async () => {
   return (

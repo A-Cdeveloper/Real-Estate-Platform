@@ -2,9 +2,9 @@
 import { News } from "@prisma/client";
 import { memo } from "react";
 import { getColumns } from "./table/columns";
-import GenericTable from "@/components/shared/GenericTable";
+import GenericTable from "@/components/shared/ui/GenericTable";
 import { sortableColumns } from "./table/sortableColumns";
-import PaginationControls from "@/components/shared/PaginationControls";
+import PaginationControls from "@/components/shared/pagination/PaginationControls";
 import AddNews from "./add-edit/AddNews";
 
 type AllNewsProps = {

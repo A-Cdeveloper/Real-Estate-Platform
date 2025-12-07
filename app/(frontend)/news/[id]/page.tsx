@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
-import BackButton from "@/components/shared/BackButton";
+import BackButton from "@/components/shared/ui/BackButton";
 import NewsDate from "@/features/frontend/news/detail/NewsDate";
-import CustumImage from "@/components/shared/CustumImage";
+import CustumImage from "@/components/shared/ui/CustumImage";
 import LatestNews from "@/features/frontend/news/LatestNews";
 import LatestNewsSkeleton from "@/components/frontend/skeletons/LatestNewsSkeleton";
 import { Typography } from "@/components/ui/typography";

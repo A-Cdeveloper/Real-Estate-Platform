@@ -1,8 +1,8 @@
 "use client";
 
-import CustomInput from "@/components/shared/CustomInput";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
-import IconButton from "@/components/shared/IconButton";
+import CustomInput from "@/components/shared/form/CustomInput";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
+import IconButton from "@/components/shared/ui/IconButton";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

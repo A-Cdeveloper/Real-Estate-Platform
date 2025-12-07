@@ -1,5 +1,5 @@
 "use client";
-import Modal from "@/components/shared/Modal";
+import Modal from "@/components/shared/ui/Modal";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserWithProperties } from "@/types/user";

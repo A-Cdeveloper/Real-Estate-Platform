@@ -1,5 +1,5 @@
 import NewsGridSkeleton from "@/components/frontend/skeletons/NewsGridSkeleton";
-import PaginationControls from "@/components/shared/PaginationControls";
+import PaginationControls from "@/components/shared/pagination/PaginationControls";
 import { Typography } from "@/components/ui/typography";
 import EmptyState from "@/features/frontend/EmptyState";
 import NewsGridtem from "@/features/frontend/news/NewsGridtem";

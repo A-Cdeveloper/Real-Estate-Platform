@@ -1,6 +1,6 @@
 "use client";
 
-import SingleImageUploader from "@/components/shared/SingleImageUploader";
+import SingleImageUploader from "@/components/shared/form/SingleImageUploader";
 import { uploadNewsImage, removeNewsImage } from "@/server/actions/news";
 import {
   NEWS_IMAGE_ALLOWED_TYPES,

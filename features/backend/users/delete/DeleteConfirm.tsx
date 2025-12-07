@@ -1,6 +1,6 @@
 "use client";
 
-import IconButton from "@/components/shared/IconButton";
+import IconButton from "@/components/shared/ui/IconButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { deleteUser } from "@/server/actions/users";

@@ -1,8 +1,8 @@
 "use client";
 
-import CustomInput from "@/components/shared/CustomInput";
-import CustomSelect from "@/components/shared/CustomSelect";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
+import CustomInput from "@/components/shared/form/CustomInput";
+import CustomSelect from "@/components/shared/form/CustomSelect";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Home, Euro, Ruler, FileText } from "lucide-react";

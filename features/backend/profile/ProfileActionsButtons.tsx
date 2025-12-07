@@ -1,6 +1,6 @@
 "use client";
 
-import IconButton from "@/components/shared/IconButton";
+import IconButton from "@/components/shared/ui/IconButton";
 import { Edit, Trash2 } from "lucide-react";
 
 /**

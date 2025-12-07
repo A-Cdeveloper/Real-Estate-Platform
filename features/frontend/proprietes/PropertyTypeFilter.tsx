@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import CustomInput from "@/components/shared/CustomInput";
+import CustomInput from "@/components/shared/form/CustomInput";
 import { PropertyType } from "@prisma/client";
 import {
   SelectTrigger,

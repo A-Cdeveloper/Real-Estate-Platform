@@ -8,14 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import PasswordInput from "@/components/auth/PasswordInput";
-import CustomInput from "@/components/shared/CustomInput";
-import IconButton from "@/components/shared/IconButton";
+import CustomInput from "@/components/shared/form/CustomInput";
+import IconButton from "@/components/shared/ui/IconButton";
 import { CurrentUser } from "@/types/user";
 import { Loader2, X } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { updateProfile } from "@/server/actions/profile";
 import { toast } from "sonner";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 
 /**
  * EditProfile component

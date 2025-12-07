@@ -1,10 +1,12 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import { Suspense } from "react";
-import { Spinner } from "@/components/shared/Spinner";
+import { Spinner } from "@/components/shared/ui/Spinner";
 import dynamic from "next/dynamic";
 
-const LocationMap = dynamic(() => import("../map/LocationMap"), { ssr: false });
+const LocationMap = dynamic(() => import("../map/LocationMap"), {
+  ssr: false,
+});
 
 type LocationCardProps = {
   lat: number | null;

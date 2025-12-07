@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Phone, Mail } from "lucide-react";
-import CustomInput from "@/components/shared/CustomInput";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
+import CustomInput from "@/components/shared/form/CustomInput";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 
 type ContactInfoCardProps = {
   phone: string;

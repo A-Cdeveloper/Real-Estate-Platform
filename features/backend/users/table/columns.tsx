@@ -1,4 +1,4 @@
-import { Column } from "@/components/shared/GenericTable";
+import { Column } from "@/components/shared/ui/GenericTable";
 import { Badge } from "@/components/ui/badge";
 import { formatLongDate } from "@/lib/utils/date";
 import { UserWithProperties } from "@/types/user";

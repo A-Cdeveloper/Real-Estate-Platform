@@ -2,7 +2,7 @@ import { checkIsAdmin } from "@/server/auth/checkIsAdmin";
 import Sidebar from "./Sidebar";
 import { navigationLinks } from "./links";
 import { Suspense } from "react";
-import { Spinner } from "@/components/shared/Spinner";
+import { Spinner } from "@/components/shared/ui/Spinner";
 
 const SidebarWrapper = async () => {
   const isAdmin = await checkIsAdmin();

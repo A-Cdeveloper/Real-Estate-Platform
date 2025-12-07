@@ -1,11 +1,11 @@
 "use client";
 
 import PasswordInput from "@/components/auth/PasswordInput";
-import CustomInput from "@/components/shared/CustomInput";
-import CustomSelect from "@/components/shared/CustomSelect";
-import CustumSwitch from "@/components/shared/CustumSwitch";
-import ErrorFormMessages from "@/components/shared/ErrorFormMessages";
-import IconButton from "@/components/shared/IconButton";
+import CustomInput from "@/components/shared/form/CustomInput";
+import CustomSelect from "@/components/shared/form/CustomSelect";
+import CustumSwitch from "@/components/shared/form/CustumSwitch";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
+import IconButton from "@/components/shared/ui/IconButton";
 import { Button } from "@/components/ui/button";
 import {
   Card,

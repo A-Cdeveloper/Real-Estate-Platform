@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getSettings } from "@/server/queries/settings";
-import Logo from "@/components/shared/Logo";
+import Logo from "@/components/shared/ui/Logo";
 
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { generateBaseMetadata } from "@/lib/metadata";
