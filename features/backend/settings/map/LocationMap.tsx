@@ -1,4 +1,9 @@
 import MapDisplay from "@/components/shared/map/MapDisplay";
+import dynamic from "next/dynamic";
+
+const MapClickHandler = dynamic(() => import("./MapClickHandler"), {
+  ssr: false,
+});
 
 /**
  * LocationMap component for backend settings
@@ -22,6 +27,7 @@ const LocationMap = ({
       address={address}
       interactive={true}
       showAddress={true}
+      clickHandler={<MapClickHandler />}
     />
   );
 };

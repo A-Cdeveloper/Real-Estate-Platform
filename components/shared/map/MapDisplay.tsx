@@ -1,15 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { customIcon } from "./CustumMarkerIcon";
-import dynamic from "next/dynamic";
-
-// Dynamically import MapClickHandler only if needed
-const MapClickHandler = dynamic(
-  () => import("@/features/backend/settings/map/MapClickHandler"),
-  { ssr: false }
-);
 
 type MapDisplayProps = {
   lat?: number | null;
@@ -19,6 +12,7 @@ type MapDisplayProps = {
   showAddress?: boolean; // Show address display below map
   height?: string; // Custom height class, defaults to "aspect-video"
   zoom?: number; // Custom zoom level, defaults to 13 or 15 if coordinates exist
+  clickHandler?: ReactNode; // Optional click handler component (for backend interactive maps)
 };
 
 /**
@@ -33,6 +27,7 @@ const MapDisplay = ({
   showAddress = false,
   height = "aspect-video",
   zoom,
+  clickHandler,
 }: MapDisplayProps) => {
   const [isMounted, setIsMounted] = useState(false);
   // Default center (Beograd)
@@ -84,7 +79,7 @@ const MapDisplay = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {interactive && <MapClickHandler />}
+          {interactive && clickHandler}
           {lat && lng && <Marker position={[lat, lng]} icon={customIcon} />}
         </MapContainer>
       </div>
