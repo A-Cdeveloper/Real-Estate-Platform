@@ -8,7 +8,6 @@ export const basePropertySchema = z.object({
   price: z.coerce.number().positive("Price must be positive"),
   area: z.coerce.number().positive("Area must be positive"),
   address: z.string().min(1, "Address is required"),
-  image: z.string().optional(),
 });
 
 export const createPropertySchema = basePropertySchema;

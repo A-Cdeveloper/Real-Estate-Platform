@@ -25,7 +25,6 @@ function parsePropertyFormData(formData: FormData) {
     area: formData.get("area"),
     address: formData.get("address"),
     description: formData.get("description"),
-    image: formData.get("image"),
   };
 }
 
@@ -59,12 +58,11 @@ export async function createProperty(
         price: Number(rawData.price) || 0,
         area: Number(rawData.area) || 0,
         address: (rawData.address as string) || "",
-        image: (rawData.image as string) || undefined,
       },
     };
   }
 
-  const { name, type, price, area, address, description, image } = result.data;
+  const { name, type, price, area, address, description } = result.data;
 
   try {
     const property = await prisma.property.create({
@@ -75,7 +73,7 @@ export async function createProperty(
         area,
         address,
         description,
-        image: image || null,
+        image: null,
         ownerId: currentUser.id,
       },
     });
@@ -92,12 +90,11 @@ export async function createProperty(
       error: getPrismaErrorMessage(error),
       data: {
         name: (rawData.name as string) || "",
-        type: type as PropertyType,
+        type: rawData.type as PropertyType,
         description: (rawData.description as string) || "",
         price: Number(rawData.price) || 0,
         area: Number(rawData.area) || 0,
         address: (rawData.address as string) || "",
-        image: (rawData.image as string) || undefined,
       },
     };
   }

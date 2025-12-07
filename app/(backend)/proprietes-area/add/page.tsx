@@ -10,7 +10,7 @@ const AddPropertyPage = () => {
       <BackButton
         href="/proprietes-area?sort=status_desc"
         label="Back"
-        className="!bg-transparent !text-muted-foreground"
+        className="!bg-transparent !text-muted-foreground mb-3"
       />
       <AddPropertyForm />
     </>

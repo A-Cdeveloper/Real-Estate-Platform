@@ -48,7 +48,7 @@ export type PropertyFilters = {
 
 export type AddProperty = Pick<
   Property,
-  "name" | "type" | "price" | "area" | "address" | "image" | "description"
+  "name" | "type" | "price" | "area" | "address" | "description"
 >;
 export type UpdateProperty = AddProperty & { id: string };
 export type DeleteProperty = Pick<Property, "id">;
