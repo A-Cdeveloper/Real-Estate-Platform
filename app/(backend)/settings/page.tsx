@@ -8,7 +8,7 @@ const SettingsPage = async () => {
   await adminGuard();
   return (
     <div>
-      <PageHeader title="Settings" icon={SettingsIcon} />
+      <PageHeader title="App Settings" icon={SettingsIcon} />
       <SettingsView />
     </div>
   );
