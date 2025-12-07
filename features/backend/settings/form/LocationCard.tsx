@@ -4,7 +4,12 @@ import { Suspense } from "react";
 import { Spinner } from "@/components/shared/ui/Spinner";
 import dynamic from "next/dynamic";
 
-const LocationMap = dynamic(() => import("../map/LocationMap"), {
+const LocationMap = dynamic(
+  () => import("@/components/shared/map/LocationMap"),
+  { ssr: false }
+);
+
+const MapClickHandler = dynamic(() => import("../map/MapClickHandler"), {
   ssr: false,
 });
 
@@ -26,7 +31,12 @@ const LocationCard = ({ lat, lng, address }: LocationCardProps) => (
     </CardHeader>
     <CardContent>
       <Suspense fallback={<Spinner className="size-4" />}>
-        <LocationMap lat={lat} lng={lng} address={address} />
+        <LocationMap
+          lat={lat}
+          lng={lng}
+          address={address}
+          clickHandler={<MapClickHandler />}
+        />
       </Suspense>
     </CardContent>
   </Card>
