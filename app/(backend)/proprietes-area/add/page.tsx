@@ -1,5 +1,5 @@
 import PageHeader from "@/components/backend/layout/PageHeader";
-import BackButton from "@/components/shared/BackButton";
+import BackButton from "@/components/shared/ui/BackButton";
 import AddPropertyForm from "@/features/backend/proprietes/add/AddPropertyForm";
 import { Building } from "lucide-react";
 

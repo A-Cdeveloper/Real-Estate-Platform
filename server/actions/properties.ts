@@ -25,6 +25,8 @@ function parsePropertyFormData(formData: FormData) {
     area: formData.get("area"),
     address: formData.get("address"),
     description: formData.get("description"),
+    lat: formData.get("lat"),
+    lng: formData.get("lng"),
   };
 }
 
@@ -58,11 +60,14 @@ export async function createProperty(
         price: Number(rawData.price) || 0,
         area: Number(rawData.area) || 0,
         address: (rawData.address as string) || "",
+        lat: rawData.lat ? Number(rawData.lat) : 0,
+        lng: rawData.lng ? Number(rawData.lng) : 0,
       },
     };
   }
 
-  const { name, type, price, area, address, description } = result.data;
+  const { name, type, price, area, address, description, lat, lng } =
+    result.data;
 
   try {
     const property = await prisma.property.create({
@@ -73,6 +78,8 @@ export async function createProperty(
         area,
         address,
         description,
+        lat,
+        lng,
         image: null,
         ownerId: currentUser.id,
       },
@@ -95,6 +102,8 @@ export async function createProperty(
         price: Number(rawData.price) || 0,
         area: Number(rawData.area) || 0,
         address: (rawData.address as string) || "",
+        lat: rawData.lat ? Number(rawData.lat) : 0,
+        lng: rawData.lng ? Number(rawData.lng) : 0,
       },
     };
   }
@@ -192,3 +201,59 @@ export async function promoteProperty(id: string) {
     };
   }
 }
+
+/**
+ * Server Action: Update property location
+ * @param id - The ID of the property
+ * @param lat - The latitude to update
+ * @param lng - The longitude to update
+ * @returns The result of the update
+ */
+// export const updatePropertyLocation = async (
+//   id: string,
+//   lat: number,
+//   lng: number
+// ): Promise<{ success: boolean; error?: string }> => {
+//   const currentUser = await getCurrentUserFromSession();
+//   if (!currentUser) {
+//     return { success: false, error: "Unauthorized" };
+//   }
+
+//   try {
+//     // Check if property exists and user has permission
+//     const property = await prisma.property.findUnique({
+//       where: { id },
+//     });
+
+//     if (!property) {
+//       return { success: false, error: "Property not found" };
+//     }
+
+//     // Check if user owns the property or is admin
+//     if (property.ownerId !== currentUser.id) {
+//       return { success: false, error: "Unauthorized" };
+//     }
+
+//     // Get address from reverse geocoding
+//     const address = await reverseGeocode(lat, lng);
+
+//     // Update both coordinates and address in a single database call
+//     await prisma.property.update({
+//       where: { id },
+//       data: {
+//         lat,
+//         lng,
+//         ...(address && { address }), // Only update address if geocoding was successful
+//       },
+//     });
+
+//     revalidatePath("/");
+//     revalidatePath("/proprietes");
+//     revalidatePath(`/proprietes/${id}`);
+//     revalidatePath("/proprietes-area");
+//     return { success: true };
+//   } catch (error) {
+//     console.error("Error updating property location:", error);
+//     return { success: false, error: "Failed to update location" };
+//   }
+// };

@@ -3,6 +3,9 @@
 import { useEffect, useState, ReactNode } from "react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { customIcon } from "./CustumMarkerIcon";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/shared/ui/Spinner";
 
 type MapDisplayProps = {
   lat?: number | null;
@@ -13,6 +16,8 @@ type MapDisplayProps = {
   height?: string; // Custom height class, defaults to "aspect-video"
   zoom?: number; // Custom zoom level, defaults to 13 or 15 if coordinates exist
   clickHandler?: ReactNode; // Optional click handler component (for backend interactive maps)
+  onRemove?: () => void; // Optional remove handler component (for backend interactive maps)
+  loadingAddress?: boolean; // Show loading state while fetching address
 };
 
 /**
@@ -28,6 +33,8 @@ const MapDisplay = ({
   height = "aspect-video",
   zoom,
   clickHandler,
+  onRemove,
+  loadingAddress = false,
 }: MapDisplayProps) => {
   const [isMounted, setIsMounted] = useState(false);
   // Default center (Beograd)
@@ -52,17 +59,44 @@ const MapDisplay = ({
     );
   }
 
+  let addressField = (
+    <span className="text-muted-foreground">
+      {interactive ? "Click on map to set address" : "Address not available"}
+    </span>
+  );
+
+  if (loadingAddress) {
+    addressField = (
+      <div className="flex items-center gap-2">
+        <Spinner className="size-4" />
+        <span className="text-muted-foreground">Loading address...</span>
+      </div>
+    );
+  } else if (onRemove && address) {
+    addressField = (
+      <div className="flex items-center gap-2">
+        <address>{address}</address>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          onClick={onRemove}
+          className="absolute right-1 top-1/2 -translate-y-1/2"
+        >
+          <X className="size-4" />
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-2">
       {showAddress && (
-        <div className="flex h-10 w-full rounded-md bg-foreground/10 px-3 py-2 text-sm text-foreground/70 items-center">
-          {address || (
-            <span className="text-muted-foreground">
-              {interactive
-                ? "Click on map to set address"
-                : "Address not available"}
-            </span>
-          )}
+        <div
+          className="flex h-10 w-full rounded-md bg-foreground/10 px-3 
+        py-2 text-sm text-foreground/70 items-center relative"
+        >
+          {addressField}
         </div>
       )}
 

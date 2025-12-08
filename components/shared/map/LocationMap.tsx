@@ -11,6 +11,9 @@ type LocationMapProps = {
   lng?: number | null;
   address?: string | null;
   clickHandler?: ReactNode; // Handler component to handle map clicks
+  removeHandler?: () => void; // Handler component to handle map removals
+  loadingMap?: boolean;
+  loadingAddress?: boolean;
 };
 
 const LocationMap = ({
@@ -18,6 +21,8 @@ const LocationMap = ({
   lng = null,
   address = null,
   clickHandler,
+  removeHandler,
+  loadingAddress = false,
 }: LocationMapProps) => {
   return (
     <MapDisplay
@@ -27,6 +32,8 @@ const LocationMap = ({
       interactive={true}
       showAddress={true}
       clickHandler={clickHandler}
+      onRemove={removeHandler}
+      loadingAddress={loadingAddress}
     />
   );
 };

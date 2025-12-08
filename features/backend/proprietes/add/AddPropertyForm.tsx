@@ -28,10 +28,10 @@ const AddPropertyForm = () => {
           <DetailsCard state={state} pending={pending} />
 
           {/* Column 2 - Location */}
-          <LocationCard state={state} pending={pending} />
+          <LocationCard state={state} />
 
           {/* Column 3 - Gallery */}
-          <ImageGalleryCard />
+          {/* <ImageGalleryCard /> */}
         </div>
 
         <div className="w-full fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-10 mt-6">

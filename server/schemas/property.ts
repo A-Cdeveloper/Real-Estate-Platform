@@ -8,6 +8,12 @@ export const basePropertySchema = z.object({
   price: z.coerce.number().positive("Price must be positive"),
   area: z.coerce.number().positive("Area must be positive"),
   address: z.string().min(1, "Address is required"),
+  lat: z.coerce.number({
+    error: "Please select a location on the map",
+  }),
+  lng: z.coerce.number({
+    error: "Please select a location on the map",
+  }),
 });
 
 export const createPropertySchema = basePropertySchema;
