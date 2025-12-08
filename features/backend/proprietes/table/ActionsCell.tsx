@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PropertyWithOwner } from "@/types/properties";
 import { LucideIcon, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import DeleteConfirm from "../delete/DeleteConfirm";
 
 /**
@@ -33,12 +33,13 @@ const ActionButton = ({
 }: ActionButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = useCallback(() => {
     setIsOpen(true);
-  };
-  const handleCloseModal = () => {
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
 
   const Icon = icon;
 
@@ -66,8 +67,9 @@ const ActionButton = ({
 };
 
 /**
- * Actions cell for the users table
- * @param news - The news to display the actions for
+ * Actions cell for the properties table
+ * Displays edit and delete action buttons for a property
+ * @param property - The property to display the actions for
  * @returns {JSX.Element} The actions cell component
  */
 
@@ -81,7 +83,7 @@ const ActionsCell = ({ property }: ActionsCellProps) => {
       {/* Edit Action Button */}
       <ActionButton property={property} mode="edit" icon={Pencil}>
         {(onClose) => (
-          //   <NewsForm onClose={onClose} mode="edit" initialData={news} />
+          //   <PropertyForm onClose={onClose} mode="edit" initialData={property} />
           <div>Edit</div>
         )}
       </ActionButton>

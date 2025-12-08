@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserWithProperties } from "@/types/user";
 import { LucideIcon, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import UserForm from "../add-edit/UserForm";
 import DeleteConfirm from "../delete/DeleteConfirm";
 
@@ -34,12 +34,13 @@ const ActionButton = ({
 }: ActionButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = useCallback(() => {
     setIsOpen(true);
-  };
-  const handleCloseModal = () => {
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
 
   const Icon = icon;
 
@@ -68,7 +69,8 @@ const ActionButton = ({
 
 /**
  * Actions cell for the users table
- * @param {UserWithProperties} user - The user to display the actions for
+ * Displays edit and delete action buttons for a user
+ * @param user - The user to display the actions for
  * @returns {JSX.Element} The actions cell component
  */
 

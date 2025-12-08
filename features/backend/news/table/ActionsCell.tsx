@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { News } from "@prisma/client";
 import { LucideIcon, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import NewsForm from "../add-edit/NewsForm";
 import DeleteConfirm from "../delete/DeleteConfirm";
 
@@ -34,12 +34,13 @@ const ActionButton = ({
 }: ActionButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = useCallback(() => {
     setIsOpen(true);
-  };
-  const handleCloseModal = () => {
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
 
   const Icon = icon;
 
@@ -67,8 +68,9 @@ const ActionButton = ({
 };
 
 /**
- * Actions cell for the users table
- * @param news - The news to display the actions for
+ * Actions cell for the news table
+ * Displays edit and delete action buttons for a news item
+ * @param news - The news item to display the actions for
  * @returns {JSX.Element} The actions cell component
  */
 
