@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { PropertyWithOwner } from "@/types/properties";
 import { LucideIcon, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
+import DeleteConfirm from "../delete/DeleteConfirm";
 
 /**
  * ActionButtonProps type is used to define the props for the ActionButton component
@@ -92,12 +93,11 @@ const ActionsCell = ({ property }: ActionsCellProps) => {
         className="text-destructive hover:text-destructive hover:bg-destructive/10"
       >
         {(onClose) => (
-          //   <DeleteConfirm
-          //     onConfirm={() => onClose()}
-          //     newsId={news.id}
-          //     onClose={onClose}
-          //   />
-          <div>Delete</div>
+          <DeleteConfirm
+            onConfirm={() => onClose()}
+            propertyId={property.id}
+            onClose={onClose}
+          />
         )}
       </ActionButton>
     </div>

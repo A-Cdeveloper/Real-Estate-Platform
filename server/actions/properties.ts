@@ -151,6 +151,26 @@ export async function updateProperty(
  * @returns The result of the deletion
  */
 export async function deleteProperty(id: string) {
+  const currentUser = await getCurrentUserFromSession();
+  if (!currentUser) {
+    return { success: false, error: "Please login to delete a property" };
+  }
+
+  if (!id) {
+    return { success: false, error: "Property ID is required" };
+  }
+
+  const property = await prisma.property.findUnique({
+    where: { id },
+  });
+  if (!property) {
+    return { success: false, error: "Property not found" };
+  }
+
+  if (property.ownerId !== currentUser.id) {
+    return { success: false, error: "You are not the owner of this property" };
+  }
+
   try {
     await prisma.property.delete({
       where: { id },
@@ -158,6 +178,7 @@ export async function deleteProperty(id: string) {
 
     revalidatePath("/");
     revalidatePath("/proprietes");
+    revalidatePath("/proprietes-area");
 
     return { success: true };
   } catch (error) {
