@@ -18,7 +18,7 @@ export const basePropertySchema = z.object({
 
 export const createPropertySchema = basePropertySchema;
 
-export const updatePropertySchema = basePropertySchema.partial().extend({
+export const updatePropertySchema = basePropertySchema.extend({
   id: z.string().min(1, "ID is required"),
 });
 

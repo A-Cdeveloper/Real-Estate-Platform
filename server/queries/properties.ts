@@ -1,13 +1,13 @@
-import prisma from "@/server/prisma";
-import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import {
   LATEST_PROPERTIES_COUNT,
   PROMOTED_PROPERTIES_COUNT,
 } from "@/lib/constants";
-import { PropertyFilters } from "@/types/properties";
-import { PropertyStatus, Role } from "@prisma/client";
 import { parseSort } from "@/lib/utils/parseSort";
-import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
+import prisma from "@/server/prisma";
+import { getPrismaErrorMessage } from "@/server/prisma-errors";
+import { PropertyFilters } from "@/types/properties";
+import { PropertyStatus } from "@prisma/client";
+import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
 
 /**
  * Get latest properties
@@ -318,8 +318,7 @@ export async function getPropertyStats() {
 */
 
 export async function getPropertyByIdAdmin(id: string) {
-  const user = await getCurrentUserFromSession();
-  if (!user) throw new Error("Unauthorized");
+  const user = await requireAuth();
 
   const property = await prisma.property.findUnique({
     where: { id },
@@ -331,12 +330,7 @@ export async function getPropertyByIdAdmin(id: string) {
 
   if (!property) throw new Error("Property not found");
 
-  const isOwner = property.ownerId === user.id;
-  const isAdmin = user.role === Role.ADMIN;
-
-  if (!isOwner && !isAdmin) {
-    throw new Error("You are not the owner of this property");
-  }
+  await requireOwnerOrAdmin(property, user);
 
   return property;
 }

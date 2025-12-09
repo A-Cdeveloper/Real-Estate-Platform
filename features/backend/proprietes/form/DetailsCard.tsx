@@ -7,15 +7,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Home, Euro, Ruler, FileText } from "lucide-react";
 import { PropertyType } from "@prisma/client";
-import { PropertyActionState } from "@/types/properties";
-import { CreatePropertyFormData } from "@/server/schemas/property";
+import { PropertyActionState, PropertyWithOwner } from "@/types/properties";
+import {
+  CreatePropertyFormData,
+  UpdatePropertyFormData,
+} from "@/server/schemas/property";
 
-interface DetailsCardProps {
-  state: PropertyActionState<CreatePropertyFormData> | null;
+type DetailsCardProps = {
+  state: PropertyActionState<
+    CreatePropertyFormData | UpdatePropertyFormData
+  > | null;
   pending: boolean;
-}
+  property: PropertyWithOwner;
+};
 
-const DetailsCard = ({ state, pending }: DetailsCardProps) => {
+const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
   return (
     <div className="space-y-6">
       <Card>
@@ -44,7 +50,7 @@ const DetailsCard = ({ state, pending }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.name
-                  : undefined
+                  : property.name
               }
               disabled={pending}
             />
@@ -67,7 +73,7 @@ const DetailsCard = ({ state, pending }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.type
-                  : undefined
+                  : property.type || undefined
               }
               disabled={pending}
             />
@@ -91,7 +97,7 @@ const DetailsCard = ({ state, pending }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.price?.toString()
-                  : undefined
+                  : property.price?.toString()
               }
               disabled={pending}
             />
@@ -119,7 +125,7 @@ const DetailsCard = ({ state, pending }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.area?.toString()
-                  : undefined
+                  : property.area?.toString()
               }
               disabled={pending}
             />
@@ -144,7 +150,7 @@ const DetailsCard = ({ state, pending }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.description
-                  : undefined
+                  : property.description || undefined
               }
               disabled={pending}
             />
@@ -161,4 +167,3 @@ const DetailsCard = ({ state, pending }: DetailsCardProps) => {
 };
 
 export default DetailsCard;
-

@@ -2,8 +2,11 @@
 import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 import { Spinner } from "@/components/shared/ui/Spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreatePropertyFormData } from "@/server/schemas/property";
-import { PropertyActionState } from "@/types/properties";
+import {
+  CreatePropertyFormData,
+  UpdatePropertyFormData,
+} from "@/server/schemas/property";
+import { PropertyActionState, PropertyWithOwner } from "@/types/properties";
 import { MapPin } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Suspense, useCallback, useReducer } from "react";
@@ -27,6 +30,7 @@ type LocationState = {
   lng: number | null; // Longitude coordinate
   address: string | null; // Human-readable address from reverse geocoding
   loadingAddress: boolean; // Loading state while fetching address
+  property: PropertyWithOwner;
 };
 
 /**
@@ -80,6 +84,7 @@ const locationReducer = (
         lng: null,
         address: null,
         loadingAddress: false,
+        property: state.property,
       };
     default:
       return state;
@@ -89,12 +94,13 @@ const locationReducer = (
 /**
  * Initial state for location reducer
  */
-const initialState: LocationState = {
+const initialState = (property: PropertyWithOwner): LocationState => ({
   lat: null,
   lng: null,
   address: null,
   loadingAddress: false,
-};
+  property,
+});
 
 /**
  * LocationCard Component
@@ -114,11 +120,18 @@ const initialState: LocationState = {
  */
 const LocationCard = ({
   state,
+  property,
 }: {
-  state: PropertyActionState<CreatePropertyFormData> | null;
+  state: PropertyActionState<
+    CreatePropertyFormData | UpdatePropertyFormData
+  > | null;
+  property: PropertyWithOwner;
 }) => {
   // Use reducer instead of multiple useState hooks for atomic updates
-  const [locationState, dispatch] = useReducer(locationReducer, initialState);
+  const [locationState, dispatch] = useReducer(
+    locationReducer,
+    initialState(property)
+  );
 
   /**
    * Handles location change from map click
@@ -162,20 +175,28 @@ const LocationCard = ({
       </CardHeader>
       <CardContent>
         {/* Hidden form inputs for server-side form submission */}
-        <input type="hidden" name="lat" value={locationState.lat ?? ""} />
-        <input type="hidden" name="lng" value={locationState.lng ?? ""} />
+        <input
+          type="hidden"
+          name="lat"
+          value={locationState.lat ?? property.lat ?? ""}
+        />
+        <input
+          type="hidden"
+          name="lng"
+          value={locationState.lng ?? property.lng ?? ""}
+        />
         <input
           type="hidden"
           name="address"
-          value={locationState.address ?? ""}
+          value={locationState.address ?? property.address ?? ""}
         />
 
         {/* Interactive map with click handler and loading state */}
         <Suspense fallback={<Spinner className="size-4" />}>
           <LocationMap
-            lat={locationState.lat}
-            lng={locationState.lng}
-            address={locationState.address}
+            lat={locationState.lat ?? property.lat ?? null}
+            lng={locationState.lng ?? property.lng ?? null}
+            address={locationState.address ?? property.address ?? null}
             loadingAddress={locationState.loadingAddress}
             clickHandler={
               <AddMapClickHandler
