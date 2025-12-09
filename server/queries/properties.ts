@@ -5,8 +5,9 @@ import {
   PROMOTED_PROPERTIES_COUNT,
 } from "@/lib/constants";
 import { PropertyFilters } from "@/types/properties";
-import { PropertyStatus } from "@prisma/client";
+import { PropertyStatus, Role } from "@prisma/client";
 import { parseSort } from "@/lib/utils/parseSort";
+import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
 
 /**
  * Get latest properties
@@ -217,7 +218,7 @@ export async function getRecentPropertyIds(limit: number = 50) {
 }
 
 /**
- * Get property by ID
+ * Get property by ID For Frontend Only
  * @param id - The ID of the property
  * @returns The property
  */
@@ -307,4 +308,35 @@ export async function getPropertyStats() {
     console.error("Database error:", error);
     throw new Error(getPrismaErrorMessage(error));
   }
+}
+
+/*
+  Get property by ID For Backend Only
+  @param id - The ID of the property
+  @param checkOwner - If true, check if the current user is the owner of the property
+  @returns The property
+*/
+
+export async function getPropertyByIdAdmin(id: string) {
+  const user = await getCurrentUserFromSession();
+  if (!user) throw new Error("Unauthorized");
+
+  const property = await prisma.property.findUnique({
+    where: { id },
+    include: {
+      owner: { select: { id: true, name: true, email: true } },
+      gallery: { orderBy: { order: "asc" } },
+    },
+  });
+
+  if (!property) throw new Error("Property not found");
+
+  const isOwner = property.ownerId === user.id;
+  const isAdmin = user.role === Role.ADMIN;
+
+  if (!isOwner && !isAdmin) {
+    throw new Error("You are not the owner of this property");
+  }
+
+  return property;
 }

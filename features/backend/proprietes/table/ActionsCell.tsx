@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PropertyWithOwner } from "@/types/properties";
 import { LucideIcon, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useState, useCallback } from "react";
 import DeleteConfirm from "../delete/DeleteConfirm";
 
@@ -81,12 +82,11 @@ const ActionsCell = ({ property }: ActionsCellProps) => {
   return (
     <div className="flex justify-center">
       {/* Edit Action Button */}
-      <ActionButton property={property} mode="edit" icon={Pencil}>
-        {(onClose) => (
-          //   <PropertyForm onClose={onClose} mode="edit" initialData={property} />
-          <div>Edit</div>
-        )}
-      </ActionButton>
+      <Link href={`/proprietes-area/edit/${property.id}`}>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Pencil className="size-4" />
+        </Button>
+      </Link>
       {/* Delete Action Button */}
       <ActionButton
         property={property}
