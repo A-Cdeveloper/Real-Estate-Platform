@@ -1,6 +1,6 @@
 import PageHeader from "@/components/backend/layout/PageHeader";
 import BackButton from "@/components/shared/ui/BackButton";
-import AddPropertyForm from "@/features/backend/proprietes/add/AddPropertyForm";
+import PropertyForm from "@/features/backend/proprietes/add-edit/PropertyForm";
 import { Building } from "lucide-react";
 
 const AddPropertyPage = () => {
@@ -12,7 +12,7 @@ const AddPropertyPage = () => {
         label="Back"
         className="!bg-transparent !text-muted-foreground mb-3"
       />
-      <AddPropertyForm />
+      <PropertyForm mode="add" />
     </>
   );
 };

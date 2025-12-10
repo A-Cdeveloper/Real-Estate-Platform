@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { updateProperty } from "@/server/actions/properties";
+import { createProperty, updateProperty } from "@/server/actions/properties";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -12,22 +12,49 @@ import { PropertyWithOwner } from "@/types/properties";
 import { PropertyStatus } from "@prisma/client";
 import CustomSelect from "@/components/shared/form/CustomSelect";
 import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
+import { Loader2 } from "lucide-react";
 
-const EditPropertyForm = ({ property }: { property: PropertyWithOwner }) => {
+type PropertyFormProps = {
+  mode: "add" | "edit";
+  property?: PropertyWithOwner;
+};
+
+const PropertyForm = ({ mode, property }: PropertyFormProps) => {
   const router = useRouter();
-  const [state, formAction, pending] = useActionState(updateProperty, null);
+  const isEdit = mode === "edit";
+
+  // Razdvojene action-state kuke
+  const [addState, addFormAction, addPending] = useActionState(
+    createProperty,
+    null
+  );
+  const [editState, editFormAction, editPending] = useActionState(
+    updateProperty,
+    null
+  );
+
+  // Izbor prema modu
+  const state = isEdit ? editState : addState;
+  const formAction = isEdit ? editFormAction : addFormAction;
+  const pending = isEdit ? editPending : addPending;
 
   useEffect(() => {
     if (state?.success) {
-      toast.success("Property updated successfully!");
+      toast.success(
+        mode === "add"
+          ? "Property created successfully!"
+          : "Property updated successfully!"
+      );
       router.push("/proprietes-area?sort=status_desc");
     }
-  }, [state, router]);
+  }, [state, router, mode]);
 
   return (
     <div className="w-full">
       <form action={formAction} className="relative">
-        <input type="hidden" name="id" value={property.id} />
+        {mode === "edit" && property && (
+          <input type="hidden" name="id" value={property.id} />
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24">
           {/* Column 1 - Property Details */}
           <DetailsCard state={state} pending={pending} property={property} />
@@ -57,9 +84,10 @@ const EditPropertyForm = ({ property }: { property: PropertyWithOwner }) => {
                     state &&
                     !state.success &&
                     state.data &&
-                    "status" in state.data
-                      ? state.data.status
-                      : property.status || undefined
+                    typeof (state.data as { status?: unknown }).status ===
+                      "string"
+                      ? (state.data as { status?: string }).status
+                      : property?.status || undefined
                   }
                   disabled={pending}
                 />
@@ -70,13 +98,19 @@ const EditPropertyForm = ({ property }: { property: PropertyWithOwner }) => {
                 />
               </>
             )}
-            <Button
-              type="submit"
-              size="lg"
-              className="w-auto block"
-              disabled={pending}
-            >
-              {pending ? "Updating..." : "Update Property"}
+            <Button type="submit" disabled={pending}>
+              {pending ? (
+                <>
+                  <Loader2 className="animate-spin" aria-hidden="true" />
+                  <span aria-live="polite">
+                    {mode === "add" ? "Creating..." : "Updating..."}
+                  </span>
+                </>
+              ) : mode === "add" ? (
+                "Create Property"
+              ) : (
+                "Update Property"
+              )}
             </Button>
           </div>
         </div>
@@ -85,4 +119,4 @@ const EditPropertyForm = ({ property }: { property: PropertyWithOwner }) => {
   );
 };
 
-export default EditPropertyForm;
+export default PropertyForm;
