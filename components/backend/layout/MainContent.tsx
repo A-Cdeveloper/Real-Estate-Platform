@@ -7,8 +7,10 @@ const MainContent = ({ children }: { children: React.ReactNode }) => {
   const isCollapsed = useSidebarStore((state) => state.isCollapsed);
   return (
     <main
+      // components/backend/layout/MainContent.tsx
+      // Linija 11 - ukloni overflow-y-auto i promeni height na min-height
       className={cn(
-        "mt-12 h-[calc(100vh-4rem)] overflow-y-auto bg-muted/20 px-4 py-8 transition-[margin-left] duration-300 lg:px-8",
+        "mt-12 min-h-[calc(100vh-4rem)] bg-muted/20 px-4 py-8 transition-[margin-left] duration-300 lg:px-8",
         // Mobile: always ml-16 (sidebar is overlay when expanded)
         // Desktop: toggle between ml-16 and ml-64
         "ml-16",
