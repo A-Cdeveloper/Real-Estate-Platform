@@ -21,14 +21,14 @@ const RealtyListItem = ({ property }: { property: Property }) => {
             {property.name}
           </CardTitle>
           {property.address && (
-            <div className="flex items-center gap-1 text-muted-foreground mb-2 font-nunito-sans text-sm">
-              <MapPin className="w-4 h-4" />
+            <div className="flex gap-2 text-muted-foreground mb-2 font-nunito-sans text-sm">
+              <MapPin className="w-4 h-4 mt-[1px]" />
               <span>{property.address}</span>
             </div>
           )}
           {property.area && (
             <div className="flex items-center gap-4 text-muted-foreground mb-4 font-nunito-sans text-sm">
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-2">
                 <Square className="w-4 h-4" />
                 {property.area} m²
               </span>

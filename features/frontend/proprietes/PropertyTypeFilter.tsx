@@ -2,14 +2,8 @@
 
 import React from "react";
 import CustomInput from "@/components/shared/form/CustomInput";
+import CustomSelect from "@/components/shared/form/CustomSelect";
 import { PropertyType } from "@prisma/client";
-import {
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-  Select,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { X, Search } from "lucide-react";
 import { usePropertyFilters } from "./hooks/usePropertyFilters";
@@ -44,6 +38,12 @@ const PropertyTypeFilter = ({
   className,
   clearRoute,
 }: PropertyTypeFilterProps) => {
+  const propertyTypeOptions = [
+    { value: PropertyType.Apartment, label: "Apartment" },
+    { value: PropertyType.House, label: "House" },
+    { value: PropertyType.Commercial, label: "Commercial" },
+  ];
+
   const {
     location,
     setLocation,
@@ -77,27 +77,18 @@ const PropertyTypeFilter = ({
         />
 
         {/* Property Type Select */}
-        <Select
+        <CustomSelect
+          id="property-type-select"
           value={type || undefined}
           onValueChange={(value) => setType(value as PropertyType)}
-          key={type || "empty"}
-        >
-          <SelectTrigger
-            id="property-type-select"
-            className={cn(
-              "w-full bg-white dark:bg-background",
-              type && "border-primary"
-            )}
-            aria-label="Select property type"
-          >
-            <SelectValue placeholder="All Types" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Apartment">Apartment</SelectItem>
-            <SelectItem value="House">House</SelectItem>
-            <SelectItem value="Commercial">Commercial</SelectItem>
-          </SelectContent>
-        </Select>
+          options={propertyTypeOptions}
+          placeholder="All Types"
+          triggerClassName={cn(
+            "w-full bg-white dark:bg-background",
+            type && "border-primary"
+          )}
+          aria-label="Select property type"
+        />
 
         {/* Min Price Input */}
         <CustomInput
