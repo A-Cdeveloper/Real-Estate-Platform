@@ -1,4 +1,4 @@
-import { PropertyType } from "@prisma/client";
+import { PropertyType, PropertyStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const basePropertySchema = z.object({
@@ -20,6 +20,9 @@ export const createPropertySchema = basePropertySchema;
 
 export const updatePropertySchema = basePropertySchema.extend({
   id: z.string().min(1, "ID is required"),
+  status: z
+    .enum(Object.values(PropertyStatus) as [string, ...string[]])
+    .optional(),
 });
 
 export type CreatePropertyFormData = z.infer<typeof createPropertySchema>;

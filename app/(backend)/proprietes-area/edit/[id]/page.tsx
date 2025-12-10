@@ -1,8 +1,10 @@
 import PageHeader from "@/components/backend/layout/PageHeader";
 import BackButton from "@/components/shared/ui/BackButton";
+import EditPropertyForm from "@/features/backend/proprietes/edit/EditPropertyForm";
+import { PropertyStatusBadge } from "@/features/backend/proprietes/ui/PropertyStatusBadge";
 import { getPropertyByIdAdmin } from "@/server/queries/properties";
 import { Building } from "lucide-react";
-import EditPropertyForm from "@/features/backend/proprietes/edit/EditPropertyForm";
+import ScrollToTopOnMount from "@/components/ScrollToTopOnMount";
 
 type Params = Promise<{ id: string }>;
 
@@ -13,7 +15,11 @@ const EditPropertyPage = async ({ params }: { params: Params }) => {
 
   return (
     <>
-      <PageHeader title="Edit Property" icon={Building} />
+      <ScrollToTopOnMount />
+      <div className="flex items-center gap-4">
+        <PageHeader title="Edit Property" icon={Building} />
+        <PropertyStatusBadge status={property.status} className="block -mt-4" />
+      </div>
       <BackButton
         href="/proprietes-area?sort=status_desc"
         label="Back"

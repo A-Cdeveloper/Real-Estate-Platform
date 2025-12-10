@@ -18,7 +18,7 @@ type DetailsCardProps = {
     CreatePropertyFormData | UpdatePropertyFormData
   > | null;
   pending: boolean;
-  property: PropertyWithOwner;
+  property?: PropertyWithOwner;
 };
 
 const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
@@ -50,7 +50,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.name
-                  : property.name
+                  : property?.name
               }
               disabled={pending}
             />
@@ -63,7 +63,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
               id="type"
               name="type"
               label="Property Type"
-              labelClassName="text-sm font-medium mb-2 flex items-center gap-2"
+              labelClassName="text-sm font-medium flex items-center gap-2"
               placeholder="Select property type"
               options={[
                 { value: PropertyType.Apartment, label: "Apartment" },
@@ -73,63 +73,70 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.type
-                  : property.type || undefined
+                  : property?.type || undefined
               }
               disabled={pending}
             />
             <ErrorFormMessages state={state} fieldName="type" fieldId="type" />
           </div>
 
-          {/* Price */}
-          <div>
-            <label
-              htmlFor="price"
-              className="text-sm font-medium mb-2 flex items-center gap-2"
-            >
-              <Euro className="size-3.5" />
-              Price (€)
-            </label>
-            <CustomInput
-              id="price"
-              name="price"
-              type="number"
-              placeholder="250000"
-              defaultValue={
-                state && !state.success && state.data
-                  ? state.data.price?.toString()
-                  : property.price?.toString()
-              }
-              disabled={pending}
-            />
-            <ErrorFormMessages
-              state={state}
-              fieldName="price"
-              fieldId="price"
-            />
-          </div>
+          {/* Price and Area */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Price */}
+            <div>
+              <label
+                htmlFor="price"
+                className="text-sm font-medium mb-2 flex items-center gap-2"
+              >
+                <Euro className="size-3.5" />
+                Price (€)
+              </label>
+              <CustomInput
+                id="price"
+                name="price"
+                type="number"
+                placeholder="250000"
+                defaultValue={
+                  state && !state.success && state.data
+                    ? state.data.price?.toString()
+                    : property?.price?.toString()
+                }
+                disabled={pending}
+              />
+              <ErrorFormMessages
+                state={state}
+                fieldName="price"
+                fieldId="price"
+              />
+            </div>
 
-          {/* Area */}
-          <div>
-            <label
-              htmlFor="area"
-              className="text-sm font-medium mb-2 flex items-center gap-2"
-            >
-              <Ruler className="size-3.5" />
-              Area (m²)
-            </label>
-            <CustomInput
-              id="area"
-              name="area"
-              type="number"
-              placeholder="85"
-              defaultValue={
-                state && !state.success && state.data
-                  ? state.data.area?.toString()
-                  : property.area?.toString()
-              }
-              disabled={pending}
-            />
-            <ErrorFormMessages state={state} fieldName="area" fieldId="area" />
+            {/* Area */}
+            <div>
+              <label
+                htmlFor="area"
+                className="text-sm font-medium mb-2 flex items-center gap-2"
+              >
+                <Ruler className="size-3.5" />
+                Area (m²)
+              </label>
+              <CustomInput
+                id="area"
+                name="area"
+                type="number"
+                placeholder="85"
+                defaultValue={
+                  state && !state.success && state.data
+                    ? state.data.area?.toString()
+                    : property?.area?.toString()
+                }
+                disabled={pending}
+              />
+              <ErrorFormMessages
+                state={state}
+                fieldName="area"
+                fieldId="area"
+              />
+            </div>
           </div>
 
           {/* Description */}
@@ -150,7 +157,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
               defaultValue={
                 state && !state.success && state.data
                   ? state.data.description
-                  : property.description || undefined
+                  : property?.description || undefined
               }
               disabled={pending}
             />

@@ -3,7 +3,7 @@
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { PropertyActionState } from "@/types/properties";
-import { PropertyType } from "@prisma/client";
+import { PropertyType, PropertyStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
 import {
@@ -29,6 +29,7 @@ function parsePropertyFormData(formData: FormData) {
     description: formData.get("description"),
     lat: formData.get("lat"),
     lng: formData.get("lng"),
+    status: formData.get("status"),
   };
 }
 
@@ -154,11 +155,12 @@ export async function updateProperty(
         address: (rawData.address as string) || "",
         lat: rawData.lat ? Number(rawData.lat) : 0,
         lng: rawData.lng ? Number(rawData.lng) : 0,
+        status: (rawData.status as PropertyStatus) || property.status,
       },
     };
   }
 
-  const { name, type, price, area, address, description, lat, lng } =
+  const { name, type, price, area, address, description, lat, lng, status } =
     result.data;
 
   try {
@@ -173,6 +175,7 @@ export async function updateProperty(
         description,
         lat,
         lng,
+        ...(status && { status: status as PropertyStatus }),
       },
     });
 
@@ -197,6 +200,7 @@ export async function updateProperty(
         address: (rawData.address as string) || "",
         lat: rawData.lat ? Number(rawData.lat) : 0,
         lng: rawData.lng ? Number(rawData.lng) : 0,
+        status: (rawData.status as PropertyStatus) || property.status,
       },
     };
   }

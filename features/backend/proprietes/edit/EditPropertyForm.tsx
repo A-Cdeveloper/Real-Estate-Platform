@@ -9,6 +9,9 @@ import DetailsCard from "../form/DetailsCard";
 import LocationCard from "../form/LocationCard";
 import ImageGalleryCard from "../form/ImageGalleryCard";
 import { PropertyWithOwner } from "@/types/properties";
+import { PropertyStatus } from "@prisma/client";
+import CustomSelect from "@/components/shared/form/CustomSelect";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 
 const EditPropertyForm = ({ property }: { property: PropertyWithOwner }) => {
   const router = useRouter();
@@ -37,14 +40,45 @@ const EditPropertyForm = ({ property }: { property: PropertyWithOwner }) => {
         </div>
 
         <div className="w-full fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-10 mt-6">
-          <Button
-            type="submit"
-            size="lg"
-            className="w-auto block ml-auto"
-            disabled={pending}
-          >
-            {pending ? "Updating..." : "Update Property"}
-          </Button>
+          <div className="flex justify-end gap-2">
+            {/* Status - Only show in edit mode */}
+            {property && (
+              <>
+                <CustomSelect
+                  id="status"
+                  name="status"
+                  placeholder="Select status"
+                  options={[
+                    { value: PropertyStatus.APPROVED, label: "Approved" },
+                    { value: PropertyStatus.IN_REVIEW, label: "In Review" },
+                    { value: PropertyStatus.REJECTED, label: "Rejected" },
+                  ]}
+                  defaultValue={
+                    state &&
+                    !state.success &&
+                    state.data &&
+                    "status" in state.data
+                      ? state.data.status
+                      : property.status || undefined
+                  }
+                  disabled={pending}
+                />
+                <ErrorFormMessages
+                  state={state}
+                  fieldName="status"
+                  fieldId="status"
+                />
+              </>
+            )}
+            <Button
+              type="submit"
+              size="lg"
+              className="w-auto block"
+              disabled={pending}
+            >
+              {pending ? "Updating..." : "Update Property"}
+            </Button>
+          </div>
         </div>
       </form>
     </div>

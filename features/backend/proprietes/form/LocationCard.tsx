@@ -30,7 +30,7 @@ type LocationState = {
   lng: number | null; // Longitude coordinate
   address: string | null; // Human-readable address from reverse geocoding
   loadingAddress: boolean; // Loading state while fetching address
-  property: PropertyWithOwner;
+  property?: PropertyWithOwner;
 };
 
 /**
@@ -94,10 +94,10 @@ const locationReducer = (
 /**
  * Initial state for location reducer
  */
-const initialState = (property: PropertyWithOwner): LocationState => ({
-  lat: null,
-  lng: null,
-  address: null,
+const initialState = (property?: PropertyWithOwner): LocationState => ({
+  lat: property?.lat ?? null,
+  lng: property?.lng ?? null,
+  address: property?.address ?? null,
   loadingAddress: false,
   property,
 });
@@ -125,7 +125,7 @@ const LocationCard = ({
   state: PropertyActionState<
     CreatePropertyFormData | UpdatePropertyFormData
   > | null;
-  property: PropertyWithOwner;
+  property?: PropertyWithOwner;
 }) => {
   // Use reducer instead of multiple useState hooks for atomic updates
   const [locationState, dispatch] = useReducer(
@@ -178,25 +178,25 @@ const LocationCard = ({
         <input
           type="hidden"
           name="lat"
-          value={locationState.lat ?? property.lat ?? ""}
+          value={locationState.lat ?? property?.lat ?? ""}
         />
         <input
           type="hidden"
           name="lng"
-          value={locationState.lng ?? property.lng ?? ""}
+          value={locationState.lng ?? property?.lng ?? ""}
         />
         <input
           type="hidden"
           name="address"
-          value={locationState.address ?? property.address ?? ""}
+          value={locationState.address ?? property?.address ?? ""}
         />
 
         {/* Interactive map with click handler and loading state */}
         <Suspense fallback={<Spinner className="size-4" />}>
           <LocationMap
-            lat={locationState.lat ?? property.lat ?? null}
-            lng={locationState.lng ?? property.lng ?? null}
-            address={locationState.address ?? property.address ?? null}
+            lat={locationState.lat ?? property?.lat ?? null}
+            lng={locationState.lng ?? property?.lng ?? null}
+            address={locationState.address ?? property?.address ?? null}
             loadingAddress={locationState.loadingAddress}
             clickHandler={
               <AddMapClickHandler

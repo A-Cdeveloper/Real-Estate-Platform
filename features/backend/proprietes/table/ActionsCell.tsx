@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PropertyWithOwner } from "@/types/properties";
 import { LucideIcon, Pencil, Trash2 } from "lucide-react";
-import Link from "next/link";
 import { useState, useCallback } from "react";
 import DeleteConfirm from "../delete/DeleteConfirm";
+import { useRouter } from "next/navigation";
 
 /**
  * ActionButtonProps type is used to define the props for the ActionButton component
@@ -79,14 +79,22 @@ type ActionsCellProps = {
 };
 
 const ActionsCell = ({ property }: ActionsCellProps) => {
+  const router = useRouter();
+  const handleClick = useCallback(() => {
+    router.push(`/proprietes-area/edit/${property.id}`);
+  }, [property.id, router]);
   return (
     <div className="flex justify-center">
       {/* Edit Action Button */}
-      <Link href={`/proprietes-area/edit/${property.id}`}>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Pencil className="size-4" />
-        </Button>
-      </Link>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleClick}
+      >
+        <Pencil className="size-4" />
+      </Button>
+
       {/* Delete Action Button */}
       <ActionButton
         property={property}
