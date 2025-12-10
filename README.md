@@ -10,6 +10,7 @@ This project is a comprehensive real estate application that demonstrates modern
 
 **Property Management**
 
+**Frontend:**
 - Browse properties with server-side pagination
 - Detailed property pages with image galleries
 - Lightbox modal for viewing property photos
@@ -23,6 +24,27 @@ This project is a comprehensive real estate application that demonstrates modern
   - Clear filters functionality
 - Hero search form on homepage
 - Property statistics (total listings, average price per m², recent additions)
+
+**Backend (Admin/Agent):**
+- Complete property management system with create, edit, and delete functionality
+- Server-side pagination for efficient data loading (default: 15 properties per page)
+- Server-side sorting by status, createdAt, and other fields with URL-based state management
+- Generic table component (`GenericTable`) for reusable data display
+- Sortable columns with visual indicators (up/down arrows)
+- Property status management (APPROVED, IN_REVIEW, REJECTED) with custom status badge component
+- Property creation form with:
+  - Property details (name, type, price, area, description)
+  - Interactive map for location selection with geocoding/reverse geocoding
+  - Location coordinates (latitude/longitude) for map display
+  - Responsive form layout with price and area fields side by side
+- Property edit form (in progress):
+  - Property details editing with pre-filled form values
+  - Location editing with interactive map
+  - Status change support
+  - ⚠️ **Note**: Image gallery editing not yet implemented
+- Owner-based filtering (agents see only their properties, admins see all)
+- Authorization system with ownership helpers (`requireAuth`, `requireOwnerOrAdmin`)
+- Scroll position reset on navigation (similar to pagination behavior)
 
 **News Section**
 
@@ -271,6 +293,22 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │       │   │   ├── ActionsCell.tsx # Edit/Delete actions
 │       │   │   └── sortableColumns.ts # Sortable columns config
 │       │   └── AllUsers.tsx       # Main users list component
+│       ├── proprietes/            # Property management
+│       │   ├── add/               # Add property form
+│       │   │   └── AddPropertyForm.tsx
+│       │   ├── edit/              # Edit property form (in progress)
+│       │   │   └── EditPropertyForm.tsx
+│       │   ├── form/              # Reusable form components
+│       │   │   ├── DetailsCard.tsx # Property details form card
+│       │   │   ├── LocationCard.tsx # Location map form card
+│       │   │   └── ImageGalleryCard.tsx # Image gallery card (not yet implemented)
+│       │   ├── table/             # Properties table components
+│       │   │   ├── columns.tsx    # Table column definitions
+│       │   │   ├── ActionsCell.tsx # Edit/Delete actions
+│       │   │   └── sortableColumns.ts # Sortable columns config
+│       │   ├── ui/                # Property UI components
+│       │   │   └── PropertyStatusBadge.tsx # Status badge component
+│       │   └── AllProprietes.tsx  # Main properties list component
 │       ├── news/                 # News management
 │       │   ├── add-edit/         # Add/Edit news form
 │       │   │   ├── AddNews.tsx
@@ -350,7 +388,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── session.ts            # Session management
 │   │   ├── password.ts           # Password hashing
 │   │   ├── resetToken.ts         # Password reset tokens
-│   │   └── getCurrentUserFromSession.ts
+│   │   ├── getCurrentUserFromSession.ts
+│   │   └── ownership.ts          # Property ownership authorization helpers
 │   ├── mail/                     # Email functionality
 │   │   ├── sendContactEmail.tsx
 │   │   ├── sendPasswordResetEmail.tsx
@@ -364,6 +403,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── auth.ts               # Authentication schemas
 │   │   ├── contact.ts
 │   │   ├── profile.ts            # Profile validation schemas
+│   │   ├── property.ts           # Property validation schemas (create/update)
 │   │   ├── propertyFilters.ts
 │   │   ├── settings.ts           # Settings validation schemas
 │   │   ├── user.ts               # User validation schemas
@@ -431,6 +471,14 @@ Enum values:
 - `createdAt` - Account creation timestamp
 - Relations: `properties` (Property\[\])
 
+### PropertyStatus
+
+Enum values:
+
+- `APPROVED` - Property is approved and visible on frontend
+- `IN_REVIEW` - Property is pending approval (default for new properties)
+- `REJECTED` - Property has been rejected
+
 ### Property
 
 - `id` - Unique identifier
@@ -443,6 +491,7 @@ Enum values:
 - `lng` - Geographic longitude (optional)
 - `description` - Property description (optional)
 - `image` - Main property image URL (optional)
+- `status` - Property status (APPROVED, IN_REVIEW, REJECTED) (default: IN_REVIEW)
 - `promoted` - Featured property flag (default: false)
 - `createdAt` - Listing creation timestamp
 - `ownerId` - Foreign key to User
@@ -630,6 +679,44 @@ The application includes a complete news management system for administrators:
 - **Type Safety**: Full TypeScript support with `AddNews`, `UpdateNews`, and `DeleteNews` types
 - **Zod Validation**: Server-side validation for all news operations with detailed error messages
 - **Role-Based Access**: Admin-only access with `adminGuard` middleware
+
+### Property Management (Backend)
+
+The application includes a comprehensive property management system for administrators and agents:
+
+- **Server-Side Operations**: All property operations (create, update, delete) use Next.js server actions
+- **Reusable Form Components**: `DetailsCard` and `LocationCard` components work with optional `property` prop for both create and edit modes
+- **Server-Side Pagination**: Efficient data loading with configurable page size (default: 15 properties per page)
+- **Server-Side Sorting**: Sortable by status, createdAt, and other fields with URL-based state management
+- **Generic Table Component**: Reuses `GenericTable` component with TypeScript generics for consistent UI
+- **Sortable Columns**: Configurable sortable columns with visual indicators (ChevronUp/ChevronDown icons)
+- **Property Status Management**: 
+  - Three statuses: APPROVED, IN_REVIEW (default), REJECTED
+  - Custom `PropertyStatusBadge` component with color-coded status display
+  - Status can be changed in edit form (optional field in update schema)
+- **Property Creation Form**:
+  - Property details: name, type, price, area, description
+  - Interactive map for location selection with geocoding/reverse geocoding
+  - Responsive layout with price and area fields side by side
+  - Form validation with Zod schemas
+- **Property Edit Form** (⚠️ **In Progress**):
+  - Property details editing with pre-filled form values
+  - Location editing with interactive map
+  - Status change support
+  - ⚠️ **Note**: Image gallery editing not yet implemented
+- **Authorization System**: Centralized ownership helpers in `server/auth/ownership.ts`:
+  - `requireAuth()` - Ensures user is authenticated
+  - `requireOwnerOrAdmin(property, user)` - Ensures user owns property or is admin
+  - Used in server actions and queries for consistent authorization
+- **Owner-Based Filtering**: Agents see only their properties, admins see all properties
+- **Scroll Position Management**: Scroll position resets on navigation (similar to pagination behavior)
+- **Form Component Reusability**: 
+  - `DetailsCard` and `LocationCard` support optional `property` prop
+  - Consistent label margins between `CustomInput` and `CustomSelect` components
+  - Responsive grid layout for price and area fields
+- **Type Safety**: Full TypeScript support with `CreatePropertyFormData`, `UpdatePropertyFormData`, and `PropertyActionState` types
+- **Zod Validation**: Server-side validation for all property operations with detailed error messages
+- **Role-Based Access**: Owner or admin access required for property operations
 
 ### Settings Management
 
