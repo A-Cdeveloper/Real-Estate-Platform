@@ -6,11 +6,11 @@ import { DEFAULT_NEWS_IMAGE } from "@/lib/constants";
 import { PropertyWithOwner } from "@/types/properties";
 import ActionsCell from "./ActionsCell";
 
-import { Badge } from "@/components/ui/badge";
 import { promoteProperty } from "@/server/actions/properties";
 import { PropertyStatus } from "@prisma/client";
 import { Star } from "lucide-react";
 import { toast } from "sonner";
+import { PropertyStatusBadge } from "../ui/PropertyStatusBadge";
 
 /**
  * Columns for the news table
@@ -59,21 +59,7 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
     key: "status",
     label: "Status",
     render: (property) => {
-      return (
-        <Badge
-          className="w-fit"
-          variant={
-            property.status === PropertyStatus.APPROVED
-              ? "success"
-              : property.status === PropertyStatus.IN_REVIEW
-                ? "warning"
-                : "destructive"
-          }
-        >
-          {property.status.charAt(0) + property.status.slice(1).toLowerCase() ||
-            "N/A"}
-        </Badge>
-      );
+      return <PropertyStatusBadge status={property.status} />;
     },
   },
   ...(isAdmin
