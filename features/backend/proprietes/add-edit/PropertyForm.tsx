@@ -55,6 +55,7 @@ const PropertyForm = ({ mode, property }: PropertyFormProps) => {
         {mode === "edit" && property && (
           <input type="hidden" name="id" value={property.id} />
         )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24">
           {/* Column 1 - Property Details */}
           <DetailsCard state={state} pending={pending} property={property} />
@@ -63,7 +64,7 @@ const PropertyForm = ({ mode, property }: PropertyFormProps) => {
           <LocationCard state={state} property={property} />
 
           {/* Column 3 - Gallery */}
-          {/* <ImageGalleryCard /> */}
+          <ImageGalleryCard state={state} property={property} />
         </div>
 
         <div className="w-full fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-10 mt-6">

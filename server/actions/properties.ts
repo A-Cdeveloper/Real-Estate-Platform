@@ -9,6 +9,7 @@ import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
 import {
   CreatePropertyFormData,
   createPropertySchema,
+  PropertyGallery,
   UpdatePropertyFormData,
   updatePropertySchema,
 } from "../schemas/property";
@@ -20,6 +21,15 @@ import { formatZodErrors } from "../utils/zod";
  * @returns The parsed property data
  */
 function parsePropertyFormData(formData: FormData) {
+  const galleryRaw = formData.get("gallery");
+  let gallery: PropertyGallery = [];
+  if (typeof galleryRaw === "string") {
+    try {
+      gallery = JSON.parse(galleryRaw);
+    } catch {
+      gallery = [];
+    }
+  }
   return {
     name: formData.get("name"),
     type: formData.get("type"),
@@ -30,6 +40,7 @@ function parsePropertyFormData(formData: FormData) {
     lat: formData.get("lat"),
     lng: formData.get("lng"),
     status: formData.get("status"),
+    gallery,
   };
 }
 
@@ -62,11 +73,14 @@ export async function createProperty(
         address: (rawData.address as string) || "",
         lat: rawData.lat ? Number(rawData.lat) : 0,
         lng: rawData.lng ? Number(rawData.lng) : 0,
+        gallery: Array.isArray(rawData.gallery)
+          ? (rawData.gallery as PropertyGallery)
+          : [],
       },
     };
   }
 
-  const { name, type, price, area, address, description, lat, lng } =
+  const { name, type, price, area, address, description, lat, lng, gallery } =
     result.data;
 
   try {
@@ -80,10 +94,21 @@ export async function createProperty(
         description,
         lat,
         lng,
-        image: null,
+        image: gallery[0]?.url ?? null,
         ownerId: user.id,
       },
     });
+
+    if (gallery.length) {
+      await prisma.propertyImage.createMany({
+        data: gallery.map((item, idx) => ({
+          url: item.url,
+          alt: item.alt ?? null,
+          order: typeof item.order === "number" ? item.order : idx,
+          propertyId: property.id,
+        })),
+      });
+    }
 
     revalidatePath("/");
     revalidatePath("/proprietes");
@@ -104,6 +129,9 @@ export async function createProperty(
         address: (rawData.address as string) || "",
         lat: rawData.lat ? Number(rawData.lat) : 0,
         lng: rawData.lng ? Number(rawData.lng) : 0,
+        gallery: Array.isArray(rawData.gallery)
+          ? (rawData.gallery as PropertyGallery)
+          : [],
       },
     };
   }
