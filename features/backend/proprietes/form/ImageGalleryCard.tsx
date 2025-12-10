@@ -1,61 +1,71 @@
 "use client";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   CreatePropertyFormData,
-  UpdatePropertyFormData,
   PropertyGallery,
+  UpdatePropertyFormData,
 } from "@/server/schemas/property";
-import { Image as ImageIcon, Images, Plus, X } from "lucide-react";
 import { PropertyActionState, PropertyWithOwner } from "@/types/properties";
-import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
-import CustumImage from "@/components/shared/ui/CustumImage";
+import { Images } from "lucide-react";
+import React, { useState } from "react";
+import ImageDropzone from "./ImageDropzone";
+import ImageGalleryList from "./ImageGalleryList";
 
 type ImageGalleryCardProps = {
   state: PropertyActionState<
     CreatePropertyFormData | UpdatePropertyFormData
   > | null;
   property?: PropertyWithOwner;
+  onHasBlobsChange?: (hasBlobs: boolean) => void;
 };
 
-const ImageGalleryCard = ({ state, property }: ImageGalleryCardProps) => {
+const ImageGalleryCard = ({
+  state,
+  property,
+  onHasBlobsChange,
+}: ImageGalleryCardProps) => {
   const [images, setImages] = useState<PropertyGallery>([]);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const addDummy = () => {
-    setImages((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        alt: "Image",
-        url: `https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=600&fit=crop`,
-        order: prev.length,
-      },
-    ]);
-  };
-  const setAsMain = (id?: string) => {
-    if (!id) return;
+  // Check if there are blob URLs and notify parent
+  React.useEffect(() => {
+    const hasBlobs = images.some((img) => img.url.startsWith("blob:"));
+    onHasBlobsChange?.(hasBlobs || isUploading);
+  }, [images, isUploading, onHasBlobsChange]);
+
+  // Set the main image to the top of the list
+  const setMainImage = (id: string) => {
     setImages((prev) => {
-      const next = [...prev];
-      const idx = next.findIndex((img) => img.id === id);
-      if (idx < 0) return prev;
-      const [item] = next.splice(idx, 1);
-      next.unshift({ ...item, order: 0 });
-      return next.map((it, i) => ({ ...it, order: i }));
+      const image = prev.find((img) => img.id === id);
+      if (!image) return prev;
+
+      const others = prev.filter((img) => img.id !== id);
+      return [{ ...image, order: 0 }, ...others].map((img, i) => ({
+        ...img,
+        order: i,
+      }));
     });
   };
 
-  const removeAt = (id?: string) => {
-    if (!id) return;
-    setImages((prev) => {
-      const next = prev.filter((img) => img.id !== id);
-      return next.map((it, i) => ({ ...it, order: i }));
-    });
+  // Remove the image from the list
+  const removeImage = (id: string) => {
+    setImages((prev) =>
+      prev
+        .filter((img) => img.id !== id)
+        .map((img, i) => ({
+          ...img,
+          order: i,
+        }))
+    );
   };
+
+  // Filter out blob URLs before submitting
+  const validImages = images.filter((img) => !img.url.startsWith("blob:"));
 
   return (
     <div className="space-y-6">
-      <input type="hidden" name="gallery" value={JSON.stringify(images)} />
+      <input type="hidden" name="gallery" value={JSON.stringify(validImages)} />
 
       <Card className="h-fit">
         <CardHeader>
@@ -67,48 +77,17 @@ const ImageGalleryCard = ({ state, property }: ImageGalleryCardProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {images.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-              {images.map((img) => (
-                <div
-                  key={img.id}
-                  className="border rounded-md space-y-3 bg-muted/40 relative"
-                >
-                  <CustumImage
-                    src={img.url}
-                    alt={img.alt || "Image"}
-                    className="w-full h-28 object-cover rounded"
-                  />
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        type="button"
-                        onClick={() => setAsMain(img.id)}
-                      >
-                        Set as main
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        type="button"
-                        onClick={() => removeAt(img.id)}
-                        aria-label="Remove image"
-                        className="absolute -top-2 -right-2 bg-destructive text-white w-6 h-6 rounded-full"
-                      >
-                        <X className="size-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <Button variant="outline" size="sm" type="button" onClick={addDummy}>
-            <Plus className="size-4" />
-            Add Image
-          </Button>
+          <ImageGalleryList
+            images={images}
+            onSetMain={setMainImage}
+            onRemove={removeImage}
+            isUploading={isUploading}
+          />
+          <ImageDropzone
+            setImages={setImages}
+            propertyId={property?.id || "temp"}
+            onUploadingChange={setIsUploading}
+          />
           <ErrorFormMessages
             state={state}
             fieldName="gallery"

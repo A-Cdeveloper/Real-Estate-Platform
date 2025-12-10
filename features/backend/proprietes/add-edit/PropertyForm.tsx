@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { createProperty, updateProperty } from "@/server/actions/properties";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import DetailsCard from "../form/DetailsCard";
@@ -22,6 +22,7 @@ type PropertyFormProps = {
 const PropertyForm = ({ mode, property }: PropertyFormProps) => {
   const router = useRouter();
   const isEdit = mode === "edit";
+  const [hasBlobs, setHasBlobs] = useState(false);
 
   // Razdvojene action-state kuke
   const [addState, addFormAction, addPending] = useActionState(
@@ -33,10 +34,11 @@ const PropertyForm = ({ mode, property }: PropertyFormProps) => {
     null
   );
 
-  // Izbor prema modu
   const state = isEdit ? editState : addState;
   const formAction = isEdit ? editFormAction : addFormAction;
   const pending = isEdit ? editPending : addPending;
+
+  console.log("form rendered");
 
   useEffect(() => {
     if (state?.success) {
@@ -64,7 +66,11 @@ const PropertyForm = ({ mode, property }: PropertyFormProps) => {
           <LocationCard state={state} property={property} />
 
           {/* Column 3 - Gallery */}
-          <ImageGalleryCard state={state} property={property} />
+          <ImageGalleryCard
+            state={state}
+            property={property}
+            onHasBlobsChange={setHasBlobs}
+          />
         </div>
 
         <div className="w-full fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-10 mt-6">
@@ -99,7 +105,7 @@ const PropertyForm = ({ mode, property }: PropertyFormProps) => {
                 />
               </>
             )}
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" disabled={pending || hasBlobs}>
               {pending ? (
                 <>
                   <Loader2 className="animate-spin" aria-hidden="true" />

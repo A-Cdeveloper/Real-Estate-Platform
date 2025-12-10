@@ -51,3 +51,14 @@ export const NEWS_IMAGE_ALLOWED_TYPES = [...LOGO_ALLOWED_TYPES] as const;
 
 // Default images
 export const DEFAULT_NEWS_IMAGE = "/default-news.jpg";
+
+// Property image upload validation constants
+export const PROPERTY_IMAGE_MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const PROPERTY_IMAGE_MAX_FILES = 10; // Maximum number of files per upload
+export const PROPERTY_IMAGE_ALLOWED_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/svg+xml",
+  "image/webp",
+] as const;

@@ -14,6 +14,11 @@ import {
   updatePropertySchema,
 } from "../schemas/property";
 import { formatZodErrors } from "../utils/zod";
+import {
+  PROPERTY_IMAGE_ALLOWED_TYPES,
+  PROPERTY_IMAGE_MAX_FILE_SIZE,
+} from "@/lib/constants";
+import { uploadImagePinata } from "./uploadImagePinata";
 
 /**
  * Helper function to parse property form data from FormData
@@ -316,51 +321,40 @@ export async function promoteProperty(id: string) {
  * @param lng - The longitude to update
  * @returns The result of the update
  */
-// export const updatePropertyLocation = async (
-//   id: string,
-//   lat: number,
-//   lng: number
-// ): Promise<{ success: boolean; error?: string }> => {
-//   const currentUser = await getCurrentUserFromSession();
-//   if (!currentUser) {
-//     return { success: false, error: "Unauthorized" };
-//   }
 
-//   try {
-//     // Check if property exists and user has permission
-//     const property = await prisma.property.findUnique({
-//       where: { id },
-//     });
+export async function uploadPropertyImages(
+  files: File[],
+  propertyId: string
+): Promise<string[]> {
+  try {
+    const timestamp = Date.now();
+    const urls = await Promise.all(
+      files.map(async (file, index) => {
+        // Get file extension
+        const extension = file.name.split(".").pop() || "jpg";
 
-//     if (!property) {
-//       return { success: false, error: "Property not found" };
-//     }
+        // Create new filename: property-{id}-{timestamp}-{index}.{ext}
+        const prefix =
+          propertyId === "temp" ? "property-temp" : `property-${propertyId}`;
+        const newFileName = `${prefix}-${timestamp}-${index}.${extension}`;
 
-//     // Check if user owns the property or is admin
-//     if (property.ownerId !== currentUser.id) {
-//       return { success: false, error: "Unauthorized" };
-//     }
+        // Create new File object with renamed file
+        const renamedFile = new File([file], newFileName, {
+          type: file.type,
+          lastModified: file.lastModified,
+        });
 
-//     // Get address from reverse geocoding
-//     const address = await reverseGeocode(lat, lng);
-
-//     // Update both coordinates and address in a single database call
-//     await prisma.property.update({
-//       where: { id },
-//       data: {
-//         lat,
-//         lng,
-//         ...(address && { address }), // Only update address if geocoding was successful
-//       },
-//     });
-
-//     revalidatePath("/");
-//     revalidatePath("/proprietes");
-//     revalidatePath(`/proprietes/${id}`);
-//     revalidatePath("/proprietes-area");
-//     return { success: true };
-//   } catch (error) {
-//     console.error("Error updating property location:", error);
-//     return { success: false, error: "Failed to update location" };
-//   }
-// };
+        return await uploadImagePinata(
+          renamedFile,
+          PROPERTY_IMAGE_ALLOWED_TYPES,
+          PROPERTY_IMAGE_MAX_FILE_SIZE,
+          process.env.PINATA_PROPERTY_IMAGE_GROUP_ID || ""
+        );
+      })
+    );
+    return urls.filter((url) => url !== null);
+  } catch (error) {
+    console.error("Error updating property images:", error);
+    return [];
+  }
+}
