@@ -58,4 +58,3 @@ export const uploadImagePinata = async (
     return null;
   }
 };
-

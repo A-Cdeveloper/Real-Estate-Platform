@@ -19,6 +19,7 @@ import {
   PROPERTY_IMAGE_MAX_FILE_SIZE,
 } from "@/lib/constants";
 import { uploadImagePinata } from "./uploadImagePinata";
+import { deleteImagePinata } from "./deleteImagePinata";
 
 /**
  * Helper function to parse property form data from FormData
@@ -294,9 +295,33 @@ export async function deleteProperty(id: string) {
   await requireOwnerOrAdmin(property, user);
 
   try {
+    // Get all gallery images before deleting the property
+    const galleryImages = await prisma.propertyImage.findMany({
+      where: { propertyId: id },
+      select: { url: true },
+    });
+
+    // Delete the property (this will cascade delete PropertyImage records)
     await prisma.property.delete({
       where: { id },
     });
+
+    // Delete images from Pinata (don't block if this fails)
+    if (galleryImages.length > 0) {
+      // Also delete the main image if it exists
+      const imagesToDelete = [
+        ...galleryImages.map((img) => img.url),
+        ...(property.image ? [property.image] : []),
+      ];
+
+      // Delete all images from Pinata in parallel (non-blocking)
+      Promise.all(imagesToDelete.map((url) => deleteImagePinata(url))).catch(
+        (error) => {
+          console.error("Error deleting images from Pinata:", error);
+          // Don't throw - property is already deleted from database
+        }
+      );
+    }
 
     revalidatePath("/");
     revalidatePath("/proprietes");
