@@ -17,9 +17,14 @@ import { Loader2 } from "lucide-react";
 type PropertyFormProps = {
   mode: "add" | "edit";
   property?: PropertyWithOwner;
+  isAdmin?: boolean;
 };
 
-const PropertyForm = ({ mode, property }: PropertyFormProps) => {
+const PropertyForm = ({
+  mode,
+  property,
+  isAdmin = false,
+}: PropertyFormProps) => {
   const router = useRouter();
   const isEdit = mode === "edit";
   const [hasBlobs, setHasBlobs] = useState(false);
@@ -75,8 +80,8 @@ const PropertyForm = ({ mode, property }: PropertyFormProps) => {
 
         <div className="w-full fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-10 mt-6">
           <div className="flex justify-end gap-2">
-            {/* Status - Only show in edit mode */}
-            {property && (
+            {/* Status - Only show in edit mode and only for admin */}
+            {property && isAdmin && (
               <>
                 <CustomSelect
                   id="status"

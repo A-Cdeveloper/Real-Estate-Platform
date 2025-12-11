@@ -4,6 +4,7 @@ import BackButton from "@/components/shared/ui/BackButton";
 import PropertyForm from "@/features/backend/proprietes/add-edit/PropertyForm";
 import { PropertyStatusBadge } from "@/features/backend/proprietes/ui/PropertyStatusBadge";
 import { getPropertyByIdAdmin } from "@/server/queries/properties";
+import { checkIsAdmin } from "@/server/auth/checkIsAdmin";
 import { Building } from "lucide-react";
 
 type Params = Promise<{ id: string }>;
@@ -12,6 +13,7 @@ const EditPropertyPage = async ({ params }: { params: Params }) => {
   const { id } = await params;
 
   const property = await getPropertyByIdAdmin(id);
+  const isAdmin = await checkIsAdmin();
 
   return (
     <>
@@ -25,7 +27,7 @@ const EditPropertyPage = async ({ params }: { params: Params }) => {
         label="Back"
         className="!bg-transparent !text-muted-foreground mb-3"
       />
-      <PropertyForm mode="edit" property={property} />
+      <PropertyForm mode="edit" property={property} isAdmin={isAdmin} />
     </>
   );
 };
