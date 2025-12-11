@@ -37,11 +37,21 @@ This project is a comprehensive real estate application that demonstrates modern
   - Interactive map for location selection with geocoding/reverse geocoding
   - Location coordinates (latitude/longitude) for map display
   - Responsive form layout with price and area fields side by side
-- Property edit form (in progress):
+- Property edit form:
   - Property details editing with pre-filled form values
   - Location editing with interactive map
   - Status change support
-  - ⚠️ **Note**: Image gallery editing not yet implemented
+  - **Image gallery management**:
+    - Multi-image upload with drag & drop (react-dropzone)
+    - Drag & drop reordering within gallery (HTML5 Drag & Drop API)
+    - First image automatically set as main image
+    - Visual border indicator for main image
+    - Info banner explaining drag & drop functionality
+    - Upload progress indicators
+    - File validation (type, size, max 10 files)
+    - Blob URL previews during upload
+    - Automatic cleanup of blob URLs after upload
+    - Prevents form submission while uploads are in progress
 - Owner-based filtering (agents see only their properties, admins see all)
 - Authorization system with ownership helpers (`requireAuth`, `requireOwnerOrAdmin`)
 - Scroll position reset on navigation (similar to pagination behavior)
@@ -294,14 +304,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │       │   │   └── sortableColumns.ts # Sortable columns config
 │       │   └── AllUsers.tsx       # Main users list component
 │       ├── proprietes/            # Property management
-│       │   ├── add/               # Add property form
-│       │   │   └── AddPropertyForm.tsx
-│       │   ├── edit/              # Edit property form (in progress)
-│       │   │   └── EditPropertyForm.tsx
+│       │   ├── add-edit/          # Shared add/edit property form
+│       │   │   └── PropertyForm.tsx # Generic form for create/edit
 │       │   ├── form/              # Reusable form components
 │       │   │   ├── DetailsCard.tsx # Property details form card
 │       │   │   ├── LocationCard.tsx # Location map form card
-│       │   │   └── ImageGalleryCard.tsx # Image gallery card (not yet implemented)
+│       │   │   ├── ImageGalleryCard.tsx # Image gallery card with upload and reordering
+│       │   │   ├── ImageGalleryList.tsx # Gallery list with drag & drop reordering
+│       │   │   └── ImageDropzone.tsx # Drag & drop upload zone
+│       │   ├── hooks/             # Custom hooks
+│       │   │   ├── usePropertyImageUpload.ts # Image upload logic hook
+│       │   │   └── useImageDragAndDrop.ts # Drag & drop reordering hook
 │       │   ├── table/             # Properties table components
 │       │   │   ├── columns.tsx    # Table column definitions
 │       │   │   ├── ActionsCell.tsx # Edit/Delete actions
@@ -378,6 +391,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── users.ts              # User management actions
 │   │   ├── news.ts               # News management actions
 │   │   ├── uploadImagePinata.ts  # Centralized IPFS image upload action
+│   │   ├── deleteImagePinata.ts  # IPFS image deletion (unpin) action
 │   │   └── sendMessage.ts       # Contact form action
 │   ├── queries/                  # Database query functions
 │   │   ├── properties.ts
@@ -560,9 +574,10 @@ DATABASE_URL="mysql://user:password@localhost:3306/database_name"
 ### Optional
 
 - `NEXT_PUBLIC_SITE_URL` - Public site URL for metadata and email templates (defaults to `https://realestatepro.com`)
-- `PINATA_JWT` - Pinata JWT token for IPFS file uploads (required for logo and news image uploads)
+- `PINATA_JWT` - Pinata JWT token for IPFS file uploads (required for logo, news, and property image uploads)
 - `PINATA_LOGO_GROUP_ID` - Pinata group ID for logo uploads (required for logo uploads)
 - `PINATA_NEWS_IMAGE_GROUP_ID` - Pinata group ID for news image uploads (required for news image uploads)
+- `PINATA_PROPERTY_IMAGE_GROUP_ID` - Pinata group ID for property image uploads (required for property gallery uploads)
 - `EMAIL_USER` - Email address for sending emails (contact form, password reset)
 - `EMAIL_PASS` - Email password for SMTP authentication
 
@@ -619,8 +634,12 @@ The application implements a comprehensive filtering system:
 - Type-safe generic components with TypeScript constraints
 - Optimized event handlers with useCallback hooks
 - Centralized file validation utility for consistent upload handling
-- IPFS/Pinata integration for image storage (logos and news images)
+- IPFS/Pinata integration for image storage (logos, news images, and property galleries)
 - Environment-based configuration for Pinata group IDs
+- Automatic image cleanup from Pinata when properties are deleted
+- Custom hooks for complex state logic (`usePropertyImageUpload`, `useImageDragAndDrop`)
+- Drag & drop reordering with HTML5 Drag & Drop API
+- Optimized image upload with blob URL previews and automatic cleanup
 
 ### Code Organization
 
@@ -685,6 +704,13 @@ The application includes a complete news management system for administrators:
 The application includes a comprehensive property management system for administrators and agents:
 
 - **Server-Side Operations**: All property operations (create, update, delete) use Next.js server actions
+- **Image Management**:
+  - Multi-image upload to Pinata IPFS with batch processing
+  - Gallery images stored in `PropertyImage` table with order field
+  - First image automatically set as main image (`property.image` field)
+  - Image cleanup on property deletion (unpins images from Pinata)
+  - Non-blocking cleanup - property deletion continues even if Pinata delete fails
+  - Parallel deletion of all images for better performance
 - **Reusable Form Components**: `DetailsCard` and `LocationCard` components work with optional `property` prop for both create and edit modes
 - **Server-Side Pagination**: Efficient data loading with configurable page size (default: 15 properties per page)
 - **Server-Side Sorting**: Sortable by status, createdAt, and other fields with URL-based state management
@@ -698,12 +724,39 @@ The application includes a comprehensive property management system for administ
   - Property details: name, type, price, area, description
   - Interactive map for location selection with geocoding/reverse geocoding
   - Responsive layout with price and area fields side by side
+  - **Image Gallery Management**:
+    - Multi-image upload with drag & drop (react-dropzone)
+    - Drag & drop reordering within gallery (HTML5 Drag & Drop API)
+    - First image automatically set as main image (order: 0)
+    - Visual border indicator for main image
+    - Info banner explaining drag & drop functionality
+    - Upload progress indicators and loading states
+    - File validation (type, size, max 10 files per upload)
+    - Blob URL previews during upload
+    - Automatic cleanup of blob URLs after upload
+    - Prevents form submission while uploads are in progress
+    - Custom hooks for upload logic (`usePropertyImageUpload`) and drag & drop (`useImageDragAndDrop`)
+    - Optimized with useCallback and useMemo to prevent unnecessary re-renders
   - Form validation with Zod schemas
-- **Property Edit Form** (⚠️ **In Progress**):
+- **Property Edit Form**:
   - Property details editing with pre-filled form values
   - Location editing with interactive map
   - Status change support
-  - ⚠️ **Note**: Image gallery editing not yet implemented
+  - **Image Gallery Management**:
+    - Loads existing images from database on edit
+    - Multi-image upload with drag & drop (react-dropzone)
+    - Drag & drop reordering within gallery (HTML5 Drag & Drop API)
+    - First image automatically set as main image (order: 0)
+    - Visual border indicator for main image
+    - Info banner explaining drag & drop functionality
+    - Upload progress indicators and loading states
+    - File validation (type, size, max 10 files per upload)
+    - Blob URL previews during upload
+    - Automatic cleanup of blob URLs after upload
+    - Prevents form submission while uploads are in progress
+    - Custom hooks for upload logic (`usePropertyImageUpload`) and drag & drop (`useImageDragAndDrop`)
+    - Optimized with useCallback and useMemo to prevent unnecessary re-renders
+    - Images sorted by order when loading from database
 - **Authorization System**: Centralized ownership helpers in `server/auth/ownership.ts`:
   - `requireAuth()` - Ensures user is authenticated
   - `requireOwnerOrAdmin(property, user)` - Ensures user owns property or is admin
