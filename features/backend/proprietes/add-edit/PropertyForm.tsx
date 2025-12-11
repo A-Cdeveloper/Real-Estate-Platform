@@ -91,6 +91,8 @@ const PropertyForm = ({
                     { value: PropertyStatus.APPROVED, label: "Approved" },
                     { value: PropertyStatus.IN_REVIEW, label: "In Review" },
                     { value: PropertyStatus.REJECTED, label: "Rejected" },
+                    { value: PropertyStatus.INACTIVE, label: "Inactive" },
+                    { value: PropertyStatus.DELETED, label: "Deleted" },
                   ]}
                   defaultValue={
                     state &&

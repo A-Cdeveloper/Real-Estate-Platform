@@ -24,12 +24,17 @@ export function PropertyStatusBadge({
   // Map status to badge variant
   const getVariant = (
     status: PropertyStatus
-  ): "success" | "warning" | "destructive" => {
+  ): "success" | "warning" | "destructive" | "secondary" => {
     switch (status) {
       case PropertyStatus.APPROVED:
         return "success";
       case PropertyStatus.IN_REVIEW:
         return "warning";
+      case PropertyStatus.INACTIVE:
+        return "secondary";
+      case PropertyStatus.REJECTED:
+        return "destructive";
+      case PropertyStatus.DELETED:
       default:
         return "destructive";
     }
