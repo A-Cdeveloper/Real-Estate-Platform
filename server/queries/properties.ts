@@ -151,7 +151,14 @@ export async function getAllProperties({
       ...(ownerId && { ownerId }),
     };
 
-    const orderBy = parseSort(sort);
+    const parsedSort = parseSort(sort);
+    const sortField = Object.keys(parsedSort)[0];
+
+    // Always add createdAt_desc as secondary sort, unless createdAt is already the primary sort
+    const orderBy =
+      sortField === "createdAt"
+        ? [parsedSort]
+        : [parsedSort, { createdAt: "desc" as const }];
 
     // Build query - use conditional logic for include relations
     const [properties, total] = await Promise.all([
