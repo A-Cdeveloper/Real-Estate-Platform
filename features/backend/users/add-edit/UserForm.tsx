@@ -101,6 +101,14 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
                   : initialData?.name || ""
               }
               disabled={pending}
+              aria-invalid={
+                state && !state.success && state.errors?.name ? "true" : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.name
+                  ? "name-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages state={state} fieldName="name" fieldId="name" />
           </div>
@@ -118,6 +126,18 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
                   : initialData?.email || ""
               }
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.email
+                  ? "true"
+                  : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.email
+                  ? "email-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages
               state={state}
@@ -139,6 +159,16 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
                   : initialData?.role || USER_ROLE_OPTIONS[1].value
               }
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.role ? "true" : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.role
+                  ? "role-error"
+                  : undefined
+              }
             />
           </div>
           <div>
@@ -154,6 +184,18 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
               placeholder="Enter password"
               defaultValue={state && !state.success ? state.data?.password : ""}
               disabled={pending}
+              required={mode === "create"}
+              aria-required={mode === "create" ? "true" : "false"}
+              aria-invalid={
+                state && !state.success && state.errors?.password
+                  ? "true"
+                  : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.password
+                  ? "password-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages
               state={state}

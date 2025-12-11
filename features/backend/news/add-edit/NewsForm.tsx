@@ -113,6 +113,16 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
                   : initialData?.title || ""
               }
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.title ? "true" : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.title
+                  ? "title-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages
               state={state}
@@ -138,6 +148,18 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
                   : initialData?.description || ""
               }
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.description
+                  ? "true"
+                  : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.description
+                  ? "description-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages
               state={state}

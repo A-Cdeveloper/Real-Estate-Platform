@@ -39,6 +39,7 @@ const Navigation = ({ links }: { links: SidebarLink[] }) => {
           ? "items-center space-y-2 ps-2 pe-3.5"
           : "items-start space-y-0"
       )}
+      aria-label="Main navigation"
     >
       <SidebarToggle />
 
@@ -53,6 +54,7 @@ const Navigation = ({ links }: { links: SidebarLink[] }) => {
             key={item.href}
             href={item.href}
             aria-label={item.label}
+            aria-current={isActive ? "page" : undefined}
             title={item.label}
             className={cn(
               "flex items-center rounded-lg px-3 py-2 text-base font-semibold transition w-full hover:bg-primary/20 hover:text-foreground",
@@ -62,7 +64,7 @@ const Navigation = ({ links }: { links: SidebarLink[] }) => {
               isActive ? "bg-secondary text-primary" : "text-muted-foreground "
             )}
           >
-            <Icon className="size-5" />
+            <Icon className="size-5" aria-hidden="true" />
 
             {!isCollapsed && <span>{item.label}</span>}
           </Link>

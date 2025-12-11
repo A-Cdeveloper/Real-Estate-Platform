@@ -34,8 +34,12 @@ const ImageGalleryList = ({
 
   return (
     <div className="space-y-4 mb-6">
-      <div className="flex items-center gap-2 text-[12px] text-muted-foreground -mt-4 rounded-md mb-6">
-        <Info className="size-4 shrink-0" />
+      <div
+        className="flex items-center gap-2 text-[12px] text-muted-foreground -mt-4 rounded-md mb-6"
+        role="status"
+        aria-live="polite"
+      >
+        <Info className="size-4 shrink-0" aria-hidden="true" />
         <p>
           The first image is always the main image. <br />
           You can drag and drop images to reorder them.
@@ -51,7 +55,15 @@ const ImageGalleryList = ({
           return (
             <div
               key={img.id}
+              role="button"
               draggable={!isDisabled}
+              tabIndex={!isDisabled ? 0 : undefined}
+              aria-label={
+                index === 0
+                  ? `Main image ${index + 1} of ${images.length}. Drag to reorder.`
+                  : `Image ${index + 1} of ${images.length}. Drag to reorder.`
+              }
+              aria-disabled={isDisabled}
               onDragStart={(e) =>
                 !isDisabled && img.id && handleDragStart(e, img.id)
               }
@@ -62,6 +74,12 @@ const ImageGalleryList = ({
               onDragLeave={handleDragLeave}
               onDrop={(e) => !isDisabled && img.id && handleDrop(e, img.id)}
               onDragEnd={handleDragEnd}
+              onKeyDown={(e) => {
+                if (!isDisabled && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  // Could add keyboard reordering here if needed
+                }
+              }}
               className={cn(
                 "rounded-md bg-muted/40 relative cursor-move border-2 border-transparent",
                 isDisabled && "opacity-50 cursor-not-allowed",
@@ -83,10 +101,10 @@ const ImageGalleryList = ({
                       size="icon"
                       type="button"
                       onClick={() => img.id && onRemove(img.id)}
-                      aria-label="Remove image"
+                      aria-label={`Remove image ${index + 1}`}
                       className="absolute -top-2 -right-2 bg-destructive text-white w-4.5 h-4.5 rounded-full"
                     >
-                      <X className="size-3" />
+                      <X className="size-3" aria-hidden="true" />
                     </Button>
                   )}
                 </div>

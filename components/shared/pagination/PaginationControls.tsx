@@ -51,6 +51,7 @@ export default function PaginationControls({
                   : getPageUrl(1, baseUrl, queryParams)
               );
             }}
+            aria-label="Go to previous page"
           />
         </PaginationItem>
 
@@ -67,6 +68,8 @@ export default function PaginationControls({
                   e.preventDefault();
                   handleNavigation(href);
                 }}
+                aria-label={`Go to page ${pageNumber}`}
+                aria-current={pageNumber === currentPage ? "page" : undefined}
               >
                 {pageNumber}
               </PaginationLink>
@@ -91,6 +94,7 @@ export default function PaginationControls({
                   : getPageUrl(totalPages, baseUrl, queryParams)
               );
             }}
+            aria-label="Go to next page"
           />
         </PaginationItem>
       </PaginationContent>

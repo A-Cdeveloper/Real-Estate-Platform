@@ -26,6 +26,9 @@ type CustomSelectProps = Omit<
   placeholder?: string;
   triggerClassName?: string;
   className?: string;
+  "aria-required"?: boolean | "true" | "false";
+  "aria-invalid"?: boolean | "true" | "false";
+  "aria-describedby"?: string;
 };
 
 /**
@@ -47,6 +50,9 @@ const CustomSelect = ({
   placeholder = "Select an option",
   triggerClassName,
   className,
+  "aria-required": ariaRequired,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
   ...props
 }: CustomSelectProps) => {
   return (
@@ -63,7 +69,13 @@ const CustomSelect = ({
         </label>
       )}
       <Select {...props}>
-        <SelectTrigger id={id} className={cn("w-full", triggerClassName)}>
+        <SelectTrigger
+          id={id}
+          className={cn("w-full", triggerClassName)}
+          aria-required={ariaRequired}
+          aria-invalid={ariaInvalid}
+          aria-describedby={ariaDescribedBy}
+        >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

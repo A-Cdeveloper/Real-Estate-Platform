@@ -51,7 +51,11 @@ const UserAvatar = async ({
   const displayName = user.name || user.email || "Unknown user";
 
   return (
-    <Link href="/profile" className="flex items-center gap-2">
+    <Link
+      href="/profile"
+      className="flex items-center gap-2"
+      aria-label={`Go to profile for ${displayName}`}
+    >
       <UserAvatarIcon username={displayName} isAdmin={isAdmin} />
       <span className="flex flex-col">
         <span className="text-sm font-semibold leading-4">{displayName}</span>

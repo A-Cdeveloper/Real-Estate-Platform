@@ -37,7 +37,7 @@ export const getColumns = (
     label: "Name",
     render: (user) => (
       <div className="flex items-center gap-2">
-        <UserIcon className="size-4 text-muted-foreground" />
+        <UserIcon className="size-4 text-muted-foreground" aria-hidden="true" />
         <span className="text-white">{user.name || "N/A"}</span>
       </div>
     ),
@@ -47,8 +47,12 @@ export const getColumns = (
     label: "Email",
     render: (user) => (
       <div className="flex items-center gap-2">
-        <Mail className="size-4 text-muted-foreground" />
-        <Link href={`mailto:${user.email}`} className="text-sm">
+        <Mail className="size-4 text-muted-foreground" aria-hidden="true" />
+        <Link
+          href={`mailto:${user.email}`}
+          className="text-sm"
+          aria-label={`Send email to ${user.email}`}
+        >
           {user.email}
         </Link>
       </div>
@@ -85,7 +89,7 @@ export const getColumns = (
     label: "Properties",
     render: (user) => (
       <div className="flex items-center gap-2">
-        <Building2 className="size-4 text-muted-foreground" />
+        <Building2 className="size-4 text-muted-foreground" aria-hidden="true" />
         <span className="text-sm font-medium">{user.propertyCount}</span>
       </div>
     ),
@@ -96,8 +100,12 @@ export const getColumns = (
     render: (user) => {
       return currentUserId === user.id ? (
         <div className="flex items-center justify-center">
-          <Link href={`/profile`} className="text-sm hover:text-primary">
-            <User2Icon className="size-5 text-muted-foreground" />
+          <Link
+            href={`/profile`}
+            className="text-sm hover:text-primary"
+            aria-label={`View profile for ${user.name || user.email}`}
+          >
+            <User2Icon className="size-5 text-muted-foreground" aria-hidden="true" />
           </Link>
         </div>
       ) : (

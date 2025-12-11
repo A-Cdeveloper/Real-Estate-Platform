@@ -23,7 +23,7 @@ const CloseButton = ({ onClose }: CloseButtonProps) => {
         onClose();
       }}
     >
-      <X className="w-8 h-8 flex-shrink-0" />
+      <X className="w-8 h-8 flex-shrink-0" aria-hidden="true" />
     </Button>
   );
 };

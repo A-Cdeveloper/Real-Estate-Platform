@@ -42,7 +42,11 @@ export function PropertyStatusBadge({
   };
 
   return (
-    <Badge className={cn("w-fit", className)} variant={getVariant(status)}>
+    <Badge
+      className={cn("w-fit", className)}
+      variant={getVariant(status)}
+      aria-label={`Property status: ${formatStatus(status)}`}
+    >
       {formatStatus(status)}
     </Badge>
   );

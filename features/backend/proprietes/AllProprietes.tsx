@@ -31,8 +31,8 @@ const AllProprietes = ({
       <div className="flex items-center justify-between">
         <span className="text-sm">Total: {total}</span>
         <Link href="/proprietes-area/add">
-          <Button>
-            <Building className="size-4 mr-2" />
+          <Button aria-label="Add new property">
+            <Building className="size-4 mr-2" aria-hidden="true" />
             Add Property
           </Button>
         </Link>

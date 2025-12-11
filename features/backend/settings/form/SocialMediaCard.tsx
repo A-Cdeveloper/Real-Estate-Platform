@@ -41,7 +41,10 @@ const SocialMediaCard = ({
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
         <div className="p-2 rounded-md bg-green-500/10">
-          <Facebook className="size-4 text-green-600 dark:text-green-400" />
+          <Facebook
+            className="size-4 text-green-600 dark:text-green-400"
+            aria-hidden="true"
+          />
         </div>
         Social Media
       </CardTitle>
@@ -53,7 +56,7 @@ const SocialMediaCard = ({
           htmlFor="facebook"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <Facebook className="size-3.5" />
+          <Facebook className="size-3.5" aria-hidden="true" />
           Facebook
         </label>
         <CustomInput
@@ -76,7 +79,7 @@ const SocialMediaCard = ({
           htmlFor="instagram"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <Instagram className="size-3.5" />
+          <Instagram className="size-3.5" aria-hidden="true" />
           Instagram
         </label>
         <CustomInput
@@ -99,7 +102,8 @@ const SocialMediaCard = ({
           htmlFor="x"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <Twitter className="size-3.5" />X (Twitter)
+          <Twitter className="size-3.5" aria-hidden="true" />
+          X (Twitter)
         </label>
         <CustomInput
           id="x"
@@ -121,7 +125,7 @@ const SocialMediaCard = ({
           htmlFor="linkedin"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <Linkedin className="size-3.5" />
+          <Linkedin className="size-3.5" aria-hidden="true" />
           LinkedIn
         </label>
         <CustomInput
@@ -144,7 +148,7 @@ const SocialMediaCard = ({
           htmlFor="youtube"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <Youtube className="size-3.5" />
+          <Youtube className="size-3.5" aria-hidden="true" />
           YouTube
         </label>
         <CustomInput

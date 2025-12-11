@@ -95,7 +95,10 @@ const ImageGalleryCard = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <div className="p-2 rounded-md bg-purple-500/10">
-              <Images className="size-4 text-purple-600 dark:text-purple-400" />
+              <Images
+                className="size-4 text-purple-600 dark:text-purple-400"
+                aria-hidden="true"
+              />
             </div>
             Image Gallery
           </CardTitle>

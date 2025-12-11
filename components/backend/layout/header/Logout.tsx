@@ -21,8 +21,13 @@ const Logout = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <Button variant="ghost" size="icon" onClick={handleLogout}>
-      <LogOutIcon className="h-[1.2rem] w-[1.2rem]" />
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={handleLogout}
+      aria-label="Logout"
+    >
+      <LogOutIcon className="h-[1.2rem] w-[1.2rem]" aria-hidden="true" />
       <span className="sr-only">Logout</span>
     </Button>
   );

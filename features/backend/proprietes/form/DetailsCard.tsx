@@ -28,7 +28,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <div className="p-2 rounded-md bg-primary/10">
-              <Home className="size-4 text-primary" />
+              <Home className="size-4 text-primary" aria-hidden="true" />
             </div>
             Property Details
           </CardTitle>
@@ -40,7 +40,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
               htmlFor="name"
               className="text-sm font-medium mb-2 flex items-center gap-2"
             >
-              <Home className="size-3.5" />
+              <Home className="size-3.5" aria-hidden="true" />
               Property Name
             </label>
             <CustomInput
@@ -53,6 +53,16 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
                   : property?.name
               }
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.name ? "true" : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.name
+                  ? "name-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages state={state} fieldName="name" fieldId="name" />
           </div>
@@ -76,6 +86,16 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
                   : property?.type || undefined
               }
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.type ? "true" : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.type
+                  ? "type-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages state={state} fieldName="type" fieldId="type" />
           </div>
@@ -88,7 +108,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
                 htmlFor="price"
                 className="text-sm font-medium mb-2 flex items-center gap-2"
               >
-                <Euro className="size-3.5" />
+                <Euro className="size-3.5" aria-hidden="true" />
                 Price (€)
               </label>
               <CustomInput
@@ -102,6 +122,18 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
                     : property?.price?.toString()
                 }
                 disabled={pending}
+                required
+                aria-required="true"
+                aria-invalid={
+                  state && !state.success && state.errors?.price
+                    ? "true"
+                    : "false"
+                }
+                aria-describedby={
+                  state && !state.success && state.errors?.price
+                    ? "price-error"
+                    : undefined
+                }
               />
               <ErrorFormMessages
                 state={state}
@@ -116,7 +148,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
                 htmlFor="area"
                 className="text-sm font-medium mb-2 flex items-center gap-2"
               >
-                <Ruler className="size-3.5" />
+                <Ruler className="size-3.5" aria-hidden="true" />
                 Area (m²)
               </label>
               <CustomInput
@@ -130,6 +162,18 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
                     : property?.area?.toString()
                 }
                 disabled={pending}
+                required
+                aria-required="true"
+                aria-invalid={
+                  state && !state.success && state.errors?.area
+                    ? "true"
+                    : "false"
+                }
+                aria-describedby={
+                  state && !state.success && state.errors?.area
+                    ? "area-error"
+                    : undefined
+                }
               />
               <ErrorFormMessages
                 state={state}
@@ -145,7 +189,7 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
               htmlFor="description"
               className="text-sm font-medium mb-2 flex items-center gap-2"
             >
-              <FileText className="size-3.5" />
+              <FileText className="size-3.5" aria-hidden="true" />
               Description
             </label>
             <Textarea
@@ -160,6 +204,18 @@ const DetailsCard = ({ state, pending, property }: DetailsCardProps) => {
                   : property?.description || undefined
               }
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.description
+                  ? "true"
+                  : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.description
+                  ? "description-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages
               state={state}

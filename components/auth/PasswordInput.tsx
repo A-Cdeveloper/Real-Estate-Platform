@@ -16,7 +16,10 @@ type PasswordInputProps = {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  required?: boolean;
   "aria-required"?: boolean | "true" | "false";
+  "aria-invalid"?: boolean | "true" | "false";
+  "aria-describedby"?: string;
   className?: string;
 };
 
@@ -30,7 +33,10 @@ const PasswordInput = ({
   value,
   onChange,
   disabled,
+  required,
   "aria-required": ariaRequired,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
   className,
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,7 +54,10 @@ const PasswordInput = ({
         value={value}
         onChange={onChange}
         disabled={disabled}
-        aria-required={ariaRequired}
+        required={required}
+        aria-required={ariaRequired ?? (required ? "true" : "false")}
+        aria-invalid={ariaInvalid}
+        aria-describedby={ariaDescribedBy}
         className={cn("pr-10", className)}
       />
       <Button

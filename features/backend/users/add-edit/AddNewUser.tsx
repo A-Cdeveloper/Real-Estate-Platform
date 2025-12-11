@@ -9,8 +9,8 @@ const AddNewUser = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>
-        <UserPlus className="size-4 mr-2" />
+      <Button onClick={() => setIsOpen(true)} aria-label="Add new user">
+        <UserPlus className="size-4 mr-2" aria-hidden="true" />
         Add New User
       </Button>
       <Modal

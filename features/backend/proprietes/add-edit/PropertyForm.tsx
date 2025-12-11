@@ -97,6 +97,17 @@ const PropertyForm = ({ mode, property }: PropertyFormProps) => {
                       : property?.status || undefined
                   }
                   disabled={pending}
+                  aria-label="Property status"
+                  aria-invalid={
+                    state && !state.success && state.errors?.status
+                      ? "true"
+                      : "false"
+                  }
+                  aria-describedby={
+                    state && !state.success && state.errors?.status
+                      ? "status-error"
+                      : undefined
+                  }
                 />
                 <ErrorFormMessages
                   state={state}

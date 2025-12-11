@@ -21,7 +21,7 @@ const ProfileCard = ({
     <Card className="py-6 px-1 flex-1 h-fit">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg border-b pb-2">
-          <Icon className="size-4" />
+          <Icon className="size-4" aria-hidden="true" />
           {title}
         </CardTitle>
       </CardHeader>

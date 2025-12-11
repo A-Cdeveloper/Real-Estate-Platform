@@ -30,6 +30,10 @@ const CustumSwitch = ({
   const handleCheckedChange = (checked: boolean) => {
     setChecked(checked);
   };
+  const currentLabel = checked
+    ? labels.find((label) => label.checked)?.label
+    : labels.find((label) => !label.checked)?.label;
+
   return (
     <div className="flex items-center space-x-2">
       <Switch
@@ -37,12 +41,12 @@ const CustumSwitch = ({
         checked={checked}
         className={className}
         onCheckedChange={handleCheckedChange}
+        aria-label={currentLabel || "Toggle switch"}
+        aria-checked={checked}
       />
-      <span className="text-sm font-medium text-muted-foreground">
-        {checked
-          ? labels.find((label) => label.checked)?.label
-          : labels.find((label) => !label.checked)?.label}
-      </span>
+      <label htmlFor={id} className="text-sm font-medium text-muted-foreground">
+        {currentLabel}
+      </label>
       <input type="hidden" name={name} value={checked.toString()} />
     </div>
   );

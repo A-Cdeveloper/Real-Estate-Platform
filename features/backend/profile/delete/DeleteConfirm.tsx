@@ -67,11 +67,12 @@ const DeleteConfirm = ({
               variant="destructive"
               onClick={handleConfirm}
               disabled={isPending}
+              aria-label="Confirm profile deletion"
             >
               {isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Deleting...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <span aria-live="polite">Deleting...</span>
                 </>
               ) : (
                 "Confirm"

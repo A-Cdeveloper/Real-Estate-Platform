@@ -9,8 +9,8 @@ import { Bell } from "lucide-react";
  */
 const NotificationArea = () => {
   return (
-    <Button variant="ghost" size="icon">
-      <Bell className="size-4" />
+    <Button variant="ghost" size="icon" aria-label="Notifications">
+      <Bell className="size-4" aria-hidden="true" />
     </Button>
   );
 };

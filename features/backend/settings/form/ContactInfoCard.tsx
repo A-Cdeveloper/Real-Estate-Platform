@@ -22,7 +22,10 @@ const ContactInfoCard = ({
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
         <div className="p-2 rounded-md bg-blue-500/10">
-          <Phone className="size-4 text-blue-600 dark:text-blue-400" />
+          <Phone
+            className="size-4 text-blue-600 dark:text-blue-400"
+            aria-hidden="true"
+          />
         </div>
         Contact Information
       </CardTitle>
@@ -34,7 +37,7 @@ const ContactInfoCard = ({
           htmlFor="phone"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <Phone className="size-3.5" />
+          <Phone className="size-3.5" aria-hidden="true" />
           Phone
         </label>
         <CustomInput
@@ -44,6 +47,10 @@ const ContactInfoCard = ({
           name="phone"
           onBlur={(e) => handleBlur("phone", e.target.value)}
           disabled={pending}
+          required
+          aria-required="true"
+          aria-invalid={errors.phone ? "true" : "false"}
+          aria-describedby={errors.phone ? "phone-error" : undefined}
         />
         <ErrorFormMessages
           state={{ success: false, errors: { phone: errors.phone || [] } }}
@@ -58,16 +65,21 @@ const ContactInfoCard = ({
           htmlFor="email"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <Mail className="size-3.5" />
+          <Mail className="size-3.5" aria-hidden="true" />
           Email
         </label>
         <CustomInput
           id="email"
+          type="email"
           placeholder="Enter email"
           defaultValue={email}
           name="email"
           onBlur={(e) => handleBlur("email", e.target.value)}
           disabled={pending}
+          required
+          aria-required="true"
+          aria-invalid={errors.email ? "true" : "false"}
+          aria-describedby={errors.email ? "email-error" : undefined}
         />
         <ErrorFormMessages
           state={{ success: false, errors: { email: errors.email || [] } }}

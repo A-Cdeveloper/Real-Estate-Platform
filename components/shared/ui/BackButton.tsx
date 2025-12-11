@@ -17,8 +17,11 @@ const BackButton = ({ href, label, className }: BackButtonProps) => {
       asChild
       className={cn(className, "group")}
     >
-      <Link href={href} className="font-nunito-sans">
-        <ArrowLeft className="w-4 h-4 mr-0 group-hover:translate-x-[-3px] transition-all duration-300" />
+      <Link href={href} className="font-nunito-sans" aria-label={`Go back to ${label}`}>
+        <ArrowLeft
+          className="w-4 h-4 mr-0 group-hover:translate-x-[-3px] transition-all duration-300"
+          aria-hidden="true"
+        />
         {label}
       </Link>
     </Button>

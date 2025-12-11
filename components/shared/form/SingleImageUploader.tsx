@@ -294,6 +294,7 @@ const SingleImageUploader = ({
           onChange={handleFileChange}
           className="hidden"
           ref={fileRef}
+          aria-label={finalLabels.uploadButton}
         />
 
         {previewUrl ? (
@@ -307,9 +308,16 @@ const SingleImageUploader = ({
               className="object-cover h-[100px] w-[100px]"
             />
             {isPending && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-md">
+              <div
+                className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-md"
+                role="status"
+                aria-live="polite"
+              >
                 <div className="flex items-center gap-2">
-                  <Loader2 className="size-4 animate-spin text-white" />
+                  <Loader2
+                    className="size-4 animate-spin text-white"
+                    aria-hidden="true"
+                  />
                   <span className="text-sm text-white">Uploading...</span>
                 </div>
               </div>
@@ -321,8 +329,9 @@ const SingleImageUploader = ({
                 size="sm"
                 onClick={handleRemove}
                 className="!bg-transparent !border-none"
+                aria-label={`Remove ${finalLabels.altText}`}
               >
-                <TrashIcon className="size-4 text-destructive" />
+                <TrashIcon className="size-4 text-destructive" aria-hidden="true" />
               </Button>
             )}
           </div>
@@ -333,8 +342,9 @@ const SingleImageUploader = ({
             size="lg"
             onClick={triggerFileInput}
             className="w-full !bg-transparent !border-none"
+            aria-label={finalLabels.uploadButton}
           >
-            <UploadIcon className="size-4" />
+            <UploadIcon className="size-4" aria-hidden="true" />
             {finalLabels.uploadButton}
           </Button>
         )}

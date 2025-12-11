@@ -61,7 +61,7 @@ const ActionButton = ({
         aria-label={`${mode.charAt(0).toUpperCase() + mode.slice(1)} property ${property.name || property.description}`}
         onClick={handleOpenModal}
       >
-        <Icon className="size-4" />
+        <Icon className="size-4" aria-hidden="true" />
       </Button>
     </>
   );
@@ -91,8 +91,9 @@ const ActionsCell = ({ property }: ActionsCellProps) => {
         size="icon"
         className="h-8 w-8"
         onClick={handleClick}
+        aria-label={`Edit property ${property.name || property.description}`}
       >
-        <Pencil className="size-4" />
+        <Pencil className="size-4" aria-hidden="true" />
       </Button>
 
       {/* Delete Action Button */}

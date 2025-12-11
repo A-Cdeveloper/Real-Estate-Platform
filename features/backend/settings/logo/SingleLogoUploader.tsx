@@ -166,6 +166,7 @@ const SingleLogoUploader = ({ type, logo }: SingleLogoUploaderProps) => {
           onChange={handleFileChange}
           className="hidden"
           ref={fileRef}
+          aria-label={`Upload ${getTypeLabel(type)} logo`}
         />
 
         {previewUrl ? (
@@ -179,9 +180,16 @@ const SingleLogoUploader = ({ type, logo }: SingleLogoUploaderProps) => {
               className="object-contain"
             />
             {isPending && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-md">
+              <div
+                className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-md"
+                role="status"
+                aria-live="polite"
+              >
                 <div className="flex items-center gap-2">
-                  <Loader2 className="size-4 animate-spin text-white" />
+                  <Loader2
+                    className="size-4 animate-spin text-white"
+                    aria-hidden="true"
+                  />
                   <span className="text-sm text-white">Uploading...</span>
                 </div>
               </div>
@@ -193,8 +201,9 @@ const SingleLogoUploader = ({ type, logo }: SingleLogoUploaderProps) => {
                 size="sm"
                 onClick={handleRemove}
                 className="!bg-transparent !border-none"
+                aria-label={`Remove ${getTypeLabel(type)} logo`}
               >
-                <TrashIcon className="size-4 text-destructive" />
+                <TrashIcon className="size-4 text-destructive" aria-hidden="true" />
               </Button>
             )}
           </div>
@@ -210,8 +219,9 @@ const SingleLogoUploader = ({ type, logo }: SingleLogoUploaderProps) => {
                 ? "dark:text-white text-white"
                 : "text-dark-foreground dark:text-secondary"
             )}
+            aria-label={`Upload ${getTypeLabel(type)} logo`}
           >
-            <UploadIcon className="size-4" />
+            <UploadIcon className="size-4" aria-hidden="true" />
             Upload {getTypeLabel(type)} Logo
           </Button>
         )}

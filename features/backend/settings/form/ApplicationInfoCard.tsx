@@ -23,7 +23,7 @@ const ApplicationInfoCard = ({
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
         <div className="p-2 rounded-md bg-primary/10">
-          <FileText className="size-4 text-primary" />
+          <FileText className="size-4 text-primary" aria-hidden="true" />
         </div>
         Application Info
       </CardTitle>
@@ -35,7 +35,7 @@ const ApplicationInfoCard = ({
           htmlFor="app-name"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <FileText className="size-3.5" />
+          <FileText className="size-3.5" aria-hidden="true" />
           App Name
         </label>
         <CustomInput
@@ -45,6 +45,10 @@ const ApplicationInfoCard = ({
           name="appName"
           onBlur={(e) => handleBlur("appName", e.target.value)}
           disabled={pending}
+          required
+          aria-required="true"
+          aria-invalid={errors.appName ? "true" : "false"}
+          aria-describedby={errors.appName ? "app-name-error" : undefined}
         />
         <ErrorFormMessages
           state={{ success: false, errors: { appName: errors.appName || [] } }}
@@ -59,7 +63,7 @@ const ApplicationInfoCard = ({
           htmlFor="app-description"
           className="text-sm font-medium mb-2 flex items-center gap-2"
         >
-          <FileText className="size-3.5" />
+          <FileText className="size-3.5" aria-hidden="true" />
           App Description
         </label>
         <Textarea
@@ -71,6 +75,12 @@ const ApplicationInfoCard = ({
           onBlur={(e) => handleBlur("appDescription", e.target.value)}
           disabled={pending}
           rows={4}
+          required
+          aria-required="true"
+          aria-invalid={errors.appDescription ? "true" : "false"}
+          aria-describedby={
+            errors.appDescription ? "app-description-error" : undefined
+          }
         />
         <ErrorFormMessages
           state={{

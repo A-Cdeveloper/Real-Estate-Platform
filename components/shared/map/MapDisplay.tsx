@@ -53,6 +53,8 @@ const MapDisplay = ({
     return (
       <div
         className={`${height} rounded-md border border-dashed text-sm text-muted-foreground flex items-center justify-center`}
+        role="status"
+        aria-live="polite"
       >
         Loading map...
       </div>
@@ -82,8 +84,9 @@ const MapDisplay = ({
           size="icon-sm"
           onClick={onRemove}
           className="absolute right-1 top-1/2 -translate-y-1/2"
+          aria-label="Remove address from map"
         >
-          <X className="size-4" />
+          <X className="size-4" aria-hidden="true" />
         </Button>
       </div>
     );
@@ -102,6 +105,10 @@ const MapDisplay = ({
 
       <div
         className={`${height} rounded-md border border-dashed overflow-hidden`}
+        role="application"
+        aria-label={
+          interactive ? "Interactive map for selecting location" : "Map display"
+        }
       >
         <MapContainer
           center={center}

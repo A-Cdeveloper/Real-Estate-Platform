@@ -30,6 +30,10 @@ const ImageDropzone = ({
   return (
     <div
       {...getRootProps()}
+      role="button"
+      tabIndex={0}
+      aria-label="Upload property images"
+      aria-disabled={isUploading}
       className={cn(
         "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
         isDragActive
@@ -38,20 +42,20 @@ const ImageDropzone = ({
         isUploading && "opacity-50 cursor-not-allowed"
       )}
     >
-      <input {...getInputProps()} disabled={isUploading} />
+      <input {...getInputProps()} disabled={isUploading} aria-label="File input" />
       {isUploading ? (
         <div className="flex flex-col items-center gap-2">
-          <Loader2 className="size-6 animate-spin text-primary" />
-          <p>Uploading images...</p>
+          <Loader2 className="size-6 animate-spin text-primary" aria-hidden="true" />
+          <p aria-live="polite">Uploading images...</p>
         </div>
       ) : isDragActive ? (
         <div className="flex flex-col items-center gap-2">
-          <Upload className="size-8 text-primary" />
+          <Upload className="size-8 text-primary" aria-hidden="true" />
           <p className="text-sm text-primary font-medium">Drop images here</p>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-2">
-          <ImagePlus className="size-8 text-muted-foreground" />
+          <ImagePlus className="size-8 text-muted-foreground" aria-hidden="true" />
           <p className="text-sm text-muted-foreground">
             Click or drag to upload
           </p>

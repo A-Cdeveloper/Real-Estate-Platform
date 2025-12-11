@@ -100,9 +100,15 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
                   }
                 }}
                 className="cursor-pointer outline-none border-none"
+                aria-label={
+                  property.promoted
+                    ? "Unpromote property"
+                    : "Promote property to featured"
+                }
               >
                 <Star
                   className={`size-4 ${property.promoted ? "fill-yellow-500" : "fill-gray-500"} mx-auto`}
+                  aria-hidden="true"
                 />
               </button>
             );

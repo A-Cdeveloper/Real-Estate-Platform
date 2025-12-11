@@ -61,7 +61,7 @@ const ActionButton = ({
         aria-label={`${mode.charAt(0).toUpperCase() + mode.slice(1)} user ${user.name || user.email}`}
         onClick={handleOpenModal}
       >
-        <Icon className="size-4" />
+        <Icon className="size-4" aria-hidden="true" />
       </Button>
     </>
   );

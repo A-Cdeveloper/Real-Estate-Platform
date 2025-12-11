@@ -6,6 +6,9 @@ type CustomInputProps = React.ComponentProps<"input"> & {
   label?: string;
   id: string;
   labelClassName?: string;
+  "aria-required"?: boolean | "true" | "false";
+  "aria-invalid"?: boolean | "true" | "false";
+  "aria-describedby"?: string;
 };
 
 const CustomInput = ({
@@ -13,6 +16,9 @@ const CustomInput = ({
   id,
   labelClassName,
   className,
+  "aria-required": ariaRequired,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
   ...props
 }: CustomInputProps) => {
   return (
@@ -28,7 +34,14 @@ const CustomInput = ({
           {label}
         </label>
       )}
-      <Input id={id} className={className} {...props} />
+      <Input
+        id={id}
+        className={className}
+        aria-required={ariaRequired}
+        aria-invalid={ariaInvalid}
+        aria-describedby={ariaDescribedBy}
+        {...props}
+      />
     </div>
   );
 };

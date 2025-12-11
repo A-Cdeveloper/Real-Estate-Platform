@@ -34,6 +34,7 @@ const Sidebar = ({ links }: { links: SidebarLink[] }) => {
           // Mobile expanded overlay styling
           !isCollapsed && "md:bg-secondary bg-secondary/95 backdrop-blur"
         )}
+        aria-label="Sidebar navigation"
       >
         <Navigation links={links} />
       </aside>

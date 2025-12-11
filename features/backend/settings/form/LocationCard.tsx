@@ -24,7 +24,10 @@ const LocationCard = ({ lat, lng, address }: LocationCardProps) => (
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
         <div className="p-2 rounded-md bg-orange-500/10">
-          <MapPin className="size-4 text-orange-600 dark:text-orange-400" />
+          <MapPin
+            className="size-4 text-orange-600 dark:text-orange-400"
+            aria-hidden="true"
+          />
         </div>
         Location
       </CardTitle>

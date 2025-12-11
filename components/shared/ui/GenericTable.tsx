@@ -63,7 +63,7 @@ const GenericTable = <T extends { id: string }>({
 
   return (
     <div className="overflow-x-auto rounded-lg">
-      <table className={className}>
+      <table className={className} role="table" aria-label="Data table">
         <thead>
           <tr className="border-y bg-muted/50">
             {columns.map((col) => (
@@ -76,15 +76,32 @@ const GenericTable = <T extends { id: string }>({
                   onClick={
                     isSortable(col.key) ? () => toggleSort(col.key) : undefined
                   }
+                  role={isSortable(col.key) ? "button" : undefined}
+                  tabIndex={isSortable(col.key) ? 0 : undefined}
+                  aria-label={
+                    isSortable(col.key)
+                      ? `Sort by ${col.label} ${sortField === col.key && sortOrder === "asc" ? "descending" : "ascending"}`
+                      : undefined
+                  }
+                  onKeyDown={
+                    isSortable(col.key)
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggleSort(col.key);
+                          }
+                        }
+                      : undefined
+                  }
                 >
                   {col.label}
                   <span className="block">
                     {isSortable(col.key) &&
                       sortField === col.key &&
                       (sortOrder === "asc" ? (
-                        <ChevronUp size={16} />
+                        <ChevronUp size={16} aria-hidden="true" />
                       ) : (
-                        <ChevronDown size={16} />
+                        <ChevronDown size={16} aria-hidden="true" />
                       ))}
                   </span>
                 </div>

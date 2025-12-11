@@ -12,14 +12,16 @@ const SidebarToggle = () => {
       size="icon"
       onClick={() => setIsCollapsed((prev) => !prev)}
       className="mb-2 !bg-muted-foreground/10 self-end"
+      aria-label={isCollapsed ? "Open sidebar" : "Close sidebar"}
+      aria-expanded={!isCollapsed}
     >
       <span className="sr-only">
         {isCollapsed ? "Open sidebar" : "Close sidebar"}
       </span>
       {isCollapsed ? (
-        <ChevronRight className="size-5" />
+        <ChevronRight className="size-5" aria-hidden="true" />
       ) : (
-        <ChevronLeft className="size-5" />
+        <ChevronLeft className="size-5" aria-hidden="true" />
       )}
     </Button>
   );

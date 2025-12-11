@@ -76,6 +76,16 @@ const EditProfile = ({
               labelClassName="text-sm font-medium text-muted-foreground"
               disabled={pending}
               name="name"
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.name ? "true" : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.name
+                  ? "name-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages state={state} fieldName="name" fieldId="name" />
           </div>
@@ -89,6 +99,18 @@ const EditProfile = ({
               labelClassName="text-sm font-medium text-muted-foreground"
               name="email"
               disabled={pending}
+              required
+              aria-required="true"
+              aria-invalid={
+                state && !state.success && state.errors?.email
+                  ? "true"
+                  : "false"
+              }
+              aria-describedby={
+                state && !state.success && state.errors?.email
+                  ? "email-error"
+                  : undefined
+              }
             />
             <ErrorFormMessages
               state={state}

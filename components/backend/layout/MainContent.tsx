@@ -7,8 +7,8 @@ const MainContent = ({ children }: { children: React.ReactNode }) => {
   const isCollapsed = useSidebarStore((state) => state.isCollapsed);
   return (
     <main
-      // components/backend/layout/MainContent.tsx
-      // Linija 11 - ukloni overflow-y-auto i promeni height na min-height
+      role="main"
+      aria-label="Main content"
       className={cn(
         "mt-12 min-h-[calc(100vh-4rem)] bg-muted/20 px-4 py-8 transition-[margin-left] duration-300 lg:px-8",
         // Mobile: always ml-16 (sidebar is overlay when expanded)

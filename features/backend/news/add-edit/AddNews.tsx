@@ -9,8 +9,8 @@ const AddNews = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>
-        <BookPlus className="size-4 mr-2" />
+      <Button onClick={() => setIsOpen(true)} aria-label="Add news">
+        <BookPlus className="size-4 mr-2" aria-hidden="true" />
         Add News
       </Button>
       <Modal

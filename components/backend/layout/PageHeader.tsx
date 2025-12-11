@@ -21,7 +21,7 @@ const PageHeader = ({ title, icon: Icon, className }: PageHeaderProps) => {
       <div className="flex items-center gap-3">
         {Icon && (
           <div className="flex items-center justify-center size-10 rounded-lg bg-primary/10 text-primary">
-            <Icon className="size-5" />
+            <Icon className="size-5" aria-hidden="true" />
           </div>
         )}
         <h1 className="text-3xl font-bold tracking-wide">{title}</h1>
