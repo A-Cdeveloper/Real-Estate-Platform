@@ -1,9 +1,9 @@
 "use client";
 import { useActionState, useEffect } from "react";
-import CustomInput from "../shared/CustomInput";
+import CustomInput from "@/components/shared/form/CustomInput";
 import { forgotPasswordAction } from "@/server/actions/auth";
-import ErrorFormMessages from "../shared/ErrorFormMessages";
-import { Button } from "../ui/button";
+import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
+import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import FormWrapper from "./FormWrapper";
 import { toast } from "sonner";
