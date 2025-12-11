@@ -8,7 +8,7 @@ import {
 } from "@/server/schemas/property";
 import { PropertyActionState, PropertyWithOwner } from "@/types/properties";
 import { Images } from "lucide-react";
-import React, { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ImageDropzone from "./ImageDropzone";
 import ImageGalleryList from "./ImageGalleryList";
 
@@ -29,27 +29,39 @@ const ImageGalleryCard = ({
   const [isUploading, setIsUploading] = useState(false);
 
   // Check if there are blob URLs and notify parent
-  React.useEffect(() => {
+  useEffect(() => {
     const hasBlobs = images.some((img) => img.url.startsWith("blob:"));
     onHasBlobsChange?.(hasBlobs || isUploading);
   }, [images, isUploading, onHasBlobsChange]);
 
-  // Set the main image to the top of the list
-  const setMainImage = (id: string) => {
+  // Reorder images - first image is always main (order: 0)
+  const reorderImages = useCallback((draggedId: string, targetId: string) => {
     setImages((prev) => {
-      const image = prev.find((img) => img.id === id);
-      if (!image) return prev;
+      const draggedIndex = prev.findIndex((img) => img.id === draggedId);
+      const targetIndex = prev.findIndex((img) => img.id === targetId);
 
-      const others = prev.filter((img) => img.id !== id);
-      return [{ ...image, order: 0 }, ...others].map((img, i) => ({
+      if (
+        draggedIndex === -1 ||
+        targetIndex === -1 ||
+        draggedIndex === targetIndex
+      ) {
+        return prev;
+      }
+
+      const newImages = [...prev];
+      const [draggedItem] = newImages.splice(draggedIndex, 1);
+      newImages.splice(targetIndex, 0, draggedItem);
+
+      // Update order - first image is always main (order: 0)
+      return newImages.map((img, i) => ({
         ...img,
         order: i,
       }));
     });
-  };
+  }, []);
 
   // Remove the image from the list
-  const removeImage = (id: string) => {
+  const removeImage = useCallback((id: string) => {
     setImages((prev) =>
       prev
         .filter((img) => img.id !== id)
@@ -58,10 +70,13 @@ const ImageGalleryCard = ({
           order: i,
         }))
     );
-  };
+  }, []);
 
   // Filter out blob URLs before submitting
-  const validImages = images.filter((img) => !img.url.startsWith("blob:"));
+  const validImages = useMemo(
+    () => images.filter((img) => !img.url.startsWith("blob:")),
+    [images]
+  );
 
   return (
     <div className="space-y-6">
@@ -79,7 +94,7 @@ const ImageGalleryCard = ({
         <CardContent>
           <ImageGalleryList
             images={images}
-            onSetMain={setMainImage}
+            onReorder={reorderImages}
             onRemove={removeImage}
             isUploading={isUploading}
           />
