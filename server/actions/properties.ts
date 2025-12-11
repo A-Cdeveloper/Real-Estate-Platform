@@ -189,12 +189,25 @@ export async function updateProperty(
         lat: rawData.lat ? Number(rawData.lat) : 0,
         lng: rawData.lng ? Number(rawData.lng) : 0,
         status: (rawData.status as PropertyStatus) || property.status,
+        gallery: Array.isArray(rawData.gallery)
+          ? (rawData.gallery as PropertyGallery)
+          : [],
       },
     };
   }
 
-  const { name, type, price, area, address, description, lat, lng, status } =
-    result.data;
+  const {
+    name,
+    type,
+    price,
+    area,
+    address,
+    description,
+    lat,
+    lng,
+    status,
+    gallery,
+  } = result.data;
 
   try {
     const updatedProperty = await prisma.property.update({
@@ -208,9 +221,27 @@ export async function updateProperty(
         description,
         lat,
         lng,
+        image: gallery[0]?.url ?? null,
         ...(status && { status: status as PropertyStatus }),
       },
     });
+
+    // Delete existing gallery images
+    await prisma.propertyImage.deleteMany({
+      where: { propertyId },
+    });
+
+    // Create new gallery images
+    if (gallery.length) {
+      await prisma.propertyImage.createMany({
+        data: gallery.map((item, idx) => ({
+          url: item.url,
+          alt: item.alt ?? null,
+          order: typeof item.order === "number" ? item.order : idx,
+          propertyId: propertyId,
+        })),
+      });
+    }
 
     revalidatePath("/");
     revalidatePath("/proprietes");
@@ -234,6 +265,9 @@ export async function updateProperty(
         lat: rawData.lat ? Number(rawData.lat) : 0,
         lng: rawData.lng ? Number(rawData.lng) : 0,
         status: (rawData.status as PropertyStatus) || property.status,
+        gallery: Array.isArray(rawData.gallery)
+          ? (rawData.gallery as PropertyGallery)
+          : [],
       },
     };
   }

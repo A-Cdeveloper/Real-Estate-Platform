@@ -25,7 +25,16 @@ const ImageGalleryCard = ({
   property,
   onHasBlobsChange,
 }: ImageGalleryCardProps) => {
-  const [images, setImages] = useState<PropertyGallery>([]);
+  const [images, setImages] = useState<PropertyGallery>(
+    property?.gallery
+      ?.sort((a, b) => a.order - b.order)
+      .map((img) => ({
+        id: img.id,
+        url: img.url,
+        alt: img.alt ?? undefined,
+        order: img.order,
+      })) || []
+  );
   const [isUploading, setIsUploading] = useState(false);
 
   // Check if there are blob URLs and notify parent
