@@ -42,7 +42,7 @@ const ImageGalleryList = ({
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-        {images.map((img) => {
+        {images.map((img, index) => {
           const isBlob = img.url.startsWith("blob:");
           const isDisabled = isUploading || isBlob;
           const isDragging = draggedId === img.id;
@@ -63,10 +63,11 @@ const ImageGalleryList = ({
               onDrop={(e) => !isDisabled && img.id && handleDrop(e, img.id)}
               onDragEnd={handleDragEnd}
               className={cn(
-                "rounded-md space-y-3 bg-muted/40 relative cursor-move",
+                "rounded-md bg-muted/40 relative cursor-move border-2 border-transparent",
                 isDisabled && "opacity-50 cursor-not-allowed",
                 isDragging && "opacity-30",
-                isDragOver && "border-primary border-2"
+                isDragOver && "border-primary border-2",
+                index === 0 && "border-2 border-primary rounded-md"
               )}
             >
               <CustumImage
