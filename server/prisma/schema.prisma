@@ -18,6 +18,8 @@ enum PropertyStatus {
   APPROVED
   IN_REVIEW
   REJECTED
+  INACTIVE
+  DELETED
 }
 
 enum Role {
