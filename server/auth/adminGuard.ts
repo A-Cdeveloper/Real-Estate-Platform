@@ -10,6 +10,6 @@ import { redirect } from "next/navigation";
 export async function adminGuard() {
   const isAdmin = await checkIsAdmin();
   if (!isAdmin) {
-    redirect("/dashboard");
+    redirect("/proprietes-area"); // redirect to properties area
   }
 }

@@ -1,4 +1,7 @@
+import { adminGuard } from "@/server/auth/adminGuard";
+
 export default async function DashboardPage() {
+  await adminGuard();
   return (
     <div className="text-sm text-muted-foreground">
       <p className="text-xl font-semibold text-foreground">
