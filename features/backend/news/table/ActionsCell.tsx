@@ -1,71 +1,9 @@
 "use client";
-import Modal from "@/components/shared/ui/Modal";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import TableActionButton from "@/components/shared/table/TableActionButton";
 import { News } from "@prisma/client";
-import { LucideIcon, Pencil, Trash2 } from "lucide-react";
-import { useState, useCallback } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import NewsForm from "../add-edit/NewsForm";
 import DeleteConfirm from "../delete/DeleteConfirm";
-
-/**
- * ActionButtonProps type is used to define the props for the ActionButton component
- * @param news - The news to display the actions for
- * @param mode - The mode of the action (edit or delete)
- * @param icon - The icon to display for the action
- * @param className - The class name to apply to the button
- * @param children - The children to display in the modal
- * @returns {ActionButtonProps} The ActionButtonProps type
- */
-type ActionButtonProps = {
-  news: News;
-  mode: "edit" | "delete";
-  icon: LucideIcon;
-  className?: string;
-  children: (onClose: () => void) => React.ReactNode;
-};
-
-const ActionButton = ({
-  news,
-  mode,
-  icon,
-  className,
-  children,
-}: ActionButtonProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleOpenModal = useCallback(() => {
-    setIsOpen(true);
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  const Icon = icon;
-
-  return (
-    <>
-      <Modal
-        isOpen={isOpen}
-        onClose={handleCloseModal}
-        showCloseButton={false}
-        disableClose={false}
-      >
-        {children(handleCloseModal)}
-      </Modal>
-      <Button
-        variant="ghost"
-        size="icon"
-        className={cn("h-8 w-8", className)}
-        aria-label={`${mode.charAt(0).toUpperCase() + mode.slice(1)} news ${news.title || news.description}`}
-        onClick={handleOpenModal}
-      >
-        <Icon className="size-4" aria-hidden="true" />
-      </Button>
-    </>
-  );
-};
 
 /**
  * Actions cell for the news table
@@ -80,18 +18,20 @@ type ActionsCellProps = {
 
 const ActionsCell = ({ news }: ActionsCellProps) => {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center gap-0">
       {/* Edit Action Button */}
-      <ActionButton news={news} mode="edit" icon={Pencil}>
+      <TableActionButton
+        icon={Pencil}
+        ariaLabel={`Edit news ${news.title || news.description}`}
+      >
         {(onClose) => (
           <NewsForm onClose={onClose} mode="edit" initialData={news} />
         )}
-      </ActionButton>
+      </TableActionButton>
       {/* Delete Action Button */}
-      <ActionButton
-        news={news}
-        mode="delete"
+      <TableActionButton
         icon={Trash2}
+        ariaLabel={`Delete news ${news.title || news.description}`}
         className="text-destructive hover:text-destructive hover:bg-destructive/10"
       >
         {(onClose) => (
@@ -101,7 +41,7 @@ const ActionsCell = ({ news }: ActionsCellProps) => {
             onClose={onClose}
           />
         )}
-      </ActionButton>
+      </TableActionButton>
     </div>
   );
 };
