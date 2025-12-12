@@ -1,6 +1,6 @@
 "use server";
 
-import { Role, User } from "@prisma/client";
+import { PropertyStatus, Role, User } from "@prisma/client";
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { revalidatePath } from "next/cache";
@@ -188,6 +188,38 @@ export async function updateUser(
         isActive: rawData.isActive as boolean,
       },
     };
+  }
+
+  // Get current user to compare isActive status
+  const currentUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { isActive: true },
+  });
+
+  if (!currentUser) {
+    return {
+      success: false,
+      error: "User not found.",
+    };
+  }
+
+  // If user is being deactivated (isActive: true -> false), update their properties
+  const isBeingDeactivated =
+    currentUser.isActive === true && isActive === false;
+
+  if (isBeingDeactivated) {
+    await prisma.property.updateMany({
+      where: {
+        ownerId: userId,
+        status: {
+          in: [PropertyStatus.APPROVED, PropertyStatus.IN_REVIEW],
+        },
+      },
+      data: {
+        status: PropertyStatus.INACTIVE,
+        promoted: false,
+      },
+    });
   }
 
   try {
