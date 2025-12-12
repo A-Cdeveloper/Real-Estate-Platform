@@ -4,6 +4,8 @@ import { Role } from "@prisma/client";
 export async function requireAuth() {
   const user = await getCurrentUserFromSession();
   if (!user) throw new Error("Unauthorized");
+  if (!user.isActive)
+    throw new Error("Your account is inactive. Please contact administrator.");
   return user;
 }
 

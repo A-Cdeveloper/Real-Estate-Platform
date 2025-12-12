@@ -1,6 +1,5 @@
 import LogoWithSettings from "@/components/shared/ui/LogoWithSettings";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { getCurrentUserFromSession } from "@/server/auth/getCurrentUserFromSession";
 import { Role } from "@prisma/client";
 import NotificationArea from "./NotificationArea";
 import UserArea from "./UserArea";
@@ -9,8 +8,8 @@ import { CurrentUser } from "@/types/user";
 /**
  * BackHeader component
  *
- * Server component that renders the backend header with authentication check.
- * Fetches current user session and determines admin status to conditionally display features.
+ * Server component that renders the backend header.
+ * Receives current user from parent layout to avoid duplicate queries.
  *
  * Features:
  * - Logo with settings link
@@ -18,10 +17,10 @@ import { CurrentUser } from "@/types/user";
  * - Theme toggle
  * - User area with avatar and logout
  *
+ * @param currentUser - The current user from session
  * @returns The backend header component
  */
-const BackHeader = async () => {
-  const currentUser = await getCurrentUserFromSession();
+const BackHeader = ({ currentUser }: { currentUser: CurrentUser | null }) => {
   const isAdmin = currentUser?.role === Role.ADMIN;
   return (
     <header

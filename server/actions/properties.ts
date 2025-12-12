@@ -3,7 +3,7 @@
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { PropertyActionState } from "@/types/properties";
-import { PropertyType, PropertyStatus, Role } from "@prisma/client";
+import { PropertyType, PropertyStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
 import {
