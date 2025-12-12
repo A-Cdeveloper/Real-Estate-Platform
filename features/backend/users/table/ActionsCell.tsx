@@ -57,7 +57,7 @@ const ActionButton = ({
       <Button
         variant="ghost"
         size="icon"
-        className={cn("h-8 w-8", className)}
+        className={cn("h-7 w-7", className)}
         aria-label={`${mode.charAt(0).toUpperCase() + mode.slice(1)} user ${user.name || user.email}`}
         onClick={handleOpenModal}
       >
@@ -80,7 +80,7 @@ type ActionsCellProps = {
 
 const ActionsCell = ({ user }: ActionsCellProps) => {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center gap-0">
       {/* Edit Action Button */}
       <ActionButton user={user} mode="edit" icon={Pencil}>
         {(onClose) => (

@@ -2,9 +2,16 @@ import { Column } from "@/components/shared/ui/GenericTable";
 import { Badge } from "@/components/ui/badge";
 import { formatLongDate } from "@/lib/utils/date";
 import { UserWithProperties } from "@/types/user";
-import { Building2, Mail, User2Icon, User as UserIcon } from "lucide-react";
+import {
+  Building2,
+  Mail,
+  User2Icon,
+  User as UserIcon,
+  UserX,
+} from "lucide-react";
 import Link from "next/link";
 import ActionsCell from "./ActionsCell";
+import { Role } from "@prisma/client";
 
 const getRoleBadgeVariant = (role: string) => {
   return role === "ADMIN" ? "default" : "secondary";
@@ -89,7 +96,10 @@ export const getColumns = (
     label: "Properties",
     render: (user) => (
       <div className="flex items-center gap-2">
-        <Building2 className="size-4 text-muted-foreground" aria-hidden="true" />
+        <Building2
+          className="size-4 text-muted-foreground"
+          aria-hidden="true"
+        />
         <span className="text-sm font-medium">{user.propertyCount}</span>
       </div>
     ),
@@ -99,17 +109,25 @@ export const getColumns = (
     label: "",
     render: (user) => {
       return currentUserId === user.id ? (
-        <div className="flex items-center justify-center">
+        <>
           <Link
             href={`/profile`}
             className="text-sm hover:text-primary"
             aria-label={`View profile for ${user.name || user.email}`}
           >
-            <User2Icon className="size-5 text-muted-foreground" aria-hidden="true" />
+            <User2Icon
+              className="size-5 text-muted-foreground mx-auto"
+              aria-hidden="true"
+            />
           </Link>
-        </div>
-      ) : (
+        </>
+      ) : user.role !== Role.ADMIN ? (
         <ActionsCell key={user.id} user={user} />
+      ) : (
+        <UserX
+          className="size-5 text-muted-foreground/30 mx-auto"
+          aria-hidden="true"
+        />
       );
     },
   },
