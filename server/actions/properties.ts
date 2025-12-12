@@ -3,7 +3,7 @@
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { PropertyActionState } from "@/types/properties";
-import { PropertyType, PropertyStatus } from "@prisma/client";
+import { PropertyType, PropertyStatus, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
 import {
@@ -20,6 +20,7 @@ import {
 } from "@/lib/constants";
 import { uploadImagePinata } from "./uploadImagePinata";
 import { deleteImagePinata } from "./deleteImagePinata";
+import { checkIsAdmin } from "../auth/checkIsAdmin";
 
 /**
  * Helper function to parse property form data from FormData
@@ -173,7 +174,14 @@ export async function updateProperty(
   await requireOwnerOrAdmin(property, user);
 
   const rawData = parsePropertyFormData(formData);
-  const result = updatePropertySchema.safeParse({ ...rawData, id: propertyId });
+
+  // Remove status from rawData if user is not admin (agents can't change status)
+  const isAdmin = await checkIsAdmin();
+  const dataForValidation = isAdmin
+    ? { ...rawData, id: propertyId }
+    : { ...rawData, id: propertyId, status: undefined };
+
+  const result = updatePropertySchema.safeParse(dataForValidation);
 
   if (!result.success) {
     return {
@@ -223,7 +231,8 @@ export async function updateProperty(
         lat,
         lng,
         image: gallery[0]?.url ?? null,
-        ...(status && { status: status as PropertyStatus }),
+        // Only update status if user is admin
+        ...(isAdmin && status && { status: status as PropertyStatus }),
       },
     });
 
