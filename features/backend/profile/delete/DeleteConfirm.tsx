@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import IconButton from "@/components/shared/ui/IconButton";
 import { Loader2, X } from "lucide-react";
 import { deleteProfile } from "@/server/actions/profile";
@@ -49,7 +55,14 @@ const DeleteConfirm = ({
           onClick={onClose}
           disabled={isPending}
         />
-        <CardTitle className="text-lg"> Are you sure?</CardTitle>
+        <CardTitle className="text-xl">Are you sure?</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          This action will delete your profile and all your properties (if any)
+          will be transferred to the master administrator.
+          <span className="text-destructive font-bold block mt-2">
+            This action is irreversible and cannot be undone.
+          </span>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">

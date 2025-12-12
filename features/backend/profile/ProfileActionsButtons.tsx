@@ -25,13 +25,15 @@ const ProfileActionsButtons = ({
         label="Edit Profile"
         onClick={onEditClick}
       />
-      <IconButton
-        variant="destructive"
-        className="w-full sm:w-auto"
-        icon={Trash2}
-        label="Delete Profile"
-        onClick={onDeleteClick}
-      />
+      {onDeleteClick && (
+        <IconButton
+          variant="destructive"
+          className="w-full sm:w-auto"
+          icon={Trash2}
+          label="Delete Profile"
+          onClick={onDeleteClick}
+        />
+      )}
     </div>
   );
 };

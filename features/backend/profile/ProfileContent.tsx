@@ -6,6 +6,7 @@ import EditProfile from "./edit/EditProfile";
 import ProfileActionsButtons from "./ProfileActionsButtons";
 import DeleteConfirm from "./delete/DeleteConfirm";
 import Modal from "@/components/shared/ui/Modal";
+import { MASTER_ADMIN_EMAIL } from "@/lib/constants";
 
 /**
  * ProfileContent component
@@ -45,12 +46,15 @@ const ProfileContent = ({
     setIsDeleting(false);
   };
 
+  // Master admin cannot delete their own profile
+  const isMasterAdmin = currentUser.email === MASTER_ADMIN_EMAIL;
+
   return (
     <div className="space-y-4">
       {cards}
       <ProfileActionsButtons
         onEditClick={handleEditClick}
-        onDeleteClick={handleDeleteClick}
+        onDeleteClick={isMasterAdmin ? undefined : handleDeleteClick}
       />
 
       <Modal

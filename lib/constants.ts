@@ -1,6 +1,9 @@
 // User Role Options (using Prisma Role enum)
 import { Role } from "@prisma/client";
 
+// Master Admin Email - properties are transferred to this admin when user deletes their profile
+export const MASTER_ADMIN_EMAIL = "aleksandar@e-seo.info";
+
 // SEO & Metadata
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://realestatepro.com";

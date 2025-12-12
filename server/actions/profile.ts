@@ -9,6 +9,9 @@ import { hashPassword } from "../auth/password";
 import { deleteSession, getSession } from "../auth/session";
 import { updateProfileSchema } from "../schemas/profile";
 import { formatZodErrors } from "../utils/zod";
+import { PropertyStatus, Role } from "@prisma/client";
+import { MASTER_ADMIN_EMAIL } from "@/lib/constants";
+import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
 
 //const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -107,6 +110,8 @@ export async function updateProfile(
 
 /**
  * Server Action: Delete user profile
+ * All properties of the user are transferred to master admin and set to DELETED status
+ * Master admin cannot delete their own profile
  * @returns The result of the deletion
  */
 export async function deleteProfile() {
@@ -119,13 +124,63 @@ export async function deleteProfile() {
     };
   }
 
+  // Get current user to check if they are master admin
+  const currentUser = await getCurrentUserFromSession();
+  if (!currentUser) {
+    return {
+      success: false,
+      error: "Unauthorized. Please log in.",
+    };
+  }
+
+  // Prevent master admin from deleting their own profile
+  if (currentUser.email === MASTER_ADMIN_EMAIL) {
+    return {
+      success: false,
+      error: "Master admin cannot delete their own profile.",
+    };
+  }
+
   try {
+    // Find master admin
+    const masterAdmin = await prisma.user.findFirst({
+      where: {
+        role: Role.ADMIN,
+        email: MASTER_ADMIN_EMAIL,
+      },
+      select: { id: true },
+    });
+
+    if (!masterAdmin) {
+      return {
+        success: false,
+        error: "Master admin not found. Cannot delete profile.",
+      };
+    }
+
+    // 1. Update all user's properties: set status to DELETED and transfer to master admin
+    await prisma.property.updateMany({
+      where: {
+        ownerId: userId,
+      },
+      data: {
+        status: PropertyStatus.DELETED,
+        promoted: false,
+        ownerId: masterAdmin.id, // Transfer to master admin
+      },
+    });
+
+    // 2. Delete session FIRST (before deleting user)
+    await deleteSession();
+
+    // 3. Delete the user
     await prisma.user.delete({
       where: { id: userId },
     });
-    await deleteSession();
+
     revalidatePath("/profile");
     revalidatePath("/users");
+    revalidatePath("/proprietes-area");
     return { success: true };
   } catch (error) {
     console.error("Database error:", error);
