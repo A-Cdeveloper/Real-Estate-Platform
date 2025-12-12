@@ -14,6 +14,7 @@ import {
 } from "../schemas/user";
 import { formatZodErrors } from "../utils/zod";
 import { ensureAdminAccess } from "../auth/ensureAdminAccess";
+import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
 
 export type UserActionState<TData = unknown> =
   | { success: true; user?: CurrentUser }
@@ -266,17 +267,65 @@ export async function updateUser(
 }
 
 /**
- * Server Action: Delete a user
+ * Server Action: Delete a user (admin)
  * @param id - The ID of the user
  * @returns The result of the deletion
+ * all properties of the user are transferred to the current admin
+ * @throws {Error} If the user is not an admin
+ * @throws {Error} If the user ID is required
+ * @throws {Error} If the current admin is not found
+ * @throws {Error} If you cannot delete your own account
+ * @throws {Error} If the user is not found
+ * @throws {Error} If the user is not the current admin
+ * @throws {Error} If the user is not the current admin
  */
 export async function deleteUser(id: string) {
   await ensureAdminAccess();
+
+  if (!id) {
+    return {
+      success: false,
+      error: "User ID is required.",
+    };
+  }
+
+  // Get current admin who is deleting the user
+  const currentAdmin = await getCurrentUserFromSession();
+  if (!currentAdmin) {
+    return {
+      success: false,
+      error: "Unauthorized: Admin access required.",
+    };
+  }
+
+  // Prevent deleting yourself
+  if (currentAdmin.id === id) {
+    return {
+      success: false,
+      error: "You cannot delete your own account.",
+    };
+  }
+
   try {
+    // 1. Update all user's properties: set status to DELETED and transfer to current admin
+    await prisma.property.updateMany({
+      where: {
+        ownerId: id,
+      },
+      data: {
+        status: PropertyStatus.DELETED,
+        promoted: false,
+        ownerId: currentAdmin.id, // Transfer to the admin who is deleting
+      },
+    });
+
+    // 2. Delete the user
     await prisma.user.delete({
       where: { id },
     });
+
     revalidatePath("/users");
+    revalidatePath("/proprietes-area");
     return { success: true };
   } catch (error) {
     console.error("Database error:", error);

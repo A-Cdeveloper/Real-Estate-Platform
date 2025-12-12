@@ -9,12 +9,10 @@ import ProfileCards from "./ProfileCards";
  */
 const ProfileView = async () => {
   const currentUser = await getCurrentUserFromSession();
+
+  // Layout handles redirects for null/inactive users, so currentUser is guaranteed here
   if (!currentUser) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">User not found</p>
-      </div>
-    );
+    return null;
   }
 
   return (

@@ -2,7 +2,13 @@
 
 import IconButton from "@/components/shared/ui/IconButton";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { deleteUser } from "@/server/actions/users";
 import { Loader2, X } from "lucide-react";
 import { useTransition } from "react";
@@ -54,7 +60,14 @@ const DeleteConfirm = ({
           onClick={onClose}
           disabled={isPending}
         />
-        <CardTitle className="text-lg"> Are you sure?</CardTitle>
+        <CardTitle className="text-xl">Are you sure?</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          This action will delete the user and all their properties(if any) will
+          be transferred to you as the current admin.
+          <span className="text-destructive font-bold block mt-2">
+            This action is irreversible and cannot be undone.
+          </span>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -76,7 +89,10 @@ const DeleteConfirm = ({
             >
               {isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2
+                    className="mr-2 h-4 w-4 animate-spin"
+                    aria-hidden="true"
+                  />
                   <span aria-live="polite">Deleting...</span>
                 </>
               ) : (

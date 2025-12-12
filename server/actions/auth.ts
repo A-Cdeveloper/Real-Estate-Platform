@@ -132,6 +132,16 @@ export async function loginAction(
 }
 
 /**
+ * Server Action: Force logout (when user was deleted)
+ * Deletes session cookie and returns success
+ * @returns The result of the logout
+ */
+export async function forceLogout(): Promise<{ success: true }> {
+  await deleteSession();
+  return { success: true };
+}
+
+/**
  * Server Action: Logout user
  * @param userId - The ID of the user to logout
  * @returns The result of the logout

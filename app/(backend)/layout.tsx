@@ -1,11 +1,12 @@
 import BackHeader from "@/components/backend/layout/header/BackHeader";
 import MainContent from "@/components/backend/layout/MainContent";
-
 import React from "react";
 import dynamic from "next/dynamic";
 import SidebarWrapper from "@/components/backend/layout/sidebar/SidebarWrapper";
 import { getCurrentUserFromSession } from "@/server/auth/getCurrentUserFromSession";
+import { getSession } from "@/server/auth/session";
 import { Role } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 // Lazy load Toaster - only loads when needed (when toast is triggered)
 const Toaster = dynamic(() =>
@@ -14,17 +15,25 @@ const Toaster = dynamic(() =>
 
 const BackendLayout = async ({ children }: { children: React.ReactNode }) => {
   const currentUser = await getCurrentUserFromSession();
-  const isAdmin = currentUser?.role === Role.ADMIN;
+  const session = await getSession();
 
-  if (currentUser && !currentUser.isActive) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)]">
-        <p className="text-2xl font-semibold">
-          Your account is inactive. Please contact administrator.
-        </p>
-      </div>
-    );
+  // If user was deleted (session exists but user doesn't), redirect to deleted page
+  if (!currentUser && session) {
+    redirect("/deleted");
   }
+
+  // If no user and no session, redirect handled by middleware
+  if (!currentUser) {
+    redirect("/login");
+  }
+
+  const isAdmin = currentUser.role === Role.ADMIN;
+
+  // If user is inactive, redirect to inactive page
+  if (!currentUser.isActive) {
+    redirect("/inactive");
+  }
+
   return (
     <>
       <BackHeader currentUser={currentUser} />

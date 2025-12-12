@@ -4,7 +4,6 @@ import AllProprietes from "@/features/backend/proprietes/AllProprietes";
 import { getAllProperties } from "@/server/queries/properties";
 import { PropertyWithOwner } from "@/types/properties";
 import { getCurrentUserFromSession } from "@/server/auth/getCurrentUserFromSession";
-import { redirect } from "next/navigation";
 import { checkIsAdmin } from "@/server/auth/checkIsAdmin";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,11 +15,12 @@ const ProprietesArea = async ({
 }) => {
   const params = await searchParams;
   const currentUser = await getCurrentUserFromSession();
-  if (!currentUser) {
-    redirect("/login");
-  }
-
   const isAdmin = await checkIsAdmin();
+
+  // Layout handles redirects for null/inactive users, so currentUser is guaranteed here
+  if (!currentUser) {
+    return null;
+  }
 
   // Backend needs all properties (any status) with owner and gallery relations
   const { properties, total, page, totalPages } = await getAllProperties({
