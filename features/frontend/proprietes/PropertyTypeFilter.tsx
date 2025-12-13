@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { X, Search } from "lucide-react";
 import { usePropertyFilters } from "./hooks/usePropertyFilters";
 import { cn } from "@/lib/utils";
+import { PROPERTY_TYPE_OPTIONS } from "@/lib/constants";
 
 type FilterErrorMessageProps = {
   message: string;
@@ -38,12 +39,6 @@ const PropertyTypeFilter = ({
   className,
   clearRoute,
 }: PropertyTypeFilterProps) => {
-  const propertyTypeOptions = [
-    { value: PropertyType.Apartment, label: "Apartment" },
-    { value: PropertyType.House, label: "House" },
-    { value: PropertyType.Commercial, label: "Commercial" },
-  ];
-
   const {
     location,
     setLocation,
@@ -79,13 +74,13 @@ const PropertyTypeFilter = ({
         {/* Property Type Select */}
         <CustomSelect
           id="property-type-select"
-          value={type || undefined}
-          onValueChange={(value) => setType(value as PropertyType)}
-          options={propertyTypeOptions}
-          placeholder="All Types"
+          value={type}
+          onValueChange={(value) => setType(value as PropertyType | "all")}
+          options={[...PROPERTY_TYPE_OPTIONS]}
+          placeholder="Filter by type"
           triggerClassName={cn(
             "w-full bg-white dark:bg-background",
-            type && "border-primary"
+            type !== "all" && "border-primary"
           )}
           aria-label="Select property type"
         />

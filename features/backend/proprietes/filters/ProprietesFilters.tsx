@@ -1,11 +1,22 @@
 "use client";
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useCallback } from "react";
 import CustomSelect from "@/components/shared/form/CustomSelect";
-import { PropertyStatus, PropertyType } from "@prisma/client";
+import {
+  PROPERTY_STATUS_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  PROMOTED_OPTIONS,
+} from "@/lib/constants";
+import { UserForPropertyFilters } from "@/types/user";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
-const ProprietesFilters = () => {
+const ProprietesFilters = ({
+  isAdmin,
+  ownersList,
+}: {
+  isAdmin: boolean;
+  ownersList: UserForPropertyFilters[];
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -30,7 +41,7 @@ const ProprietesFilters = () => {
   const currentStatus = searchParams.get("status") || "all";
   const currentType = searchParams.get("type") || "all";
   const currentPromoted = searchParams.get("promoted") || "all";
-
+  const currentOwnerId = searchParams.get("ownerId") || "all";
   return (
     <div className="flex gap-4 items-end">
       {/* Status Filter */}
@@ -40,13 +51,7 @@ const ProprietesFilters = () => {
         onValueChange={(value) => {
           router.push(pathname + "?" + createQueryString("status", value));
         }}
-        options={[
-          { value: "all", label: "All Statuses" },
-          { value: PropertyStatus.APPROVED, label: "Approved" },
-          { value: PropertyStatus.IN_REVIEW, label: "In Review" },
-          { value: PropertyStatus.REJECTED, label: "Rejected" },
-          { value: PropertyStatus.DELETED, label: "Deleted" },
-        ]}
+        options={[...PROPERTY_STATUS_OPTIONS]}
         placeholder="Filter by status"
       />
 
@@ -57,12 +62,7 @@ const ProprietesFilters = () => {
         onValueChange={(value) => {
           router.push(pathname + "?" + createQueryString("type", value));
         }}
-        options={[
-          { value: "all", label: "All Types" },
-          { value: PropertyType.Apartment, label: "Apartment" },
-          { value: PropertyType.House, label: "House" },
-          { value: PropertyType.Commercial, label: "Commercial" },
-        ]}
+        options={[...PROPERTY_TYPE_OPTIONS]}
         placeholder="Filter by type"
       />
 
@@ -73,13 +73,26 @@ const ProprietesFilters = () => {
         onValueChange={(value) => {
           router.push(pathname + "?" + createQueryString("promoted", value));
         }}
-        options={[
-          { value: "all", label: "All" },
-          { value: "true", label: "Promoted" },
-          { value: "false", label: "Not Promoted" },
-        ]}
+        options={[...PROMOTED_OPTIONS]}
         placeholder="Filter by promotion"
       />
+      {/* Owner Filter */}
+      {isAdmin && (
+        <CustomSelect
+          id="owner-filter"
+          value={currentOwnerId}
+          onValueChange={(value) => {
+            router.push(pathname + "?" + createQueryString("ownerId", value));
+          }}
+          options={[{ id: "all", name: "All Owners" }, ...ownersList].map(
+            (owner) => ({
+              value: owner.id,
+              label: owner.name ?? "",
+            })
+          )}
+          placeholder="Filter by owner"
+        />
+      )}
     </div>
   );
 };

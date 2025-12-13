@@ -1,5 +1,5 @@
 // User Role Options (using Prisma Role enum)
-import { Role } from "@prisma/client";
+import { PropertyStatus, PropertyType, Role } from "@prisma/client";
 
 // Master Admin Email - properties are transferred to this admin when user deletes their profile
 export const MASTER_ADMIN_EMAIL = "aleksandar@e-seo.info";
@@ -64,4 +64,27 @@ export const PROPERTY_IMAGE_ALLOWED_TYPES = [
   "image/jpg",
   "image/svg+xml",
   "image/webp",
+] as const;
+
+// Filters options
+export const PROPERTY_STATUS_OPTIONS = [
+  { value: "all", label: "All Statuses" },
+  { value: PropertyStatus.APPROVED, label: "Approved" },
+  { value: PropertyStatus.IN_REVIEW, label: "In Review" },
+  { value: PropertyStatus.REJECTED, label: "Rejected" },
+  { value: PropertyStatus.INACTIVE, label: "Inactive" },
+  { value: PropertyStatus.DELETED, label: "Deleted" },
+] as const;
+
+export const PROPERTY_TYPE_OPTIONS = [
+  { value: "all", label: "All Types" },
+  { value: PropertyType.Apartment, label: "Apartment" },
+  { value: PropertyType.House, label: "House" },
+  { value: PropertyType.Commercial, label: "Commercial" },
+] as const;
+
+export const PROMOTED_OPTIONS = [
+  { value: "all", label: "All" },
+  { value: "true", label: "Promoted" },
+  { value: "false", label: "Not Promoted" },
 ] as const;
