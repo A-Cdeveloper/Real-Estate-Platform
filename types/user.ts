@@ -21,3 +21,5 @@ export type UpdateUser = Pick<User, "id" | "email" | "name" | "role"> & {
   password?: string;
 };
 export type DeleteUser = Pick<User, "id">;
+
+export type UserForPropertyFilters = Pick<User, "id" | "name">;

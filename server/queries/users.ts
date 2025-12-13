@@ -1,8 +1,13 @@
 import prisma from "@/server/prisma";
-import { CurrentUser, UserWithProperties } from "@/types/user";
+import {
+  CurrentUser,
+  UserForPropertyFilters,
+  UserWithProperties,
+} from "@/types/user";
 import { getPrismaErrorMessage } from "../prisma-errors";
 import { ensureAdminAccess } from "../auth/ensureAdminAccess";
 import { parseSort } from "@/lib/utils/parseSort";
+import { User } from "@prisma/client";
 
 /**
  * Fetches all users with the fields needed for backend profile views, including property counts.
@@ -81,4 +86,26 @@ export async function getUserById(userId: string): Promise<CurrentUser | null> {
       id: userId,
     },
   });
+}
+
+export async function getUsersForPropertyFilters(): Promise<
+  UserForPropertyFilters[]
+> {
+  await ensureAdminAccess();
+
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+    return users;
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(getPrismaErrorMessage(error));
+  }
 }

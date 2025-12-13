@@ -9,6 +9,7 @@ import Link from "next/link";
 import { getColumns } from "./table/columns";
 import { sortableColumns } from "./table/sortableColumns";
 import ProprietesFilters from "./filters/ProprietesFilters";
+import { UserForPropertyFilters } from "@/types/user";
 
 type AllProprietesProps = {
   properties: PropertyWithOwner[];
@@ -18,6 +19,7 @@ type AllProprietesProps = {
   sort: string;
   isAdmin: boolean;
   filters: PropertyFilters;
+  ownersList: UserForPropertyFilters[];
 };
 
 const AllProprietes = ({
@@ -28,6 +30,7 @@ const AllProprietes = ({
   sort,
   isAdmin,
   filters,
+  ownersList,
 }: AllProprietesProps) => {
   return (
     <div className="space-y-4 w-full xl:w-3/4">
@@ -38,7 +41,8 @@ const AllProprietes = ({
       </div>
 
       <div className="flex items-center justify-between border-y border-border/50 p-3">
-        <ProprietesFilters /> <TableRecordsCount total={total} />
+        <ProprietesFilters isAdmin={isAdmin} ownersList={ownersList} />
+        <TableRecordsCount total={total} />
       </div>
       <GenericTable
         data={properties}
@@ -59,6 +63,7 @@ const AllProprietes = ({
             ...(filters.promoted !== undefined && {
               promoted: filters.promoted ? "true" : "false",
             }),
+            ...(filters.ownerId && { ownerId: filters.ownerId }),
           }}
         />
       )}

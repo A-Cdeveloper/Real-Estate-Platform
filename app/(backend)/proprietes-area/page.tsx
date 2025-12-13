@@ -6,6 +6,7 @@ import { PropertyWithOwner } from "@/types/properties";
 import { getCurrentUserFromSession } from "@/server/auth/getCurrentUserFromSession";
 import { checkIsAdmin } from "@/server/auth/checkIsAdmin";
 import { PropertyStatus, PropertyType } from "@prisma/client";
+import { getUsersForPropertyFilters } from "@/server/queries/users";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -22,6 +23,8 @@ const ProprietesArea = async ({
   if (!currentUser) {
     return null;
   }
+
+  const ownersList = await getUsersForPropertyFilters();
 
   // Backend needs all properties (any status) with owner and gallery relations
   const { properties, total, page, totalPages, filters } =
@@ -41,6 +44,7 @@ const ProprietesArea = async ({
             : params.promoted === "false"
               ? false
               : undefined,
+        ownerId: params.ownerId as string | undefined,
       },
     });
   return (
@@ -54,6 +58,7 @@ const ProprietesArea = async ({
         sort={(params.sort as string) || "status_desc"}
         isAdmin={isAdmin}
         filters={filters}
+        ownersList={ownersList}
       />
     </div>
   );
