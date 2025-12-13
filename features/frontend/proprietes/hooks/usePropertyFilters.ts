@@ -8,21 +8,21 @@ import type { PropertyFilters } from "@/types/properties";
 
 type FilterState = {
   location: string;
-  type: PropertyType | undefined;
+  type: PropertyType | "all";
   minPrice: string;
   maxPrice: string;
 };
 
 type FilterAction =
   | { type: "SET_LOCATION"; payload: string }
-  | { type: "SET_TYPE"; payload: PropertyType | undefined }
+  | { type: "SET_TYPE"; payload: PropertyType | "all" }
   | { type: "SET_MIN_PRICE"; payload: string }
   | { type: "SET_MAX_PRICE"; payload: string }
   | { type: "CLEAR_ALL" };
 
 const initialState: FilterState = {
   location: "",
-  type: undefined,
+  type: "all",
   minPrice: "",
   maxPrice: "",
 };
@@ -32,7 +32,7 @@ function filterReducer(state: FilterState, action: FilterAction): FilterState {
     case "SET_LOCATION":
       return { ...state, location: action.payload };
     case "SET_TYPE":
-      return { ...state, type: action.payload };
+      return { ...state, type: action.payload as PropertyType | "all" };
     case "SET_MIN_PRICE":
       return { ...state, minPrice: action.payload };
     case "SET_MAX_PRICE":
@@ -58,7 +58,7 @@ export const usePropertyFilters = (
     if (!initialParams) return initialState;
     return {
       location: initialParams.location || "",
-      type: (initialParams.type as PropertyType | undefined) || undefined,
+      type: (initialParams.type as PropertyType | undefined) || "all",
       minPrice: initialParams.minPrice || "",
       maxPrice: initialParams.maxPrice || "",
     };
@@ -76,7 +76,7 @@ export const usePropertyFilters = (
     const trimmedMaxPrice = state.maxPrice.trim();
 
     const formData: PropertyFilters = {
-      ...(state.type && { type: state.type }),
+      ...(state.type !== "all" && { type: state.type }),
       ...(trimmedLocation && { location: trimmedLocation }),
       ...(trimmedMinPrice && { minPrice: trimmedMinPrice }),
       ...(trimmedMaxPrice && { maxPrice: trimmedMaxPrice }),
@@ -113,6 +113,11 @@ export const usePropertyFilters = (
       }
     });
 
+    // Explicitly delete type param if it's "all"
+    if (state.type === "all") {
+      params.delete("type");
+    }
+
     params.set("page", "1");
     const queryString = params.toString();
     router.push(`/proprietes?${queryString}`);
@@ -147,8 +152,8 @@ export const usePropertyFilters = (
       dispatch({ type: "SET_LOCATION", payload: value });
     },
     type: state.type,
-    setType: (value: PropertyType | undefined) => {
-      dispatch({ type: "SET_TYPE", payload: value });
+    setType: (value: PropertyType | "all") => {
+      dispatch({ type: "SET_TYPE", payload: value as PropertyType | "all" });
     },
     minPrice: state.minPrice,
     setMinPrice: (value: string) => {
