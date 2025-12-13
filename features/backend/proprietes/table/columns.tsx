@@ -11,6 +11,7 @@ import { PropertyStatus } from "@prisma/client";
 import { Star } from "lucide-react";
 import { toast } from "sonner";
 import { PropertyStatusBadge } from "../ui/PropertyStatusBadge";
+import { Button } from "@/components/ui/button";
 
 /**
  * Columns for the news table
@@ -88,7 +89,9 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
               return null;
             }
             return (
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={async () => {
                   const result = await promoteProperty(property.id);
                   if (result.success) {
@@ -99,18 +102,18 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
                     toast.error(result.error);
                   }
                 }}
-                className="cursor-pointer outline-none border-none"
                 aria-label={
                   property.promoted
                     ? "Unpromote property"
                     : "Promote property to featured"
                 }
+                className="mx-auto block"
               >
                 <Star
                   className={`size-4 ${property.promoted ? "fill-yellow-500" : "fill-gray-500"} mx-auto`}
                   aria-hidden="true"
                 />
-              </button>
+              </Button>
             );
           },
         },
