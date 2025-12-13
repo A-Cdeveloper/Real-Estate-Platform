@@ -102,13 +102,12 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
                     toast.error(result.error);
                   }
                 }}
-                className="cursor-pointer outline-none border-none"
+                className="cursor-pointer outline-none border-none mx-auto block"
                 aria-label={
                   property.promoted
                     ? "Unpromote property"
                     : "Promote property to featured"
                 }
-                className="mx-auto block"
               >
                 <Star
                   className={`size-4 ${property.promoted ? "fill-yellow-500" : "fill-gray-500"} mx-auto`}
