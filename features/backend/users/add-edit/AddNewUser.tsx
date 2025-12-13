@@ -1,6 +1,6 @@
 "use client";
 import Modal from "@/components/shared/ui/Modal";
-import { Button } from "@/components/ui/button";
+import IconButton from "@/components/shared/ui/IconButton";
 import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import UserForm from "./UserForm";
@@ -9,10 +9,11 @@ const AddNewUser = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setIsOpen(true)} aria-label="Add new user">
-        <UserPlus className="size-4 mr-2" aria-hidden="true" />
-        Add New User
-      </Button>
+      <IconButton
+        icon={UserPlus}
+        label="Add New User"
+        onClick={() => setIsOpen(true)}
+      />
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

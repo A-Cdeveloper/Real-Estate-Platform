@@ -1,6 +1,6 @@
 "use client";
 import Modal from "@/components/shared/ui/Modal";
-import { Button } from "@/components/ui/button";
+import IconButton from "@/components/shared/ui/IconButton";
 import { BookPlus } from "lucide-react";
 import { useState } from "react";
 import NewsForm from "./NewsForm";
@@ -9,10 +9,11 @@ const AddNews = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setIsOpen(true)} aria-label="Add news">
-        <BookPlus className="size-4 mr-2" aria-hidden="true" />
-        Add News
-      </Button>
+      <IconButton
+        icon={BookPlus}
+        label="Add News"
+        onClick={() => setIsOpen(true)}
+      />
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
