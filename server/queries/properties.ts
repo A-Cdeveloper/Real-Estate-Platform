@@ -60,14 +60,20 @@ export async function getPromotedProperties(
  *
  * @param page - The page number (default: 1)
  * @param limit - The number of properties per page (default: 12)
- * @param filters - Optional filters to apply (type, location, price range)
+ * @param filters - Optional filters to apply. Contains all filters for both frontend and backend:
+ *                  - Frontend: type, location, minPrice, maxPrice
+ *                  - Backend: type, status, ownerId, promoted
  * @param sort - The sorting order (default: "createdAt_desc")
  * @param includeRelations - If true, includes owner and gallery relations.
  *                           Used by backend to display full property data.
  *                           Default: false (frontend doesn't need relations)
- * @param status - Optional status filter. If not provided:
+ * @param status - Optional status filter (backward compatibility).
+ *                 Prefer using filters.status instead.
+ *                 If not provided:
  *                 - Frontend: defaults to APPROVED (only shows approved properties)
  *                 - Backend: undefined (shows all properties regardless of status)
+ * @param ownerId - Optional owner filter (backward compatibility).
+ *                  Prefer using filters.ownerId instead.
  *
  * @returns Object containing:
  *   - properties: Array of properties (with or without relations based on includeRelations)
@@ -81,7 +87,7 @@ export async function getPromotedProperties(
  * const { properties } = await getAllProperties({
  *   page: 1,
  *   limit: 12,
- *   filters: { type: "Apartment" },
+ *   filters: { type: "Apartment", location: "Belgrade" },
  *   sort: "price_asc"
  * });
  *
@@ -91,16 +97,30 @@ export async function getPromotedProperties(
  *   page: 1,
  *   limit: 10,
  *   includeRelations: true
- *   // status not provided = shows all statuses (APPROVED, IN_REVIEW, REJECTED)
+ *   // filters.status not provided = shows all statuses (APPROVED, IN_REVIEW, REJECTED)
  * });
  *
  * @example
- * // Backend usage (only IN_REVIEW properties with relations)
+ * // Backend usage with filters (only IN_REVIEW properties with relations)
  * const { properties } = await getAllProperties({
  *   page: 1,
  *   limit: 10,
  *   includeRelations: true,
- *   status: PropertyStatus.IN_REVIEW
+ *   filters: { status: PropertyStatus.IN_REVIEW, type: "House" }
+ * });
+ *
+ * @example
+ * // Backend usage with all filters
+ * const { properties } = await getAllProperties({
+ *   page: 1,
+ *   limit: 10,
+ *   includeRelations: true,
+ *   filters: {
+ *     status: PropertyStatus.APPROVED,
+ *     type: "Apartment",
+ *     ownerId: "user-id",
+ *     promoted: true
+ *   }
  * });
  */
 export async function getAllProperties({
@@ -131,24 +151,32 @@ export async function getAllProperties({
     const maxPrice = filters?.maxPrice ? Number(filters.maxPrice) : undefined;
 
     // Build where clause with filters
+    // Prefer filters over direct params for backward compatibility
     const where = {
+      // Type filter (works for both frontend and backend)
       ...(filters?.type && { type: filters.type }),
+      // Location filter (frontend only)
       ...(filters?.location && {
         address: { contains: filters.location },
       }),
+      // Price filters (frontend only)
       ...((minPrice || maxPrice) && {
         price: {
           ...(minPrice && { gte: minPrice }),
           ...(maxPrice && { lte: maxPrice }),
         },
       }),
-      // Status filter logic:
-      // - If status is explicitly provided, use it
-      // - If not provided and includeRelations is false (frontend), default to APPROVED
-      // - If not provided and includeRelations is true (backend), don't filter by status (show all)
+      // Status filter: prefer filters.status, fallback to status param, then default logic
       status:
-        status ?? (includeRelations ? undefined : PropertyStatus.APPROVED),
-      ...(ownerId && { ownerId }),
+        filters?.status ??
+        status ??
+        (includeRelations ? undefined : PropertyStatus.APPROVED),
+      // Owner filter: prefer filters.ownerId, fallback to ownerId param
+      ...((filters?.ownerId || ownerId) && {
+        ownerId: filters?.ownerId ?? ownerId,
+      }),
+      // Promoted filter (backend only)
+      ...(filters?.promoted !== undefined && { promoted: filters.promoted }),
     };
 
     const parsedSort = parseSort(sort);

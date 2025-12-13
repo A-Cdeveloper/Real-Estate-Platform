@@ -1,4 +1,4 @@
-import { Prisma, Property, PropertyType } from "@prisma/client";
+import { Prisma, Property, PropertyType, PropertyStatus } from "@prisma/client";
 import { ActionState } from "./action-state";
 
 /**
@@ -33,13 +33,19 @@ export type FullProperty = PropertyWithOwner & PropertyWithGallery;
 /**
  * Type for property filters
  * Used in usePropertyFilters hook and getAllProperties query
+ * Contains all possible filters for both frontend and backend
  * Prices are strings because they come from input fields
  */
 export type PropertyFilters = {
+  // Frontend filters
   type?: PropertyType;
   location?: string;
   minPrice?: string;
   maxPrice?: string;
+  // Backend filters
+  status?: PropertyStatus;
+  ownerId?: string;
+  promoted?: boolean;
 };
 
 /**
