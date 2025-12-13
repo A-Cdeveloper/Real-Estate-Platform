@@ -17,8 +17,9 @@ import {
 import { USER_ROLE_OPTIONS } from "@/lib/constants";
 import { createUser, updateUser } from "@/server/actions/users";
 import { CurrentUser } from "@/types/user";
+import { Role } from "@prisma/client";
 import { Loader2, X } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import { Activity, useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 /**
@@ -45,6 +46,7 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
     updateUser,
     null
   );
+  const [isRoleAdmin, setIsRoleAdmin] = useState<boolean>(false);
 
   const state = mode === "create" ? createState : updateState;
   const formAction = mode === "create" ? createAction : updateAction;
@@ -153,6 +155,9 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
               placeholder="Select a role"
               labelClassName="text-sm font-medium text-muted-foreground"
               name="role"
+              onValueChange={(value) => {
+                setIsRoleAdmin(value === Role.ADMIN);
+              }}
               defaultValue={
                 state && !state.success
                   ? state.data?.role
@@ -203,19 +208,19 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
               fieldId="password"
             />
           </div>
-          <div>
+          <Activity mode={isRoleAdmin ? "hidden" : "visible"}>
             <CustumSwitch
               id="new-user-active"
               name="isActive"
               defaultChecked={
-                mode === "edit" ? (initialData?.isActive ?? false) : false
+                mode === "edit" ? (initialData?.isActive ?? false) : true
               }
               labels={[
                 { label: "Inactive", checked: false },
                 { label: "Active", checked: true },
               ]}
             />
-          </div>
+          </Activity>
 
           <div className="flex justify-end">
             <Button type="submit" disabled={pending}>

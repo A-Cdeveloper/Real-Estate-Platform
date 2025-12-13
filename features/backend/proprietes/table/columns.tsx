@@ -37,7 +37,7 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
     render: (property) => {
       return (
         <h2 className="text-white max-w-[120px] line-clamp-2">
-          {property.name || "N/A"} ({property.owner.name || "N/A"})
+          {property.name || "N/A"}
         </h2>
       );
     },
@@ -102,6 +102,7 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
                     toast.error(result.error);
                   }
                 }}
+                className="cursor-pointer outline-none border-none"
                 aria-label={
                   property.promoted
                     ? "Unpromote property"
