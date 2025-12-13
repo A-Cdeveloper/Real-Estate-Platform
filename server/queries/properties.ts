@@ -145,6 +145,7 @@ export async function getAllProperties({
   page: number;
   limit: number;
   totalPages: number;
+  filters: PropertyFilters;
 }> {
   try {
     const minPrice = filters?.minPrice ? Number(filters.minPrice) : undefined;
@@ -224,6 +225,7 @@ export async function getAllProperties({
       page,
       limit,
       totalPages: Math.ceil(total / limit),
+      filters: filters ?? {},
     };
   } catch (error) {
     console.error("Database error:", error);
