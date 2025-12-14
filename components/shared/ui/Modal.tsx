@@ -35,6 +35,7 @@ type ModalProps = {
   className?: string;
   showCloseButton?: boolean;
   disableClose?: boolean;
+  disableBackdropClose?: boolean;
 };
 
 // Modal component is used to display a modal
@@ -46,6 +47,7 @@ const Modal = ({
   className,
   showCloseButton = true,
   disableClose = false,
+  disableBackdropClose = false,
 }: ModalProps) => {
   // useEffectEvent is used to prevent the event from being triggered in the parent component
   const onCloseEvent = useEffectEvent(() => {
@@ -71,7 +73,7 @@ const Modal = ({
       aria-modal="true"
       aria-label="Modal dialog"
       className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
-      onClick={disableClose ? undefined : onClose}
+      onClick={disableClose || disableBackdropClose ? undefined : onClose}
     >
       {showCloseButton && <CloseButton onClose={onClose} />}
 

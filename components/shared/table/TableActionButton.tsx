@@ -48,6 +48,7 @@ const TableActionButton = ({
         onClose={handleCloseModal}
         showCloseButton={false}
         disableClose={false}
+        disableBackdropClose={true}
       >
         {children(handleCloseModal)}
       </Modal>
@@ -65,4 +66,3 @@ const TableActionButton = ({
 };
 
 export default TableActionButton;
-

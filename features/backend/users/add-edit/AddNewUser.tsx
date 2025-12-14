@@ -19,6 +19,7 @@ const AddNewUser = () => {
         onClose={() => setIsOpen(false)}
         showCloseButton={false}
         disableClose={false}
+        disableBackdropClose={true}
       >
         <UserForm onClose={() => setIsOpen(false)} mode="create" />
       </Modal>

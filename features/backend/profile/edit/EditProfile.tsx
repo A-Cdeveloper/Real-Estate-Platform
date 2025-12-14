@@ -10,9 +10,18 @@ import {
 import PasswordInput from "@/components/auth/PasswordInput";
 import CustomInput from "@/components/shared/form/CustomInput";
 import IconButton from "@/components/shared/ui/IconButton";
+import Modal from "@/components/shared/ui/Modal";
+import WarningModal from "@/components/shared/ui/WarningModal";
+import { useDirtyFormModal } from "@/hooks/useDirtyFormModal";
 import { CurrentUser } from "@/types/user";
 import { Loader2, X } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  startTransition,
+  useState,
+} from "react";
 import { updateProfile } from "@/server/actions/profile";
 import { toast } from "sonner";
 import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
@@ -32,13 +41,49 @@ const EditProfile = ({
 }) => {
   const [state, formAction, pending] = useActionState(updateProfile, null);
 
-  // Show toast notification and close form on success
-  useEffect(() => {
-    if (state?.success) {
-      toast.success("User updated successfully!");
-      onClose();
+  // Track if form is dirty
+  const [isDirty, setIsDirty] = useState(false);
+  // Track if form has been successfully submitted
+  const prevSuccessRef = useRef(false);
+
+  // Use hook to handle dirty form modal
+  const {
+    handleClose,
+    showWarning,
+    handleConfirm,
+    handleCancel,
+    title,
+    message,
+  } = useDirtyFormModal({
+    isDirty,
+    onClose,
+  });
+
+  // Track form changes to determine if form is dirty
+  const handleFormChange = () => {
+    if (!isDirty) {
+      setIsDirty(true);
     }
-  }, [state, onClose]);
+  };
+
+  // Reset dirty state and handle success
+  useEffect(() => {
+    const isSuccess = state?.success ?? false;
+
+    // Only reset dirty state if success changed from false to true
+    if (isSuccess && !prevSuccessRef.current && isDirty) {
+      startTransition(() => {
+        setIsDirty(false);
+      });
+    }
+
+    prevSuccessRef.current = isSuccess;
+
+    if (isSuccess) {
+      toast.success("User updated successfully!");
+      handleClose(); // Use wrapped handleClose
+    }
+  }, [state, isDirty, handleClose]);
 
   if (!currentUser) {
     return (
@@ -57,7 +102,7 @@ const EditProfile = ({
           icon={X}
           label="Close edit form"
           className="absolute right-2 -top-4 h-6 w-6 [&>span]:hidden"
-          onClick={onClose}
+          onClick={handleClose}
           disabled={pending}
         />
         <CardTitle className="text-lg">{currentUser.name}</CardTitle>
@@ -66,7 +111,11 @@ const EditProfile = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-5" action={formAction}>
+        <form
+          className="space-y-5"
+          action={formAction}
+          onChange={handleFormChange}
+        >
           <div>
             <CustomInput
               id="profile-full-name"
@@ -148,6 +197,21 @@ const EditProfile = ({
           </div>
         </form>
       </CardContent>
+      {/* Warning Modal */}
+      <Modal
+        isOpen={showWarning}
+        onClose={handleCancel}
+        showCloseButton={false}
+        disableClose={false}
+      >
+        <WarningModal
+          isOpen={showWarning}
+          onClose={handleCancel}
+          onConfirm={handleConfirm}
+          title={title}
+          message={message}
+        />
+      </Modal>
     </Card>
   );
 };

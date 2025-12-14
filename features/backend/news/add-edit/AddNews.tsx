@@ -19,6 +19,7 @@ const AddNews = () => {
         onClose={() => setIsOpen(false)}
         showCloseButton={false}
         disableClose={false}
+        disableBackdropClose={true}
       >
         <NewsForm onClose={() => setIsOpen(false)} mode="create" />
       </Modal>

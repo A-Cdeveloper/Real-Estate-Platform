@@ -62,6 +62,7 @@ const ProfileContent = ({
         onClose={handleCloseEdit}
         showCloseButton={false}
         disableClose={true}
+        disableBackdropClose={true}
       >
         <EditProfile
           key={isEditing ? "edit-open" : "edit-closed"}

@@ -19,8 +19,18 @@ import { createUser, updateUser } from "@/server/actions/users";
 import { CurrentUser } from "@/types/user";
 import { Role } from "@prisma/client";
 import { Loader2, X } from "lucide-react";
-import { Activity, useActionState, useEffect, useState } from "react";
+import {
+  Activity,
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
+import { useDirtyFormModal } from "@/hooks/useDirtyFormModal";
+import WarningModal from "@/components/shared/ui/WarningModal";
+import Modal from "@/components/shared/ui/Modal";
 
 /**
  * UserForm component
@@ -46,22 +56,61 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
     updateUser,
     null
   );
+  //
   const [isRoleAdmin, setIsRoleAdmin] = useState<boolean>(false);
 
+  // Track if form is dirty
+  const [isDirty, setIsDirty] = useState(false);
+  // Track if form has been successfully submitted
+  const prevSuccessRef = useRef(false);
+
+  // Get the state and form action for the current mode
   const state = mode === "create" ? createState : updateState;
   const formAction = mode === "create" ? createAction : updateAction;
+  // Get the pending state for the current mode
   const pending = mode === "create" ? createPending : updatePending;
 
+  // Use hook to handle dirty form modal
+  const {
+    handleClose,
+    showWarning,
+    handleConfirm,
+    handleCancel,
+    title,
+    message,
+  } = useDirtyFormModal({
+    isDirty,
+    onClose,
+  });
+
+  // Track form changes to determine if form is dirty
+  const handleFormChange = () => {
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+  };
+
+  // Reset dirty state and handle success
   useEffect(() => {
-    if (state?.success) {
+    const isSuccess = state?.success ?? false;
+
+    if (isSuccess && !prevSuccessRef.current && isDirty) {
+      startTransition(() => {
+        setIsDirty(false);
+      });
+    }
+
+    prevSuccessRef.current = isSuccess;
+
+    if (isSuccess) {
       toast.success(
         mode === "create"
           ? "User created successfully!"
           : "User updated successfully!"
       );
-      onClose();
+      handleClose(); // Use wrapped handleClose
     }
-  }, [state, onClose, mode]);
+  }, [state, mode, isDirty, handleClose]);
 
   return (
     <Card className="min-w-full md:min-w-md border-primary/50 py-5">
@@ -72,7 +121,7 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
           icon={X}
           label="Close form"
           className="absolute right-2 -top-4 h-6 w-6 [&>span]:hidden"
-          onClick={onClose}
+          onClick={handleClose}
         />
         <CardTitle className="text-lg">
           {mode === "create" ? "Add New User" : "Edit Existing User"}
@@ -84,7 +133,11 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-5">
+        <form
+          action={formAction}
+          className="space-y-5"
+          onChange={handleFormChange}
+        >
           {mode === "edit" && initialData && (
             <div>
               <input type="hidden" name="id" value={initialData?.id} />
@@ -242,6 +295,21 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
           </div>
         </form>
       </CardContent>
+      {/* Warning Modal */}
+      <Modal
+        isOpen={showWarning}
+        onClose={handleCancel}
+        showCloseButton={false}
+        disableClose={false}
+      >
+        <WarningModal
+          isOpen={showWarning}
+          onClose={handleCancel}
+          onConfirm={handleConfirm}
+          title={title}
+          message={message}
+        />
+      </Modal>
     </Card>
   );
 };

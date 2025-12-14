@@ -3,13 +3,22 @@
 import CustomInput from "@/components/shared/form/CustomInput";
 import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 import IconButton from "@/components/shared/ui/IconButton";
+import Modal from "@/components/shared/ui/Modal";
+import WarningModal from "@/components/shared/ui/WarningModal";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useDirtyFormModal } from "@/hooks/useDirtyFormModal";
 import { addNews, updateNews } from "@/server/actions/news";
 import { News } from "@prisma/client";
 import { Loader2, X } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  startTransition,
+  useState,
+} from "react";
 import { toast } from "sonner";
 import NewsImageUploader from "./NewsImageUploader";
 
@@ -38,9 +47,27 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
     null
   );
 
+  // Track if form is dirty
+  const [isDirty, setIsDirty] = useState(false);
+  // Track if form has been successfully submitted
+  const prevSuccessRef = useRef(false);
+
   const state = mode === "create" ? createState : updateState;
   const formAction = mode === "create" ? createAction : updateAction;
   const pending = mode === "create" ? createPending : updatePending;
+
+  // Use hook to handle dirty form modal
+  const {
+    handleClose,
+    showWarning,
+    handleConfirm,
+    handleCancel,
+    title,
+    message,
+  } = useDirtyFormModal({
+    isDirty,
+    onClose,
+  });
 
   /**
    * State to store uploaded image URL in create mode.
@@ -60,16 +87,35 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
    */
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
+  // Track form changes to determine if form is dirty
+  const handleFormChange = () => {
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+  };
+
+  // Reset dirty state and handle success
   useEffect(() => {
-    if (state?.success) {
+    const isSuccess = state?.success ?? false;
+
+    // Only reset dirty state if success changed from false to true
+    if (isSuccess && !prevSuccessRef.current && isDirty) {
+      startTransition(() => {
+        setIsDirty(false);
+      });
+    }
+
+    prevSuccessRef.current = isSuccess;
+
+    if (isSuccess) {
       toast.success(
         mode === "create"
           ? "News created successfully!"
           : "News updated successfully!"
       );
-      onClose();
+      handleClose(); // Use wrapped handleClose
     }
-  }, [state, onClose, mode]);
+  }, [state, mode, isDirty, handleClose]);
 
   return (
     <Card className="min-w-full md:min-w-md border-primary/50 py-5 gap-2">
@@ -80,14 +126,18 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
           icon={X}
           label="Close form"
           className="absolute right-2 -top-4 h-6 w-6 [&>span]:hidden"
-          onClick={onClose}
+          onClick={handleClose}
         />
         <CardTitle className="text-lg">
           {mode === "create" ? "Add News" : "Edit News"}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-5">
+        <form
+          action={formAction}
+          className="space-y-5"
+          onChange={handleFormChange}
+        >
           {/* 
             Hidden input to send uploaded image URL when creating news.
             Only needed in create mode - in edit mode, image is saved directly via NewsImageUploader.
@@ -116,7 +166,9 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
               required
               aria-required="true"
               aria-invalid={
-                state && !state.success && state.errors?.title ? "true" : "false"
+                state && !state.success && state.errors?.title
+                  ? "true"
+                  : "false"
               }
               aria-describedby={
                 state && !state.success && state.errors?.title
@@ -187,7 +239,13 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
               image={
                 mode === "edit" ? initialData?.image || null : uploadedImageUrl
               }
-              onImageChange={setUploadedImageUrl}
+              onImageChange={(url) => {
+                setUploadedImageUrl(url);
+                // Mark form as dirty when image changes
+                if (!isDirty) {
+                  setIsDirty(true);
+                }
+              }}
             />
           </div>
 
@@ -216,6 +274,21 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
           </div>
         </form>
       </CardContent>
+      {/* Warning Modal */}
+      <Modal
+        isOpen={showWarning}
+        onClose={handleCancel}
+        showCloseButton={false}
+        disableClose={false}
+      >
+        <WarningModal
+          isOpen={showWarning}
+          onClose={handleCancel}
+          onConfirm={handleConfirm}
+          title={title}
+          message={message}
+        />
+      </Modal>
     </Card>
   );
 };
