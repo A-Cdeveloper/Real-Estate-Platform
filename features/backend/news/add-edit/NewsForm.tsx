@@ -3,7 +3,6 @@
 import CustomInput from "@/components/shared/form/CustomInput";
 import ErrorFormMessages from "@/components/shared/form/ErrorFormMessages";
 import IconButton from "@/components/shared/ui/IconButton";
-import Modal from "@/components/shared/ui/Modal";
 import WarningModal from "@/components/shared/ui/WarningModal";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -275,20 +274,13 @@ const NewsForm = ({ onClose, mode, initialData }: NewsFormProps) => {
         </form>
       </CardContent>
       {/* Warning Modal */}
-      <Modal
+      <WarningModal
         isOpen={showWarning}
         onClose={handleCancel}
-        showCloseButton={false}
-        disableClose={false}
-      >
-        <WarningModal
-          isOpen={showWarning}
-          onClose={handleCancel}
-          onConfirm={handleConfirm}
-          title={title}
-          message={message}
-        />
-      </Modal>
+        onConfirm={handleConfirm}
+        title={title}
+        message={message}
+      />
     </Card>
   );
 };

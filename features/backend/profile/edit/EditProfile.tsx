@@ -10,7 +10,6 @@ import {
 import PasswordInput from "@/components/auth/PasswordInput";
 import CustomInput from "@/components/shared/form/CustomInput";
 import IconButton from "@/components/shared/ui/IconButton";
-import Modal from "@/components/shared/ui/Modal";
 import WarningModal from "@/components/shared/ui/WarningModal";
 import { useDirtyFormModal } from "@/hooks/useDirtyFormModal";
 import { CurrentUser } from "@/types/user";
@@ -198,20 +197,13 @@ const EditProfile = ({
         </form>
       </CardContent>
       {/* Warning Modal */}
-      <Modal
+      <WarningModal
         isOpen={showWarning}
         onClose={handleCancel}
-        showCloseButton={false}
-        disableClose={false}
-      >
-        <WarningModal
-          isOpen={showWarning}
-          onClose={handleCancel}
-          onConfirm={handleConfirm}
-          title={title}
-          message={message}
-        />
-      </Modal>
+        onConfirm={handleConfirm}
+        title={title}
+        message={message}
+      />
     </Card>
   );
 };

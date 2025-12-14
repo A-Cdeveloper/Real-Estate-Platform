@@ -30,7 +30,6 @@ import {
 import { toast } from "sonner";
 import { useDirtyFormModal } from "@/hooks/useDirtyFormModal";
 import WarningModal from "@/components/shared/ui/WarningModal";
-import Modal from "@/components/shared/ui/Modal";
 
 /**
  * UserForm component
@@ -296,20 +295,13 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
         </form>
       </CardContent>
       {/* Warning Modal */}
-      <Modal
+      <WarningModal
         isOpen={showWarning}
         onClose={handleCancel}
-        showCloseButton={false}
-        disableClose={false}
-      >
-        <WarningModal
-          isOpen={showWarning}
-          onClose={handleCancel}
-          onConfirm={handleConfirm}
-          title={title}
-          message={message}
-        />
-      </Modal>
+        onConfirm={handleConfirm}
+        title={title}
+        message={message}
+      />
     </Card>
   );
 };
