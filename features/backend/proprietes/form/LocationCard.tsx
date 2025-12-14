@@ -121,11 +121,13 @@ const initialState = (property?: PropertyWithOwner): LocationState => ({
 const LocationCard = ({
   state,
   property,
+  onLocationChange,
 }: {
   state: PropertyActionState<
     CreatePropertyFormData | UpdatePropertyFormData
   > | null;
   property?: PropertyWithOwner;
+  onLocationChange?: () => void;
 }) => {
   // Use reducer instead of multiple useState hooks for atomic updates
   const [locationState, dispatch] = useReducer(
@@ -141,8 +143,9 @@ const LocationCard = ({
   const handleLocationChange = useCallback(
     (location: { lat: number; lng: number; address: string }) => {
       dispatch({ type: "SET_LOCATION", payload: location });
+      onLocationChange?.(); // Notify parent that location has changed
     },
-    []
+    [onLocationChange]
   );
 
   /**

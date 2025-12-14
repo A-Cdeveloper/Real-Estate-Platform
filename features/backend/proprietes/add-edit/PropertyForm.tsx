@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { createProperty, updateProperty } from "@/server/actions/properties";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import DetailsCard from "../form/DetailsCard";
@@ -43,11 +43,19 @@ const PropertyForm = ({
 
   const [isDirty, setIsDirty] = useState(false);
 
-  const handleFormChange = () => {
+  const markDirty = useCallback(() => {
     if (!isDirty) {
       setIsDirty(true);
     }
-  };
+  }, [isDirty]);
+
+  const handleHasBlobsChange = useCallback(
+    (hasBlobs: boolean) => {
+      setHasBlobs(hasBlobs);
+      markDirty(); // Mark form as dirty when gallery changes
+    },
+    [markDirty]
+  );
 
   const state = isEdit ? editState : addState;
   const formAction = isEdit ? editFormAction : addFormAction;
@@ -81,11 +89,7 @@ const PropertyForm = ({
             router.back();
           }}
         />
-        <form
-          action={formAction}
-          className="relative"
-          onChange={handleFormChange}
-        >
+        <form action={formAction} className="relative" onChange={markDirty}>
           {mode === "edit" && property && (
             <input type="hidden" name="id" value={property.id} />
           )}
@@ -95,13 +99,17 @@ const PropertyForm = ({
             <DetailsCard state={state} pending={pending} property={property} />
 
             {/* Column 2 - Location */}
-            <LocationCard state={state} property={property} />
+            <LocationCard
+              state={state}
+              property={property}
+              onLocationChange={markDirty}
+            />
 
             {/* Column 3 - Gallery */}
             <ImageGalleryCard
               state={state}
               property={property}
-              onHasBlobsChange={setHasBlobs}
+              onHasBlobsChange={handleHasBlobsChange}
             />
           </div>
 
