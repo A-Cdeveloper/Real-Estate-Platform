@@ -24,7 +24,8 @@ const ProprietesArea = async ({
     return null;
   }
 
-  const ownersList = await getUsersForPropertyFilters();
+  // Admins can filter by any owner, agents don't need owners list
+  const ownersList = isAdmin ? await getUsersForPropertyFilters() : [];
 
   // Backend needs all properties (any status) with owner and gallery relations
   const { properties, total, page, totalPages, filters } =
