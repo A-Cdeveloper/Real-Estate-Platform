@@ -31,7 +31,14 @@ This project is a comprehensive real estate application that demonstrates modern
 - Server-side sorting by status, createdAt, and other fields with URL-based state management
 - Generic table component (`GenericTable`) for reusable data display
 - Sortable columns with visual indicators (up/down arrows)
-- Property status management (APPROVED, IN_REVIEW, REJECTED) with custom status badge component
+- Property status management (APPROVED, IN_REVIEW, REJECTED, INACTIVE, DELETED) with custom status badge component
+- Backend property filtering:
+  - Filter by status (all statuses, including INACTIVE and DELETED)
+  - Filter by property type (Apartment, House, Commercial)
+  - Filter by promotion status (promoted/not promoted)
+  - Filter by owner (admin only)
+  - URL-based filter persistence
+  - Dynamic filter options from constants
 - Property creation form with:
   - Property details (name, type, price, area, description)
   - Interactive map for location selection with geocoding/reverse geocoding
@@ -106,6 +113,33 @@ This project is a comprehensive real estate application that demonstrates modern
 - Type-safe operations with TypeScript generics
 - Server actions for user CRUD operations with Zod validation
 - Session-based current user detection
+- Unsaved changes warning system:
+  - `useDirtyFormModal` hook for modal forms (UserForm, NewsForm, EditProfile)
+  - `WarningModal` component for custom warning dialogs
+  - Prevents accidental data loss when closing forms with unsaved changes
+  - Disables backdrop close to force user interaction with warning
+
+**Authentication & Authorization**
+
+- Session-based authentication with secure cookies
+- Role-based access control (ADMIN, AGENT)
+- Backend layout redirects:
+  - Inactive users → `/inactive` page (in `(auth)` route group)
+  - Deleted users → `/deleted` page (in `(auth)` route group)
+  - Unauthenticated users → `/login` page
+  - Centralized redirect logic in `app/(backend)/layout.tsx`
+- User status handling:
+  - Inactive users cannot access backend routes
+  - Deleted users are automatically logged out
+  - Force logout functionality for deleted users (`ForceLogoutButton` component)
+- Request-level memoization with React `cache()`:
+  - `getCurrentUserFromSession()` - Cached per request
+  - `getSettings()` - Cached per request
+  - Optimized prop passing from layouts to reduce duplicate queries
+- Ownership helpers:
+  - `requireAuth()` - Ensures user is authenticated and active
+  - `requireOwnerOrAdmin(property, user)` - Ensures user owns property or is admin
+  - Used in server actions and queries for consistent authorization
 
 **News Management (Admin)**
 
@@ -120,6 +154,11 @@ This project is a comprehensive real estate application that demonstrates modern
 - Type-safe operations with TypeScript generics
 - Server actions for news CRUD operations with Zod validation
 - Centralized file validation utility for consistent upload handling
+- Unsaved changes warning system:
+  - `useDirtyFormModal` hook integrated into `NewsForm`
+  - `WarningModal` component for custom warning dialogs
+  - Prevents accidental data loss when closing forms with unsaved changes
+  - Disables backdrop close to force user interaction with warning
 
 **Performance**
 
@@ -204,10 +243,16 @@ Generate Prisma Client:
 npx prisma generate --schema=./server/prisma/schema.prisma
 ```
 
-Run database migrations:
+Run database migrations (development):
 
 ```
 npx prisma migrate dev --schema=./server/prisma/schema.prisma
+```
+
+For production, use:
+
+```
+npx prisma migrate deploy --schema=./server/prisma/schema.prisma
 ```
 
 (Optional) Seed the database with sample data:
@@ -215,6 +260,17 @@ npx prisma migrate dev --schema=./server/prisma/schema.prisma
 ```
 npx prisma db seed --schema=./server/prisma/schema.prisma
 ```
+
+**Important Notes on Database Migrations:**
+
+- **Development**: Use `prisma migrate dev` to create and apply migrations
+- **Production**: Use `prisma migrate deploy` to apply existing migrations only
+- **Migration Status**: Check migration status with `prisma migrate status`
+- **Failed Migrations**: If a migration fails, you may need to:
+  1. Manually fix the database schema
+  2. Delete the failed migration entry from `_prisma_migrations` table
+  3. Run `prisma migrate deploy` again
+- **Schema Sync**: Ensure your production database schema matches your Prisma schema before deploying
 
 ### 5\. Start Development Server
 
@@ -236,6 +292,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── login/                # Login page
 │   │   ├── forgot-password/      # Password reset request
 │   │   ├── reset-password/       # Password reset form
+│   │   ├── inactive/             # Inactive user page (redirected from backend)
+│   │   ├── deleted/              # Deleted user page (redirected from backend)
 │   │   └── layout.tsx           # Auth layout
 │   ├── (backend)/                # Backend/admin routes
 │   │   ├── dashboard/            # Dashboard page
@@ -362,6 +420,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   └── skeletons/            # Loading skeletons
 │   ├── shared/                   # Shared reusable components
 │   │   ├── Modal.tsx
+│   │   ├── WarningModal.tsx        # Warning modal for unsaved changes
 │   │   ├── Spinner.tsx
 │   │   ├── CustomInput.tsx
 │   │   ├── CustomSelect.tsx
@@ -370,6 +429,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── BackButton.tsx
 │   │   ├── PaginationControls.tsx
 │   │   ├── GenericTable.tsx      # Generic reusable table component
+│   │   ├── TableRecordsCount.tsx # Component for displaying total records count
+│   │   └── table/
+│   │       └── TableActionButton.tsx # Reusable action button with modal wrapper
 │   │   ├── CustumImage.tsx
 │   │   ├── Logo.tsx
 │   │   ├── LogoWithSettings.tsx  # Server component wrapper for Logo
@@ -427,7 +489,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   ├── prisma.ts                 # Prisma client instance
 │   └── prisma-errors.ts          # Prisma error handling
 ├── hooks/                        # Custom React hooks
-│   └── useOutsideClick.ts
+│   ├── useOutsideClick.ts
+│   └── useDirtyFormModal.ts      # Hook for unsaved changes warning in modals
 ├── lib/
 │   ├── utils/                    # Utility functions
 │   │   ├── date.ts              # Date formatting
@@ -492,6 +555,8 @@ Enum values:
 - `APPROVED` - Property is approved and visible on frontend
 - `IN_REVIEW` - Property is pending approval (default for new properties)
 - `REJECTED` - Property has been rejected
+- `INACTIVE` - Property is inactive (not visible on frontend)
+- `DELETED` - Property is deleted (owner's account was deleted, properties transferred to admin)
 
 ### Property
 
@@ -505,7 +570,7 @@ Enum values:
 - `lng` - Geographic longitude (optional)
 - `description` - Property description (optional)
 - `image` - Main property image URL (optional)
-- `status` - Property status (APPROVED, IN_REVIEW, REJECTED) (default: IN_REVIEW)
+- `status` - Property status (APPROVED, IN_REVIEW, REJECTED, INACTIVE, DELETED) (default: IN_REVIEW)
 - `promoted` - Featured property flag (default: false)
 - `createdAt` - Listing creation timestamp
 - `ownerId` - Foreign key to User
@@ -555,9 +620,11 @@ Enum values:
 ## Available Scripts
 
 - `npm run dev` - Start development server
-- `npm run build` - Build production bundle
+- `npm run build` - Build production bundle (includes Prisma generate and migrate deploy)
+- `npm run build:local` - Build production bundle without running migrations (for local testing)
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+- `npm run email:dev` - Start email template preview server
 
 ## Environment Variables
 
@@ -581,21 +648,61 @@ DATABASE_URL="mysql://user:password@localhost:3306/database_name"
 - `EMAIL_USER` - Email address for sending emails (contact form, password reset)
 - `EMAIL_PASS` - Email password for SMTP authentication
 
+## Application Constants
+
+Constants are defined in `lib/constants.ts`:
+
+- `MASTER_ADMIN_EMAIL` - Master admin email address (properties are transferred to this admin when a user deletes their profile)
+- `PROPERTY_STATUS_OPTIONS` - All property status filter options (includes "all", APPROVED, IN_REVIEW, REJECTED, INACTIVE, DELETED)
+- `PROPERTY_TYPE_OPTIONS` - All property type filter options (includes "all", Apartment, House, Commercial)
+- `PROMOTED_OPTIONS` - Promotion status filter options (includes "all", "true", "false")
+- `USER_ROLE_OPTIONS` - User role options (ADMIN, AGENT)
+- `USER_STATUS_OPTIONS` - User status options (active, inactive)
+
 ## Deployment
 
 ### Vercel (Recommended)
 
 1.  Push your code to GitHub
 2.  Import your project to Vercel
-3.  Configure the `DATABASE_URL` environment variable
-4.  Deploy
+3.  Configure environment variables:
+    - `DATABASE_URL` - Production database connection string
+    - `PINATA_JWT` - Pinata JWT token for IPFS uploads
+    - `PINATA_LOGO_GROUP_ID` - Pinata group ID for logos
+    - `PINATA_NEWS_IMAGE_GROUP_ID` - Pinata group ID for news images
+    - `PINATA_PROPERTY_IMAGE_GROUP_ID` - Pinata group ID for property images
+    - `EMAIL_USER` - Email address for sending emails
+    - `EMAIL_PASS` - Email password for SMTP
+    - `NEXT_PUBLIC_SITE_URL` - Public site URL (optional)
+4.  **Important**: Ensure production database schema is up to date:
+    - Run `prisma migrate deploy` manually if needed
+    - Or migrations will run automatically during build (via `npm run build`)
+5.  Deploy
+
+### Database Migration on Production
+
+**Before deploying to production:**
+
+1. Ensure your production database schema matches your Prisma schema
+2. If migrations are out of sync:
+   ```bash
+   # Check migration status
+   DATABASE_URL="your_production_url" npx prisma migrate status --schema=./server/prisma/schema.prisma
+   
+   # Deploy migrations
+   DATABASE_URL="your_production_url" npx prisma migrate deploy --schema=./server/prisma/schema.prisma
+   ```
+3. If a migration failed:
+   - Manually fix the database schema
+   - Delete the failed migration entry from `_prisma_migrations` table
+   - Run `prisma migrate deploy` again
 
 ### Other Platforms
 
 The application can be deployed to any platform that supports Next.js:
 
-1.  Set the `DATABASE_URL` environment variable
-2.  Run `npm run build`
+1.  Set all required environment variables
+2.  Run `npm run build` (this will generate Prisma Client and deploy migrations)
 3.  Start the server with `npm run start`
 
 ## Key Implementation Details
@@ -647,11 +754,13 @@ The application implements a comprehensive filtering system:
 - Reusable component architecture
 - Type-safe database operations
 - Consistent error handling patterns
-- Custom hooks for complex state logic (`usePropertyFilters`)
+- Custom hooks for complex state logic (`usePropertyFilters`, `useDirtyFormModal`)
 - Utility functions for parsing and transforming data (`parsePropertySearchParams`, `reverseGeocode`, `getPlatformName`)
 - Zod schemas for runtime validation
-- Shared components for cross-cutting concerns (MapDisplay, LogoWithSettings)
+- Shared components for cross-cutting concerns (MapDisplay, LogoWithSettings, WarningModal, TableRecordsCount)
 - Helper functions for metadata generation and geocoding
+- React `cache()` for request-level memoization (`getCurrentUserFromSession`, `getSettings`)
+- Optimized prop passing from layouts to reduce duplicate queries
 
 ### User Management
 
@@ -717,9 +826,35 @@ The application includes a comprehensive property management system for administ
 - **Generic Table Component**: Reuses `GenericTable` component with TypeScript generics for consistent UI
 - **Sortable Columns**: Configurable sortable columns with visual indicators (ChevronUp/ChevronDown icons)
 - **Property Status Management**: 
-  - Three statuses: APPROVED, IN_REVIEW (default), REJECTED
+  - Five statuses: APPROVED, IN_REVIEW (default), REJECTED, INACTIVE, DELETED
   - Custom `PropertyStatusBadge` component with color-coded status display
   - Status can be changed in edit form (optional field in update schema)
+  - Automatic `promoted` flag management: set to `false` when status is not `APPROVED`
+- **User Deletion Handling**:
+  - When admin deletes a user: all properties transferred to deleting admin, status set to DELETED
+  - When user deletes own profile: all properties transferred to master admin (defined in `MASTER_ADMIN_EMAIL`), status set to DELETED
+  - Master admin cannot delete their own profile
+  - Hard delete: user is completely removed from database
+  - Session cleanup: deleted users are automatically logged out
+- **Backend Property Filtering**:
+  - Status filter (all statuses including INACTIVE and DELETED)
+  - Type filter (Apartment, House, Commercial)
+  - Promotion filter (promoted/not promoted)
+  - Owner filter (admin only, shows all users)
+  - Dynamic filter options from `lib/constants.ts`
+  - URL-based filter persistence
+  - Unified `PropertyFilters` type for frontend and backend
+- **Unsaved Changes Warning**:
+  - `useDirtyFormNavigation` hook for page navigation warnings (PropertyForm)
+  - `beforeunload` event handling for tab close/refresh
+  - `popstate` event handling for browser back button
+  - `WarningModal` component for custom warning dialogs
+  - Prevents accidental data loss when navigating away with unsaved changes
+  - Dirty state tracking:
+    - Form input changes mark form as dirty
+    - Map position changes (LocationCard) mark form as dirty
+    - Image gallery changes (add, delete, reorder) mark form as dirty
+    - Consolidated `markDirty` callback with `useCallback` optimization
 - **Property Creation Form**:
   - Property details: name, type, price, area, description
   - Interactive map for location selection with geocoding/reverse geocoding
