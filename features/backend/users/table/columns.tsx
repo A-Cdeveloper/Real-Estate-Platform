@@ -95,13 +95,18 @@ export const getColumns = (
     key: "propertyCount",
     label: "Properties",
     render: (user) => (
-      <div className="flex items-center gap-2">
-        <Building2
-          className="size-4 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <span className="text-sm font-medium">{user.propertyCount}</span>
-      </div>
+      <Link
+        href={`/proprietes-area?ownerId=${user.id}`}
+        className="text-sm font-medium"
+      >
+        <div className="flex items-center gap-2">
+          <Building2
+            className="size-4 text-muted-foreground"
+            aria-hidden="true"
+          />
+          {user.propertyCount}
+        </div>
+      </Link>
     ),
   },
   {
