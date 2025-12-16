@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type StatboxType = {
   title: string;
@@ -6,11 +7,20 @@ type StatboxType = {
   count: number | string;
   icon: React.ReactNode;
   className?: string;
+  href?: string;
 };
 
-const StatBox = ({ title, extraText, count, icon, className }: StatboxType) => {
+const StatBox = ({
+  title,
+  extraText,
+  count,
+  icon,
+  className,
+  href,
+}: StatboxType) => {
   return (
-    <div
+    <Link
+      href={href ?? ""}
       className={cn(
         "rounded-lg border bg-primary/5 p-4 shadow-sm flex items-center gap-3",
         className
@@ -26,7 +36,7 @@ const StatBox = ({ title, extraText, count, icon, className }: StatboxType) => {
         <div className="text-2xl font-semibold tracking-tight">{count}</div>
         <div className="text-xs text-muted-foreground">{extraText}</div>
       </div>
-    </div>
+    </Link>
   );
 };
 

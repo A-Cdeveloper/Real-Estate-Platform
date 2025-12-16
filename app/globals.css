@@ -294,4 +294,17 @@
   .dark .custom-scrollbar {
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
+
+  /* React Grid Layout - Ghost element (placeholder) styling */
+  .react-grid-placeholder {
+    background-color: hsl(var(--primary) / 0.2) !important;
+    border: 2px dashed hsl(var(--primary)) !important;
+    border-radius: var(--radius);
+    opacity: 0.5;
+  }
+
+  .dark .react-grid-placeholder {
+    background-color: hsl(var(--primary) / 0.15) !important;
+    border-color: hsl(var(--primary)) !important;
+  }
 }

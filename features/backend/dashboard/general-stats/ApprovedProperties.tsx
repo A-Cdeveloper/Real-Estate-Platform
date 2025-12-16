@@ -2,6 +2,7 @@ import { cache } from "react";
 import { CheckCircle2 } from "lucide-react";
 import StatBox from "./StatBox";
 import { getPropertyStats } from "@/server/queries/properties";
+import { PropertyStatus } from "@prisma/client";
 
 const getCachedPropertyStats = cache(getPropertyStats);
 
@@ -14,9 +15,9 @@ const ApprovedProperties = async () => {
       icon={<CheckCircle2 className="h-6 w-6" aria-hidden="true" />}
       extraText="Visible on frontend"
       className="bg-emerald-500/5"
+      href={`/proprietes-area?status=${PropertyStatus.APPROVED}&sort=createdAt_desc`}
     />
   );
 };
 
 export default ApprovedProperties;
-

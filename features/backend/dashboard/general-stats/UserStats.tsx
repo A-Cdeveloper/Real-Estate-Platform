@@ -18,6 +18,7 @@ const UserStats = async () => {
       icon={<Users className="h-6 w-6" aria-hidden="true" />}
       extraText={`${adminCount} admins • ${agentCount} agents`}
       className="bg-sky-500/5"
+      href="/users?sort=role_asc"
     />
   );
 };

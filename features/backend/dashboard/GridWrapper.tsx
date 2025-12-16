@@ -1,89 +1,48 @@
 "use client";
 
 import { Responsive, useContainerWidth } from "react-grid-layout";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import {
+  addMaxWToLayouts,
+  DEFAULT_LAYOUTS,
+} from "./grid-stats/dashboard-layouts";
+import { useGridLayoutStorage } from "./hooks/useGridLayoutStorage";
+import GridCard from "./grid-stats/GridCard";
 
-// Simple card component
-const Card = ({ number }: { number: number }) => (
-  <div className="rounded-lg border bg-card p-6 shadow-sm h-full">
-    <div className="flex items-center justify-between mb-2">
-      <h2 className="text-sm font-medium">Card {number}</h2>
-      <span className="text-xs text-muted-foreground">Drag & resize me</span>
-    </div>
-    <div className="rounded-md border border-dashed border-border/60 p-2 text-xs text-muted-foreground">
-      Content placeholder for card {number}
-    </div>
-  </div>
-);
+const STORAGE_KEY = "dashboard-grid-layout";
 
 const GridWrapper = () => {
   const { width, containerRef, mounted } = useContainerWidth();
 
-  const [layouts, setLayouts] = useState({
-    lg: [
-      { i: "1", x: 0, y: 0, w: 6, h: 2 },
-      { i: "2", x: 6, y: 0, w: 6, h: 2 },
-      { i: "3", x: 0, y: 2, w: 6, h: 2 },
-      { i: "4", x: 6, y: 2, w: 6, h: 2 },
-      { i: "5", x: 0, y: 4, w: 6, h: 2 },
-      { i: "6", x: 6, y: 4, w: 6, h: 2 },
-    ],
-    md: [
-      { i: "1", x: 0, y: 0, w: 5, h: 2 },
-      { i: "2", x: 5, y: 0, w: 5, h: 2 },
-      { i: "3", x: 0, y: 2, w: 5, h: 2 },
-      { i: "4", x: 5, y: 2, w: 5, h: 2 },
-      { i: "5", x: 0, y: 4, w: 5, h: 2 },
-      { i: "6", x: 5, y: 4, w: 5, h: 2 },
-    ],
-    sm: [
-      { i: "1", x: 0, y: 0, w: 3, h: 2 },
-      { i: "2", x: 3, y: 0, w: 3, h: 2 },
-      { i: "3", x: 0, y: 2, w: 3, h: 2 },
-      { i: "4", x: 3, y: 2, w: 3, h: 2 },
-      { i: "5", x: 0, y: 4, w: 3, h: 2 },
-      { i: "6", x: 3, y: 4, w: 3, h: 2 },
-    ],
-    xs: [
-      { i: "1", x: 0, y: 0, w: 2, h: 2 },
-      { i: "2", x: 2, y: 0, w: 2, h: 2 },
-      { i: "3", x: 0, y: 2, w: 2, h: 2 },
-      { i: "4", x: 2, y: 2, w: 2, h: 2 },
-      { i: "5", x: 0, y: 4, w: 2, h: 2 },
-      { i: "6", x: 2, y: 4, w: 2, h: 2 },
-    ],
-    xxs: [
-      { i: "1", x: 0, y: 0, w: 1, h: 2 },
-      { i: "2", x: 1, y: 0, w: 1, h: 2 },
-      { i: "3", x: 0, y: 2, w: 1, h: 2 },
-      { i: "4", x: 1, y: 2, w: 1, h: 2 },
-      { i: "5", x: 0, y: 4, w: 1, h: 2 },
-      { i: "6", x: 1, y: 4, w: 1, h: 2 },
-    ],
-  });
+  // Use hook for localStorage persistence
+  const [layouts, setLayouts] = useGridLayoutStorage(
+    STORAGE_KEY,
+    DEFAULT_LAYOUTS,
+    addMaxWToLayouts
+  );
 
   const children = useMemo(
     () => [
       <div key="1">
-        <Card number={1} />
+        <GridCard number={1} />
       </div>,
       <div key="2">
-        <Card number={2} />
+        <GridCard number={2} />
       </div>,
       <div key="3">
-        <Card number={3} />
+        <GridCard number={3} />
       </div>,
       <div key="4">
-        <Card number={4} />
+        <GridCard number={4} />
       </div>,
       <div key="5">
-        <Card number={5} />
+        <GridCard number={5} />
       </div>,
       <div key="6">
-        <Card number={6} />
+        <GridCard number={6} />
       </div>,
     ],
     []
@@ -102,7 +61,19 @@ const GridWrapper = () => {
           containerPadding={[0, 0]}
           onLayoutChange={(layout, layouts) => {
             if (layouts) {
-              setLayouts((prev) => ({ ...prev, ...layouts }));
+              // Ensure all breakpoints exist and are arrays, merge with defaults if missing
+              const completeLayouts = {
+                lg: Array.isArray(layouts.lg) ? layouts.lg : DEFAULT_LAYOUTS.lg,
+                md: Array.isArray(layouts.md) ? layouts.md : DEFAULT_LAYOUTS.md,
+                sm: Array.isArray(layouts.sm) ? layouts.sm : DEFAULT_LAYOUTS.sm,
+                xs: Array.isArray(layouts.xs) ? layouts.xs : DEFAULT_LAYOUTS.xs,
+                xxs: Array.isArray(layouts.xxs)
+                  ? layouts.xxs
+                  : DEFAULT_LAYOUTS.xxs,
+              };
+              // Ensure maxW is preserved on all items
+              const layoutsWithMaxW = addMaxWToLayouts(completeLayouts);
+              setLayouts(layoutsWithMaxW);
             }
           }}
         >

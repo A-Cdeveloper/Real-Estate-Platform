@@ -1,5 +1,5 @@
 import { adminGuard } from "@/server/auth/adminGuard";
-import GeneralStats from "@/features/backend/dashboard/general-stats/GeneralStats";
+import GeneralStats from "@/features/backend/dashboard/GeneralStats";
 import GridWrapper from "@/features/backend/dashboard/GridWrapper";
 
 export default async function DashboardPage() {
