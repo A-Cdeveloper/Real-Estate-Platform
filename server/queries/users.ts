@@ -130,6 +130,7 @@ export async function getUsersForPropertyFilters(): Promise<
 
 export const getUserStats = async () => {
   await ensureAdminAccess();
+
   try {
     const [total, adminCount, agentCount] = await Promise.all([
       prisma.user.count(),
