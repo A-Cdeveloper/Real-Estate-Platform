@@ -30,7 +30,7 @@ export default function Error({
 
         {error.message && (
           <div className="bg-destructive/10 border border-destructive/20 rounded-md p-4 mb-4">
-            <p className="font-nunito-sans text-sm text-foreground break-words">
+            <p className="font-nunito-sans text-sm text-foreground">
               {error.message}
             </p>
           </div>

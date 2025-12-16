@@ -11,6 +11,7 @@ import { Suspense } from "react";
 import Hero from "@/features/frontend/Hero";
 import RealtyStatsSkeleton from "@/components/frontend/skeletons/RealtyStatsSkeleton";
 import { generatePageMetadata } from "@/lib/metadata";
+import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata(
@@ -29,35 +30,47 @@ export default async function HomePage() {
         <div className="space-y-12">
           {/* Row 1: Promoted Properties + Latest News */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <Suspense
-              fallback={
-                <CarouselSkeleton
-                  itemsCount={3}
-                  itemClassName="basis-full md:basis-1/2 lg:basis-1/2"
-                  showTitle={true}
-                  colSpan="2"
-                />
-              }
-            >
-              <PromotedProprietes />
-            </Suspense>
-            <Suspense fallback={<RealtyStatsSkeleton />}>
-              <RealtyStats />
-            </Suspense>
+            <ErrorBoundary className="lg:col-span-2">
+              <Suspense
+                fallback={
+                  <CarouselSkeleton
+                    itemsCount={3}
+                    itemClassName="basis-full md:basis-1/2 lg:basis-1/2"
+                    showTitle={true}
+                    colSpan="2"
+                  />
+                }
+              >
+                <PromotedProprietes />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Suspense fallback={<RealtyStatsSkeleton />}>
+                <RealtyStats />
+              </Suspense>
+            </ErrorBoundary>
           </div>
 
           {/* Row 2: Latest Properties + Future Widget */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <Suspense
-              fallback={
-                <CarouselSkeleton itemsCount={3} showTitle={true} colSpan="2" />
-              }
-            >
-              <LatestProprietes />
-            </Suspense>
-            <Suspense fallback={<LatestNewsSkeleton />}>
-              <LatestNews />
-            </Suspense>
+            <ErrorBoundary className="lg:col-span-2">
+              <Suspense
+                fallback={
+                  <CarouselSkeleton
+                    itemsCount={3}
+                    showTitle={true}
+                    colSpan="2"
+                  />
+                }
+              >
+                <LatestProprietes />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary className="lg:col-span-1">
+              <Suspense fallback={<LatestNewsSkeleton />}>
+                <LatestNews />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         </div>
       </section>

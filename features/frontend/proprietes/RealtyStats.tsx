@@ -14,7 +14,7 @@ const StatWidget = ({
   return (
     <div
       className={cn(
-        "flex h-full flex-col items-center justify-center gap-3 rounded-2xl bg-gradient-to-br p-6 text-white text-center shadow-lg",
+        "flex h-full flex-col items-center justify-center gap-3 rounded-2xl bg-linear-to-br p-6 text-white text-center shadow-lg",
         className
       )}
     >

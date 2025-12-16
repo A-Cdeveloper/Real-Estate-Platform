@@ -1,34 +1,34 @@
 /**
- * Pretvara Prisma greške u user-friendly poruke
+ * Converts Prisma errors to user-friendly messages
  */
 export function getPrismaErrorMessage(error: unknown): string {
   if (!(error instanceof Error)) {
-    return "Došlo je do greške pri učitavanju podataka iz baze.";
+    return "An error occurred while loading data from the database.";
   }
 
   const message = error.message;
 
-  // Prepoznaj tip greške i vrati odgovarajuću poruku
+  // Recognize error type and return appropriate message
   if (message.includes("Can't reach database")) {
-    return "Baza podataka nije dostupna. Proverite da li je MySQL server pokrenut.";
+    return "Database is not available. Please check if MySQL server is running.";
   }
 
   if (message.includes("Authentication failed")) {
-    return "Neispravni podaci za pristup bazi podataka.";
+    return "Invalid database access credentials.";
   }
 
   if (message.includes("does not exist")) {
-    return "Baza podataka ne postoji. Proverite konfiguraciju.";
+    return "Database does not exist. Please check the configuration.";
   }
 
   if (message.includes("Unique constraint")) {
-    return "Podatak već postoji u bazi.";
+    return "Data already exists in the database.";
   }
 
   if (message.includes("Foreign key constraint")) {
-    return "Greška u relacijama podataka.";
+    return "Error in data relationships.";
   }
 
-  // Fallback za ostale greške
-  return "Došlo je do greške pri učitavanju podataka iz baze.";
+  // Fallback for other errors
+  return "An error occurred while loading data from the database.";
 }
