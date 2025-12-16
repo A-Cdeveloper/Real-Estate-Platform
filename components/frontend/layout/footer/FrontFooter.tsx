@@ -3,9 +3,16 @@ import { COPYRIGHT } from "@/lib/constants";
 import SocialLinks from "./SocialLinks";
 import MetaMenu from "./MetaMenu";
 import { getSettings } from "@/server/queries/settings";
+import { CurrentSettings } from "@/types/settings";
 
 const FrontFooter = async () => {
-  const settings = await getSettings();
+  let settings = null;
+  try {
+    settings = await getSettings();
+  } catch (error) {
+    console.error("Error in FrontFooter:", error);
+  }
+
   const appName = settings?.appName || "Real Estate";
 
   return (
@@ -30,7 +37,7 @@ const FrontFooter = async () => {
               Stay connected, explore opportunities, and invest with confidence.
               Your real estate success starts here
             </p>
-            <SocialLinks />
+            <SocialLinks settings={settings ?? ({} as CurrentSettings)} />
           </div>
 
           {/* Middle Columns */}

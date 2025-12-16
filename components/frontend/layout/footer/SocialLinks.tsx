@@ -1,10 +1,9 @@
-import { getSettings } from "@/server/queries/settings";
-import SocialLink from "./SocialLink";
 import { getPlatformName } from "@/lib/utils/social";
+import { CurrentSettings } from "@/types/settings";
+import SocialLink from "./SocialLink";
 
-const SocialLinks = async () => {
-  const settings = await getSettings();
-  const { facebook, instagram, x, linkedin, youtube } = settings ?? {};
+const SocialLinks = async ({ settings }: { settings: CurrentSettings }) => {
+  const { facebook, instagram, x, linkedin, youtube } = settings;
   return (
     <div className="flex gap-4">
       {facebook && (

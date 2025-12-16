@@ -7,6 +7,7 @@ import ProprietesList from "@/features/frontend/proprietes/ProprietesList";
 import { Typography } from "@/components/ui/typography";
 import { Suspense } from "react";
 import { generatePageMetadata } from "@/lib/metadata";
+import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata(
@@ -35,9 +36,11 @@ const ProprietesPage = async ({
 
       <ProprietesWrapper initialParams={params} />
 
-      <Suspense key={params.page} fallback={<PropertiesGridSkeleton />}>
-        <ProprietesList params={params} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense key={params.page} fallback={<PropertiesGridSkeleton />}>
+          <ProprietesList params={params} />
+        </Suspense>
+      </ErrorBoundary>
     </section>
   );
 };

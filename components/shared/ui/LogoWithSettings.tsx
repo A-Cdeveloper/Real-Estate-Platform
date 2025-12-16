@@ -14,25 +14,20 @@ const LogoWithSettings = async ({
   width = 100,
   height = 100,
 }: LogoWithSettingsProps) => {
-  const settings = await getSettings();
-
-  // Check for empty string as well as null/undefined
-  const logoLight =
-    settings?.logo_light && settings.logo_light.trim() !== ""
-      ? settings.logo_light
-      : "/real-estate-logo.png";
-  const logoDark =
-    settings?.logo_dark && settings.logo_dark.trim() !== ""
-      ? settings.logo_dark
-      : "/real-estate-logo_light.png";
+  let settings = null;
+  try {
+    settings = await getSettings();
+  } catch (error) {
+    console.error("Error in LogoWithSettings:", error);
+  }
 
   return (
     <Logo
       width={width}
       height={height}
       appName={settings?.appName || "Real Estate"}
-      logoLight={logoLight}
-      logoDark={logoDark}
+      logoLight={settings?.logo_light || "/real-estate-logo.png"}
+      logoDark={settings?.logo_dark || "/real-estate-logo_light.png"}
     />
   );
 };

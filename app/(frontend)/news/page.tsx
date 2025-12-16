@@ -9,6 +9,7 @@ import { getAllNews } from "@/server/queries/news";
 import { News } from "@prisma/client";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata(
@@ -34,9 +35,11 @@ const AllNewsPage = async ({
         News
       </Typography>
 
-      <Suspense key={page} fallback={<NewsGridSkeleton />}>
-        <NewsList page={page} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense key={page} fallback={<NewsGridSkeleton />}>
+          <NewsList page={page} />
+        </Suspense>
+      </ErrorBoundary>
     </section>
   );
 };

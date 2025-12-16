@@ -12,6 +12,8 @@ import {
 import { notFound } from "next/navigation";
 import RealtyLocationMap from "@/features/frontend/proprietes/details/RealtyLocationMap";
 import { getSettings } from "@/server/queries/settings";
+import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
+import { Suspense } from "react";
 
 type Params = Promise<{ id: string }>;
 

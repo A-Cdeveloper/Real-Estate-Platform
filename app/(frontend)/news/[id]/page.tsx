@@ -10,6 +10,7 @@ import { getNewsById, getRecentNewsIds } from "@/server/queries/news";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getSettings } from "@/server/queries/settings";
+import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 
 type Params = Promise<{ id: string }>;
 
@@ -110,22 +111,24 @@ const NewsDetailPage = async ({ params }: { params: Params }) => {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          <Suspense
-            fallback={
-              <LatestNewsSkeleton
-                showTitle={true}
-                showButton={false}
-                itemsCount={7}
+          <ErrorBoundary className="lg:col-span-1">
+            <Suspense
+              fallback={
+                <LatestNewsSkeleton
+                  showTitle={true}
+                  showButton={false}
+                  itemsCount={7}
+                  className="h-auto overflow-visible"
+                />
+              }
+            >
+              <LatestNews
+                count={7}
                 className="h-auto overflow-visible"
+                showButton={false}
               />
-            }
-          >
-            <LatestNews
-              count={7}
-              className="h-auto overflow-visible"
-              showButton={false}
-            />
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </div>
     </section>

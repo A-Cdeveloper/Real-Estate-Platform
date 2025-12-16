@@ -51,7 +51,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       // Default error UI
       return (
         <div
-          className={`flex flex-col items-center justify-center p-8 rounded-lg border border-destructive/20 bg-destructive/5 ${this.props.className || ""}`}
+          className={`flex flex-col items-center justify-center p-8  ${this.props.className || ""}`}
         >
           <AlertTriangle className="w-12 h-12 text-destructive mb-4" />
           <Typography variant="h3" className="mb-2 text-center">
