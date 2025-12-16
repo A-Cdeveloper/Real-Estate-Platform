@@ -53,15 +53,13 @@ const RealyDetails = ({ property }: { property: PropertyWithOwner }) => {
           <RealyDetailsWidget
             label="Type"
             value={property.type || "N/A"}
-            icon={
-              <LayoutDashboard className="w-8 h-8 text-primary flex-shrink-0" />
-            }
+            icon={<LayoutDashboard className="w-8 h-8 text-primary shrink-0" />}
           />
           {property.address && (
             <RealyDetailsWidget
               label="Location"
               value={property.address}
-              icon={<MapPin className="w-8 h-8 text-primary flex-shrink-0" />}
+              icon={<MapPin className="w-8 h-8 text-primary shrink-0" />}
             />
           )}
 
@@ -69,7 +67,7 @@ const RealyDetails = ({ property }: { property: PropertyWithOwner }) => {
             <RealyDetailsWidget
               label="Price per m²"
               value={`€${Math.round(property.price / property.area).toLocaleString()}`}
-              icon={<Square className="w-8 h-8 text-primary flex-shrink-0" />}
+              icon={<Square className="w-8 h-8 text-primary shrink-0" />}
             />
           )}
         </div>

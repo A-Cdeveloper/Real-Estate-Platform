@@ -32,7 +32,7 @@ const ProprietesWrapper = ({
           type="button"
           variant="outline"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="font-semibold !bg-transparent"
+          className="font-semibold bg-transparent!"
           aria-label={isOpen ? "Hide filters" : "Show filters"}
           aria-expanded={isOpen}
         >
