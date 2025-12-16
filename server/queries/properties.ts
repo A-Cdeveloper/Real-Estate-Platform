@@ -298,34 +298,39 @@ export async function getPropertyStats() {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-    const [total, addedLastWeek, propertiesWithArea] = await Promise.all([
-      // Total count
-      prisma.property.count({
-        where: { status: PropertyStatus.APPROVED },
-      }),
-      // Count added in last week
-      prisma.property.count({
-        where: {
-          status: PropertyStatus.APPROVED,
-          createdAt: {
-            gte: oneWeekAgo,
+    const [total, approvedCount, addedLastWeek, propertiesWithArea] =
+      await Promise.all([
+        // Total count
+        prisma.property.count(),
+
+        // Approved properties count
+        prisma.property.count({
+          where: { status: PropertyStatus.APPROVED },
+        }),
+
+        // Count added in last week
+        prisma.property.count({
+          where: {
+            status: PropertyStatus.APPROVED,
+            createdAt: {
+              gte: oneWeekAgo,
+            },
           },
-        },
-      }),
-      // Get properties with area for average calculation
-      prisma.property.findMany({
-        where: {
-          status: PropertyStatus.APPROVED,
-          area: {
-            not: null,
+        }),
+        // Get properties with area for average calculation
+        prisma.property.findMany({
+          where: {
+            status: PropertyStatus.APPROVED,
+            area: {
+              not: null,
+            },
           },
-        },
-        select: {
-          price: true,
-          area: true,
-        },
-      }),
-    ]);
+          select: {
+            price: true,
+            area: true,
+          },
+        }),
+      ]);
 
     // Calculate average price per m²
     let avgPricePerSqm = 0;
@@ -338,6 +343,7 @@ export async function getPropertyStats() {
 
     return {
       total,
+      approvedCount,
       avgPricePerSqm: Math.round(avgPricePerSqm),
       addedLastWeek,
     };

@@ -7,7 +7,7 @@ import {
 import { getPrismaErrorMessage } from "../prisma-errors";
 import { ensureAdminAccess } from "../auth/ensureAdminAccess";
 import { parseSort } from "@/lib/utils/parseSort";
-import { User } from "@prisma/client";
+import { Role } from "@prisma/client";
 
 /**
  * Fetches all users with the fields needed for backend profile views, including property counts.
@@ -81,13 +81,24 @@ export const getUsers = async ({
  * @returns The user
  */
 export async function getUserById(userId: string): Promise<CurrentUser | null> {
-  return prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  await ensureAdminAccess();
+  try {
+    return prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(getPrismaErrorMessage(error));
+  }
 }
 
+/**
+ * Fetches all users for property filters.
+ * Admin-only query - requires admin access.
+ * @returns The users
+ */
 export async function getUsersForPropertyFilters(): Promise<
   UserForPropertyFilters[]
 > {
@@ -109,3 +120,29 @@ export async function getUsersForPropertyFilters(): Promise<
     throw new Error(getPrismaErrorMessage(error));
   }
 }
+
+/**
+ * Fetches user statistics.
+ * Admin-only query - requires admin access.
+ * Returns: total users, admin count, agent count
+ * @returns The user statistics
+ */
+
+export const getUserStats = async () => {
+  await ensureAdminAccess();
+  try {
+    const [total, adminCount, agentCount] = await Promise.all([
+      prisma.user.count(),
+      prisma.user.count({ where: { role: Role.ADMIN } }),
+      prisma.user.count({ where: { role: Role.AGENT } }),
+    ]);
+    return {
+      total,
+      adminCount,
+      agentCount,
+    };
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(getPrismaErrorMessage(error));
+  }
+};
