@@ -26,10 +26,14 @@ export default function NotFound() {
         </p>
         <div className="flex gap-4 justify-center">
           <Button asChild>
-            <Link href="/proprietes-area">Go back to properties</Link>
+            <Link href="/">Go back home</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/proprietes">View Properties</Link>
           </Button>
         </div>
       </div>
     </div>
   );
 }
+

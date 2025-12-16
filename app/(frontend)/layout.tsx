@@ -29,7 +29,7 @@ export default function RootLayout({
         Skip to main content
       </a>
       <FrontHeader />
-      <main id="main-content" className="min-h-screen" role="main">
+      <main id="main-content" className="min-h-fit" role="main">
         {children}
       </main>
       <FrontFooter />
