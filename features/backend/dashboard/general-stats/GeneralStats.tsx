@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import TotalProperties from "./components/TotalProperties";
-import ApprovedProperties from "./components/ApprovedProperties";
-import AvgPrice from "./components/AvgPrice";
-import UserStats from "./components/UserStats";
+import TotalProperties from "./total-properties/TotalProperties";
+import ApprovedProperties from "./approved-properties/ApprovedProperties";
+import AvgPrice from "./avg-price/AvgPrice";
+import UserStats from "./user-stats/UserStats";
 import StatBoxSkeleton from "./shared/StatBoxSkeleton";
 import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 

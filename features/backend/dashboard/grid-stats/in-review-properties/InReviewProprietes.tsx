@@ -1,21 +1,14 @@
 import { getInReviewProperties } from "@/server/queries/dashboard-grid";
-import GridCard from "../shared/GridCard";
 import InReviewProprietesTable from "./InReviewProprietesTable";
 
 /**
  * Server component that fetches and displays in-review properties
+ * Client component handles filtering based on search params
  */
 const InReviewProprietes = async () => {
   const properties = await getInReviewProperties();
 
-  return (
-    <GridCard
-      title="Properties in review"
-      subtitle={`${properties.length} properties`}
-    >
-      <InReviewProprietesTable properties={properties} />
-    </GridCard>
-  );
+  return <InReviewProprietesTable properties={properties} />;
 };
 
 export default InReviewProprietes;
