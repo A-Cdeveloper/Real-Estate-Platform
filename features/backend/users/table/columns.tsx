@@ -45,7 +45,7 @@ export const getColumns = (
     render: (user) => (
       <div className="flex items-center gap-2">
         <UserIcon className="size-4 text-muted-foreground" aria-hidden="true" />
-        <span className="text-white">{user.name || "N/A"}</span>
+        <span className="text-foreground">{user.name || "N/A"}</span>
       </div>
     ),
   },

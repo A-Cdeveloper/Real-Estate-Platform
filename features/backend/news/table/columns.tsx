@@ -26,7 +26,7 @@ export const getColumns = (): Column<News>[] => [
     label: "Title",
     render: (news) => (
       <div className="flex items-center gap-2">
-        <h2 className="text-white max-w-[150px] line-clamp-2">
+        <h2 className="text-foreground max-w-[150px] line-clamp-2">
           {news.title || "N/A"}
         </h2>
       </div>

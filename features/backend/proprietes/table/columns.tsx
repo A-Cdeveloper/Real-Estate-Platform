@@ -36,7 +36,7 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
     label: "Name",
     render: (property) => {
       return (
-        <h2 className="text-white max-w-[120px] line-clamp-2">
+        <h2 className="text-foreground max-w-[120px] line-clamp-2">
           {property.name || "N/A"}
         </h2>
       );
