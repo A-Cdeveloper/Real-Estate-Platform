@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import TotalProperties from "./general-stats/components/TotalProperties";
-import ApprovedProperties from "./general-stats/components/ApprovedProperties";
-import AvgPrice from "./general-stats/components/AvgPrice";
-import UserStats from "./general-stats/components/UserStats";
-import StatBoxSkeleton from "./general-stats/shared/StatBoxSkeleton";
+import TotalProperties from "./components/TotalProperties";
+import ApprovedProperties from "./components/ApprovedProperties";
+import AvgPrice from "./components/AvgPrice";
+import UserStats from "./components/UserStats";
+import StatBoxSkeleton from "./shared/StatBoxSkeleton";
 import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 
 const GeneralStats = () => {

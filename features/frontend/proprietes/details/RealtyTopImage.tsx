@@ -32,7 +32,7 @@ const RealtyTopImage = ({ property }: { property: Property }) => {
       />
 
       {/* Property Title Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-8">
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-linear-to-b from-black/80 via-black/60 to-transparent p-8">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex items-center gap-3 mb-3">
             <Typography

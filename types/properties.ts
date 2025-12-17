@@ -85,6 +85,11 @@ export type PromotedProperty = LatestProperty & { promoted: boolean };
  * Contains only essential fields needed for grid card display
  */
 export type InReviewProperty = Pick<
-  Property,
-  "id" | "name" | "createdAt" | "status"
->;
+  PropertyWithOwner,
+  "id" | "name" | "createdAt" | "type" | "address"
+> & {
+  owner: {
+    id: string;
+    name: string;
+  };
+};
