@@ -4,6 +4,7 @@ import RealtyListItem from "./RealtyListItem";
 import EmptyState from "@/features/frontend/EmptyState";
 import { PROMOTED_PROPERTIES_COUNT } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
+import { PromotedProperty } from "@/types/properties";
 
 const PromotedProprietes = async () => {
   const promotedProperties = await getPromotedProperties(
@@ -25,7 +26,9 @@ const PromotedProprietes = async () => {
       </Typography>
       <CarouselCustum
         items={promotedProperties}
-        render={(property) => <RealtyListItem property={property} />}
+        render={(property: PromotedProperty) => (
+          <RealtyListItem property={property} />
+        )}
         itemClassName="basis-full sm:basis-1/2 lg:basis-1/2"
       />
     </div>

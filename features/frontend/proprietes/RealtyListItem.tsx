@@ -1,17 +1,21 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Property } from "@prisma/client";
 import { MapPin } from "lucide-react";
 import { Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CustumImage from "@/components/shared/ui/CustumImage";
 import Link from "next/link";
+import { LatestProperty, PromotedProperty } from "@/types/properties";
 
-const RealtyListItem = ({ property }: { property: Property }) => {
+const RealtyListItem = ({
+  property,
+}: {
+  property: LatestProperty | PromotedProperty;
+}) => {
   return (
     <Link href={`/proprietes/${property.id}`}>
       <Card className="group overflow-hidden hover:shadow-md transition-shadow p-0 hover:bg-muted h-full">
         <CustumImage
-          src={property.image}
+          src={property.image || ""}
           alt={property.name}
           className="h-48 rounded-none"
           showFallback={true}
@@ -22,7 +26,7 @@ const RealtyListItem = ({ property }: { property: Property }) => {
           </CardTitle>
           {property.address && (
             <div className="flex gap-2 text-muted-foreground mb-2 font-nunito-sans text-sm">
-              <MapPin className="w-4 h-4 mt-[1px]" />
+              <MapPin className="w-4 h-4 mt-px" />
               <span>{property.address}</span>
             </div>
           )}

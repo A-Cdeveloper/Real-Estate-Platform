@@ -4,6 +4,7 @@ import CarouselCustum from "@/features/frontend/CarouselCustum";
 import EmptyState from "@/features/frontend/EmptyState";
 import { LATEST_PROPERTIES_COUNT } from "@/lib/constants";
 import { Typography } from "@/components/ui/typography";
+import { LatestProperty } from "@/types/properties";
 
 const LatestProprietes = async () => {
   const latestProperties = await getLatestProperties(LATEST_PROPERTIES_COUNT);
@@ -23,7 +24,9 @@ const LatestProprietes = async () => {
       </Typography>
       <CarouselCustum
         items={latestProperties}
-        render={(property) => <RealtyListItem property={property} />}
+        render={(property: LatestProperty) => (
+          <RealtyListItem property={property} />
+        )}
       />
     </div>
   );

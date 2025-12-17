@@ -63,3 +63,28 @@ export type PropertyActionState<TData = unknown> = ActionState<
   TData,
   { property?: Property }
 >;
+
+/**
+ * Optimized type for latest properties and promoted properties
+ * Contains only essential fields needed for grid card display
+ */
+export type LatestProperty = Pick<
+  Property,
+  "id" | "name" | "image" | "address" | "area" | "price" | "status"
+>;
+
+export type PromotedProperty = LatestProperty & { promoted: boolean };
+
+/********************************************************************** */
+
+/**********************************************************************
+ * Dashboard Grid
+ **********************************************************************/
+/**
+ * Optimized type for dashboard grid: In Review Properties
+ * Contains only essential fields needed for grid card display
+ */
+export type InReviewProperty = Pick<
+  Property,
+  "id" | "name" | "createdAt" | "status"
+>;

@@ -5,7 +5,12 @@ import {
 import { parseSort } from "@/lib/utils/parseSort";
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
-import { PropertyFilters } from "@/types/properties";
+import {
+  LatestProperty,
+  PromotedProperty,
+  PropertyFilters,
+  PropertyWithOwner,
+} from "@/types/properties";
 import { PropertyStatus } from "@prisma/client";
 import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
 
@@ -16,12 +21,21 @@ import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
  */
 export async function getLatestProperties(
   take: number = LATEST_PROPERTIES_COUNT
-) {
+): Promise<LatestProperty[]> {
   try {
     const properties = await prisma.property.findMany({
       take,
       orderBy: { createdAt: "desc" },
       where: { status: "APPROVED" },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        address: true,
+        area: true,
+        price: true,
+        status: true,
+      },
     });
     return properties;
   } catch (error) {
@@ -37,12 +51,22 @@ export async function getLatestProperties(
  */
 export async function getPromotedProperties(
   take: number = PROMOTED_PROPERTIES_COUNT
-) {
+): Promise<PromotedProperty[]> {
   try {
     const properties = await prisma.property.findMany({
       where: { promoted: true, status: "APPROVED" },
       take,
       orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        address: true,
+        area: true,
+        price: true,
+        status: true,
+        promoted: true,
+      },
     });
     return properties;
   } catch (error) {
@@ -259,7 +283,7 @@ export async function getRecentPropertyIds(limit: number = 50) {
  * @param id - The ID of the property
  * @returns The property
  */
-export async function getPropertyById(id: string) {
+export async function getPropertyById(id: string): Promise<PropertyWithOwner> {
   try {
     const property = await prisma.property.findUnique({
       where: { id, status: PropertyStatus.APPROVED },
