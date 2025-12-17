@@ -41,3 +41,4 @@ const StatBox = ({
 };
 
 export default StatBox;
+

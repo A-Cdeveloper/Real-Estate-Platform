@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { CheckCircle2 } from "lucide-react";
-import StatBox from "./StatBox";
+import StatBox from "../shared/StatBox";
 import { getPropertyStats } from "@/server/queries/properties";
 import { PropertyStatus } from "@prisma/client";
 
@@ -21,3 +21,4 @@ const ApprovedProperties = async () => {
 };
 
 export default ApprovedProperties;
+

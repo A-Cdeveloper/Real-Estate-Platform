@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { Users } from "lucide-react";
-import StatBox from "./StatBox";
+import StatBox from "../shared/StatBox";
 import { getUserStats } from "@/server/queries/users";
 
 const getCachedUserStats = cache(getUserStats);
@@ -24,3 +24,4 @@ const UserStats = async () => {
 };
 
 export default UserStats;
+

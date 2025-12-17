@@ -8,13 +8,23 @@ import "react-resizable/css/styles.css";
 import {
   addMaxWToLayouts,
   DEFAULT_LAYOUTS,
-} from "./grid-stats/dashboard-layouts";
+  MIN_WIDTHS,
+  MAX_WIDTHS,
+  MIN_HEIGHT,
+  MAX_HEIGHT,
+} from "./grid-stats/config/dashboard-layouts";
 import { useGridLayoutStorage } from "./hooks/useGridLayoutStorage";
-import GridCard from "./grid-stats/GridCard";
+import { getDashboardGridItems } from "./grid-stats/shared/DashboardGridItems";
+import { Property } from "@prisma/client";
 
 const STORAGE_KEY = "dashboard-grid-layout";
 
-const GridWrapper = () => {
+type GridWrapperProps = {
+  inReviewProperties: Property[];
+  // Add more props as needed for other grid cards
+};
+
+const GridWrapper = ({ inReviewProperties }: GridWrapperProps) => {
   const { width, containerRef, mounted } = useContainerWidth();
 
   // Use hook for localStorage persistence
@@ -25,27 +35,8 @@ const GridWrapper = () => {
   );
 
   const children = useMemo(
-    () => [
-      <div key="1">
-        <GridCard number={1} />
-      </div>,
-      <div key="2">
-        <GridCard number={2} />
-      </div>,
-      <div key="3">
-        <GridCard number={3} />
-      </div>,
-      <div key="4">
-        <GridCard number={4} />
-      </div>,
-      <div key="5">
-        <GridCard number={5} />
-      </div>,
-      <div key="6">
-        <GridCard number={6} />
-      </div>,
-    ],
-    []
+    () => getDashboardGridItems({ inReviewProperties }),
+    [inReviewProperties]
   );
 
   return (
@@ -71,9 +62,40 @@ const GridWrapper = () => {
                   ? layouts.xxs
                   : DEFAULT_LAYOUTS.xxs,
               };
-              // Ensure maxW is preserved on all items
-              const layoutsWithMaxW = addMaxWToLayouts(completeLayouts);
-              setLayouts(layoutsWithMaxW);
+
+              // Apply minW, maxW, minH and maxH constraints by limiting w (width) and h (height) for each breakpoint
+              const constrainedLayouts = {
+                lg: completeLayouts.lg.map((item) => ({
+                  ...item,
+                  w: Math.max(MIN_WIDTHS.lg, Math.min(item.w, MAX_WIDTHS.lg)),
+                  h: Math.max(MIN_HEIGHT, Math.min(item.h, MAX_HEIGHT)),
+                })),
+                md: completeLayouts.md.map((item) => ({
+                  ...item,
+                  w: Math.max(MIN_WIDTHS.md, Math.min(item.w, MAX_WIDTHS.md)),
+                  h: Math.max(MIN_HEIGHT, Math.min(item.h, MAX_HEIGHT)),
+                })),
+                sm: completeLayouts.sm.map((item) => ({
+                  ...item,
+                  w: Math.max(MIN_WIDTHS.sm, Math.min(item.w, MAX_WIDTHS.sm)),
+                  h: Math.max(MIN_HEIGHT, Math.min(item.h, MAX_HEIGHT)),
+                })),
+                xs: completeLayouts.xs.map((item) => ({
+                  ...item,
+                  w: Math.max(MIN_WIDTHS.xs, Math.min(item.w, MAX_WIDTHS.xs)),
+                  h: Math.max(MIN_HEIGHT, Math.min(item.h, MAX_HEIGHT)),
+                })),
+                xxs: completeLayouts.xxs.map((item) => ({
+                  ...item,
+                  w: Math.max(MIN_WIDTHS.xxs, Math.min(item.w, MAX_WIDTHS.xxs)),
+                  h: Math.max(MIN_HEIGHT, Math.min(item.h, MAX_HEIGHT)),
+                })),
+              };
+
+              // Ensure minW, maxW, minH and resizeHandles are preserved on all items
+              const layoutsWithConstraints =
+                addMaxWToLayouts(constrainedLayouts);
+              setLayouts(layoutsWithConstraints);
             }
           }}
         >

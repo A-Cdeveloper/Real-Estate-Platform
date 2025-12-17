@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { Building } from "lucide-react";
-import StatBox from "./StatBox";
+import StatBox from "../shared/StatBox";
 import { getPropertyStats } from "@/server/queries/properties";
 
 const getCachedPropertyStats = cache(getPropertyStats);
@@ -20,3 +20,4 @@ const TotalProperties = async () => {
 };
 
 export default TotalProperties;
+
