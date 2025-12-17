@@ -23,3 +23,11 @@ export type UpdateUser = Pick<User, "id" | "email" | "name" | "role"> & {
 export type DeleteUser = Pick<User, "id">;
 
 export type UserForPropertyFilters = Pick<User, "id" | "name">;
+
+/**
+ * Online user type for dashboard grid
+ */
+export type OnlineUser = Pick<
+  User,
+  "id" | "name" | "email" | "lastLogin" | "isOnline" | "role"
+>;

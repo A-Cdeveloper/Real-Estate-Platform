@@ -37,7 +37,7 @@ const InReviewProprietesTable = ({
   return (
     <GridCard
       title="Properties in review status"
-      subtitle={`${filteredProperties.length} properties`}
+      subtitle={`${filteredProperties.length === 1 ? "1 property" : `${filteredProperties.length} properties`}`}
       headerExtra={!isEmpty && <FilterByType typeFilter={typeFilter} />}
     >
       {isEmpty ? (

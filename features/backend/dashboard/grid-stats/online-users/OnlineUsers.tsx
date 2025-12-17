@@ -1,7 +1,10 @@
-import React from "react";
+import { getOnlineUsers } from "@/server/queries/dashboard-grid";
+import OnlineUsersTable from "./OnlineUsersTable";
 
-const OnlineUsers = () => {
-  return <div>OnlineUsers</div>;
+const OnlineUsers = async () => {
+  const onlineUsers = await getOnlineUsers();
+
+  return <OnlineUsersTable onlineUsers={onlineUsers} />;
 };
 
 export default OnlineUsers;

@@ -3,6 +3,7 @@ import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { PropertyStatus } from "@prisma/client";
 import { InReviewProperty } from "@/types/properties";
+import { OnlineUser } from "@/types/user";
 
 /**
  * Optimized query for dashboard grid: In Review Properties
@@ -43,3 +44,37 @@ export const getInReviewProperties = cache(
     }
   }
 );
+
+/**
+ * Optimized query for dashboard grid: Online Users
+ * Cached to prevent duplicate queries in the same request
+ * Returns only essential fields needed for the grid card
+ * Client component handles filtering based on search params
+ * @returns Array of users with minimal fields (id, name, email, lastLogin, isOnline)
+ */
+
+export const getOnlineUsers = cache(async (): Promise<OnlineUser[]> => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        isOnline: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        lastLogin: true,
+        isOnline: true,
+        role: true,
+      },
+      orderBy: {
+        lastLogin: "desc",
+      },
+      take: 200,
+    });
+    return users as OnlineUser[];
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(getPrismaErrorMessage(error));
+  }
+});

@@ -28,7 +28,7 @@ const GridCard = ({
   >
     <CardHeader className="px-6 py-2 gap-0 bg-foreground/10 ">
       <div className="flex items-center justify-between">
-        <CardTitle className="text-[17px] font-semibold text-foreground">
+        <CardTitle className="text-[17px] font-medium text-foreground">
           {title}
           {subtitle && (
             <p className="text-xs text-muted-foreground font-normal mt-0.5">
