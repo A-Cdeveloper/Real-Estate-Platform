@@ -24,6 +24,7 @@ export const getInReviewProperties = cache(
           name: true,
           createdAt: true,
           type: true,
+          address: true,
           owner: {
             select: {
               id: true,

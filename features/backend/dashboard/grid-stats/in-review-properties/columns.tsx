@@ -16,7 +16,7 @@ export const getColumns = (): Column<InReviewProperty>[] => [
     render: (property) => {
       return (
         <>
-          <h2 className="text-white max-w-[190px] line-clamp-2">
+          <h2 className="text-foreground max-w-[190px] line-clamp-2">
             {property.name || "N/A"}
           </h2>
           <span>{property.address || "N/A"}</span>
