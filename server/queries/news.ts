@@ -1,26 +1,38 @@
+import { cache } from "react";
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
-import { News } from "@prisma/client";
 import { NEWS_PER_PAGE } from "@/lib/constants";
 import { parseSort } from "@/lib/utils/parseSort";
+import { News } from "@prisma/client";
 
 /**
- * Get latest news
- * @param take - The number of news to return
- * @returns The latest news
+ * Get latest news for dashboard
+ * Cached to prevent duplicate queries in the same request
+ * Returns only essential fields needed for the grid card
+ * @param take - The number of news to return (default: 5)
+ * @returns The latest news with minimal fields
  */
-export async function getLatestNews(take: number = 5) {
-  try {
-    const news = await prisma.news.findMany({
-      take,
-      orderBy: { createdAt: "desc" },
-    });
-    return news;
-  } catch (error) {
-    console.error("Database error:", error);
-    throw new Error(getPrismaErrorMessage(error));
+export const getLatestNews = cache(
+  async (take: number = 5): Promise<News[]> => {
+    try {
+      const news = await prisma.news.findMany({
+        take,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      return news as News[];
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
+    }
   }
-}
+);
 /**
  *
  * @param page - The page number
