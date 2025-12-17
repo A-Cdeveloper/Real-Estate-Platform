@@ -15,6 +15,7 @@ export type GenericTableProps<T extends { id: string }> = {
   currentUserId?: string | null;
   sortableColumns?: string[];
   defaultSortField?: string;
+  showHeader?: boolean;
 };
 
 const GenericTable = <T extends { id: string }>({
@@ -24,6 +25,7 @@ const GenericTable = <T extends { id: string }>({
   className,
   currentUserId,
   defaultSortField,
+  showHeader = true,
 }: GenericTableProps<T>) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -64,56 +66,60 @@ const GenericTable = <T extends { id: string }>({
   return (
     <div className="overflow-x-auto rounded-lg">
       <table className={className} role="table" aria-label="Data table">
-        <thead>
-          <tr className="border-y bg-muted/50">
-            {columns.map((col) => (
-              <th
-                key={col.key}
-                className="text-left py-3 px-4 font-semibold text-sm"
-              >
-                <div
-                  className={`flex items-center gap-2 ${isSortable(col.key) ? "cursor-pointer" : ""}`}
-                  onClick={
-                    isSortable(col.key) ? () => toggleSort(col.key) : undefined
-                  }
-                  role={isSortable(col.key) ? "button" : undefined}
-                  tabIndex={isSortable(col.key) ? 0 : undefined}
-                  aria-label={
-                    isSortable(col.key)
-                      ? `Sort by ${col.label} ${sortField === col.key && sortOrder === "asc" ? "descending" : "ascending"}`
-                      : undefined
-                  }
-                  onKeyDown={
-                    isSortable(col.key)
-                      ? (e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            toggleSort(col.key);
-                          }
-                        }
-                      : undefined
-                  }
+        {showHeader && (
+          <thead>
+            <tr className="border-y bg-muted/50">
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  className="text-left py-3 px-4 font-semibold text-sm"
                 >
-                  {col.label}
-                  <span className="block">
-                    {isSortable(col.key) &&
-                      sortField === col.key &&
-                      (sortOrder === "asc" ? (
-                        <ChevronUp size={16} aria-hidden="true" />
-                      ) : (
-                        <ChevronDown size={16} aria-hidden="true" />
-                      ))}
-                  </span>
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
+                  <div
+                    className={`flex items-center gap-2 ${isSortable(col.key) ? "cursor-pointer" : ""}`}
+                    onClick={
+                      isSortable(col.key)
+                        ? () => toggleSort(col.key)
+                        : undefined
+                    }
+                    role={isSortable(col.key) ? "button" : undefined}
+                    tabIndex={isSortable(col.key) ? 0 : undefined}
+                    aria-label={
+                      isSortable(col.key)
+                        ? `Sort by ${col.label} ${sortField === col.key && sortOrder === "asc" ? "descending" : "ascending"}`
+                        : undefined
+                    }
+                    onKeyDown={
+                      isSortable(col.key)
+                        ? (e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              toggleSort(col.key);
+                            }
+                          }
+                        : undefined
+                    }
+                  >
+                    {col.label}
+                    <span className="block">
+                      {isSortable(col.key) &&
+                        sortField === col.key &&
+                        (sortOrder === "asc" ? (
+                          <ChevronUp size={16} aria-hidden="true" />
+                        ) : (
+                          <ChevronDown size={16} aria-hidden="true" />
+                        ))}
+                    </span>
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+        )}
         <tbody>
           {data.map((item) => (
             <tr
               key={item.id}
-              className={`border-b hover:bg-muted/50 transition-colors ${currentUserId === item.id ? "bg-muted-foreground/20 hover:!bg-muted-foreground/20" : ""}`}
+              className={`border-b hover:bg-muted/50 transition-colors ${currentUserId === item.id ? "bg-muted-foreground/20 hover:bg-muted-foreground/20" : ""}`}
             >
               {columns.map((col) => (
                 <td key={col.key} className="py-3 px-4">
