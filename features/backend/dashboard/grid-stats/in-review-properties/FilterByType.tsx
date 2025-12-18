@@ -23,6 +23,7 @@ const FilterByType = ({ typeFilter }: { typeFilter: PropertyType | "all" }) => {
         label: option.label,
       }))}
       className="w-[200px] p-0 bg-secondary"
+      aria-label="Filter properties by type"
     />
   );
 };

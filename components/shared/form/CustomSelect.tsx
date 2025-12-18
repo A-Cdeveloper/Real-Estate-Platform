@@ -29,6 +29,7 @@ type CustomSelectProps = Omit<
   "aria-required"?: boolean | "true" | "false";
   "aria-invalid"?: boolean | "true" | "false";
   "aria-describedby"?: string;
+  "aria-label"?: string;
 };
 
 /**
@@ -53,6 +54,7 @@ const CustomSelect = ({
   "aria-required": ariaRequired,
   "aria-invalid": ariaInvalid,
   "aria-describedby": ariaDescribedBy,
+  "aria-label": ariaLabel,
   ...props
 }: CustomSelectProps) => {
   return (
@@ -75,6 +77,7 @@ const CustomSelect = ({
           aria-required={ariaRequired}
           aria-invalid={ariaInvalid}
           aria-describedby={ariaDescribedBy}
+          aria-label={ariaLabel}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

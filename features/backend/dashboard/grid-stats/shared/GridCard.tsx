@@ -20,6 +20,8 @@ const GridCard = ({
   headerExtra,
 }: GridCardProps) => (
   <Card
+    role="region"
+    aria-label={title}
     className={cn(
       "flex flex-col bg-card border border-border p-0 gap-0 h-fit max-h-[400px]",
       "shadow-sm hover:shadow-md transition-shadow",
