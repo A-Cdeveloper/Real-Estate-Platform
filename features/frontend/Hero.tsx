@@ -28,8 +28,7 @@ const Hero = () => {
           <Card className="rounded-2xl p-8 shadow-lg bg-background/85 backdrop-blur-xs">
             {/* Heading */}
             <Typography variant="h1" className="text-4xl md:text-5xl mb-0">
-              Find your <span className="text-primary">perfect investment</span>{" "}
-              properties
+              Find your <span className="text-primary">perfect</span> properties
             </Typography>
             <p className="text-foreground/90 font-nunito-sans text-lg mb-6">
               Explore a selection of high-value real estate opportunities
