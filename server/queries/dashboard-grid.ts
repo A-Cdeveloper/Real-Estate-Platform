@@ -1,7 +1,7 @@
 import { cache } from "react";
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
-import { PropertyStatus, PropertyType } from "@prisma/client";
+import { PropertyStatus, PropertyType, Role } from "@prisma/client";
 import { InReviewProperty } from "@/types/properties";
 import { OnlineUser } from "@/types/user";
 
@@ -187,6 +187,83 @@ export const getPropertiesLocationCountForBar = cache(
         .map(([location, count]) => ({ name: location, value: count }))
         .sort((a, b) => b.value - a.value)
         .slice(0, 5); // Top 5 locations
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
+    }
+  }
+);
+
+/**
+ * Get top 5 users by total properties count with properties grouped by status
+ * Cached to prevent duplicate queries in the same request
+ * Returns data formatted for recharts StackedBarChart component
+ * Used in: TopUserByProprietes -> StackedBarChart
+ * @returns Array formatted for stacked bar chart: { name: string, APPROVED: number, IN_REVIEW: number, REJECTED: number, INACTIVE: number, DELETED: number }[]
+ */
+export const getTopUsersByPropertiesCount = cache(
+  async (): Promise<
+    Array<{
+      name: string;
+      APPROVED: number;
+      IN_REVIEW: number;
+      REJECTED: number;
+      INACTIVE: number;
+      DELETED: number;
+    }>
+  > => {
+    try {
+      // Get all agents with their properties grouped by status
+      const users = await prisma.user.findMany({
+        where: {
+          role: Role.AGENT,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          properties: {
+            select: {
+              status: true,
+            },
+          },
+        },
+      });
+
+      // Process data: group properties by status for each user
+      const userStats = users.map((user) => {
+        const statusCounts = {
+          APPROVED: 0,
+          IN_REVIEW: 0,
+          REJECTED: 0,
+          INACTIVE: 0,
+          DELETED: 0,
+        };
+
+        user.properties.forEach((property) => {
+          statusCounts[property.status] =
+            (statusCounts[property.status] || 0) + 1;
+        });
+
+        return {
+          id: user.id,
+          name: user.name || user.email,
+          total: user.properties.length,
+          ...statusCounts,
+        };
+      });
+
+      // Sort by total properties count descending and take top 5
+      const topUsers = userStats
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 5)
+        .map(({ id, total, ...rest }) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const _ = { id, total };
+          return rest;
+        });
+
+      return topUsers;
     } catch (error) {
       console.error("Database error:", error);
       throw new Error(getPrismaErrorMessage(error));
