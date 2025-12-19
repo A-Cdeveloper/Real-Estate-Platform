@@ -1,7 +1,9 @@
 "use client";
 
-import React, { memo, useCallback } from "react";
-import PieChart from "./charts/PieChart";
+import React, { memo, useCallback, useMemo } from "react";
+import PieChart from "../ui/charts/PieChart";
+import { getStatusColor } from "../shared/statusColors";
+import { PropertyStatus } from "@prisma/client";
 
 type PieChartData = { name: string; value: number }[];
 
@@ -29,9 +31,20 @@ const PieProprietesStatus = ({ data }: PieProprietesStatusProps) => {
     []
   );
 
+  // Map colors based on status name - ensure same order as data
+  const colors = useMemo(
+    () =>
+      data.map((item) => {
+        const status = item.name as PropertyStatus;
+        return getStatusColor(status);
+      }),
+    [data]
+  );
+
   return (
     <PieChart
       data={data}
+      colors={colors}
       cx="45%"
       cy="50%"
       labelLine={true}

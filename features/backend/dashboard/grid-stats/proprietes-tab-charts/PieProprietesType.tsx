@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo, useCallback } from "react";
-import PieChart from "./charts/PieChart";
+import PieChart from "../ui/charts/PieChart";
 
 type PieChartData = { name: string; value: number }[];
 

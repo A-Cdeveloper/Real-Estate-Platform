@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo } from "react";
-import BarChart from "./charts/BarChart";
+import BarChart from "../ui/charts/BarChart";
 
 type BarChartData = { name: string; value: number }[];
 
@@ -9,7 +9,7 @@ type BarProprietesLocationProps = {
   data: BarChartData;
 };
 
-const MARGIN = { top: 5, right: 30, left: -10, bottom: 5 } as const;
+const MARGIN = { top: 20, right: 30, left: -10, bottom: 5 } as const;
 
 const BarProprietesLocation = ({ data }: BarProprietesLocationProps) => {
   return (
@@ -17,7 +17,7 @@ const BarProprietesLocation = ({ data }: BarProprietesLocationProps) => {
       data={data}
       layout="vertical"
       margin={MARGIN}
-      barSize={30}
+      barSize={20}
       showTooltip={false}
       aria-label="Horizontal bar chart showing top property locations"
     />

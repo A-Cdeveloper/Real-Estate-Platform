@@ -5,8 +5,8 @@ import GridCard from "../shared/GridCard";
 import PieProprietesStatus from "./PieProprietesStatus";
 import PieProprietesType from "./PieProprietesType";
 import BarProprietesLocation from "./BarProprietesLocation";
-import TabsButtons from "./tabs/TabsButtons";
-import TabsContent from "./tabs/TabsContent";
+import TabsButtons from "../ui/tabs/TabsButtons";
+import TabsContent from "../ui/tabs/TabsContent";
 
 type ChartData = { name: string; value: number }[];
 
@@ -52,6 +52,7 @@ const ProprietesChartsTabs = ({
   return (
     <GridCard
       title="Properties statistics"
+      className="max-h-[500px]"
       headerExtra={
         <TabsButtons
           tabs={TABS}
