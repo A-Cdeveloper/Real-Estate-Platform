@@ -3,7 +3,7 @@ import InReviewProprietesTable from "./InReviewProprietesTable";
 
 /**
  * Server component that fetches and displays in-review properties
- * Client component handles filtering based on search params
+ * Client component handles filtering based on local state
  */
 const InReviewProprietes = async () => {
   const properties = await getInReviewProperties();

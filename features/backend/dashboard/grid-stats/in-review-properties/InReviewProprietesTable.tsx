@@ -4,8 +4,7 @@ import GenericTable from "@/components/shared/ui/GenericTable";
 import { InReviewProperty } from "@/types/properties";
 import { PropertyType } from "@prisma/client";
 import { Info } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import GridCard from "../shared/GridCard";
 import { getColumns } from "./columns";
 import FilterByType from "./FilterByType";
@@ -13,17 +12,16 @@ import FilterByType from "./FilterByType";
 /**
  * Client component that displays in-review properties table with a grid card wrapper
  * Receives data as props from server component
- * Filters properties based on search params
+ * Filters properties based on local state
  */
 const InReviewProprietesTable = ({
   properties,
 }: {
   properties: InReviewProperty[];
 }) => {
-  const searchParams = useSearchParams();
-  const typeFilter = searchParams.get("type") as PropertyType | "all";
+  const [typeFilter, setTypeFilter] = useState<PropertyType | "all">("all");
 
-  // Filter properties based on search params
+  // Filter properties based on local state
   const filteredProperties = useMemo(() => {
     if (!typeFilter || typeFilter === "all") return properties;
     return properties.filter((p) => p.type === typeFilter);
@@ -38,7 +36,14 @@ const InReviewProprietesTable = ({
     <GridCard
       title="Properties in review status"
       subtitle={`${filteredProperties.length === 1 ? "1 property" : `${filteredProperties.length} properties`}`}
-      headerExtra={!isEmpty && <FilterByType typeFilter={typeFilter} />}
+      headerExtra={
+        !isEmpty && (
+          <FilterByType
+            typeFilter={typeFilter}
+            onChangeFilter={setTypeFilter}
+          />
+        )
+      }
     >
       {isEmpty ? (
         <div className="text-sm text-muted-foreground py-6 px-3 mx-auto flex items-center gap-2">
