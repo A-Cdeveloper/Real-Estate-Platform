@@ -270,3 +270,126 @@ export const getTopUsersByPropertiesCount = cache(
     }
   }
 );
+
+/**
+ * Get properties count grouped by price range for dashboard bar chart
+ * Cached to prevent duplicate queries in the same request
+ * Only includes APPROVED properties
+ * Returns data formatted for recharts BarChart component (name, value)
+ * Used in: PriceRangeChart -> BarPriceRange
+ * @returns Array formatted for recharts: { name: string, value: number }[]
+ */
+export const getPropertiesPriceRangeCount = cache(
+  async (): Promise<{ name: string; value: number }[]> => {
+    try {
+      // Get all approved properties with prices
+      const properties = await prisma.property.findMany({
+        where: {
+          status: PropertyStatus.DELETED,
+        },
+        select: {
+          price: true,
+        },
+      });
+
+      // Filter out any properties with null prices and ensure price is a number
+      const propertiesWithPrice = properties
+        .filter((p) => p.price !== null && typeof p.price === "number")
+        .map((p) => ({ price: p.price as number }));
+
+      // Define price ranges (in euros)
+      const priceRanges = [
+        { min: 0, max: 50000, label: "0-50k" },
+        { min: 50000, max: 100000, label: "50k-100k" },
+        { min: 100000, max: 200000, label: "100k-200k" },
+        { min: 200000, max: 300000, label: "200k-300k" },
+        { min: 300000, max: 500000, label: "300k-500k" },
+        { min: 500000, max: Infinity, label: "500k+" },
+      ];
+
+      // Initialize count map for each range
+      const rangeCounts = new Map<string, number>();
+      priceRanges.forEach((range) => {
+        rangeCounts.set(range.label, 0);
+      });
+
+      // Count properties in each range
+      propertiesWithPrice.forEach((property) => {
+        const price = property.price;
+        for (const range of priceRanges) {
+          if (price >= range.min && price < range.max) {
+            const currentCount = rangeCounts.get(range.label) || 0;
+            rangeCounts.set(range.label, currentCount + 1);
+            break;
+          }
+        }
+      });
+
+      // Convert to array format for recharts
+      return priceRanges.map((range) => ({
+        name: range.label,
+        value: rangeCounts.get(range.label) || 0,
+      }));
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
+    }
+  }
+);
+
+/**
+ * Get properties count grouped by date (createdAt) for timeline chart
+ * Cached to prevent duplicate queries in the same request
+ * Returns data formatted for recharts LineChart component
+ * Used in: PropertiesTimeline -> LinePropertiesTimeline
+ * @returns Array formatted for recharts: { name: string, value: number, date: Date }[]
+ *          Sorted by date ascending
+ */
+export const getPropertiesTimelineData = cache(
+  async (): Promise<Array<{ name: string; value: number; date: Date }>> => {
+    try {
+      // Get all properties with createdAt date
+      const properties = await prisma.property.findMany({
+        where: {
+          status: PropertyStatus.APPROVED,
+        },
+        select: {
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      // Group by date (day level)
+      const dateMap = new Map<string, number>();
+
+      properties.forEach((property) => {
+        // Format date as YYYY-MM-DD
+        const dateKey = property.createdAt.toISOString().split("T")[0];
+        const currentCount = dateMap.get(dateKey) || 0;
+        dateMap.set(dateKey, currentCount + 1);
+      });
+
+      // Convert to array and format for chart
+      const timelineData = Array.from(dateMap.entries())
+        .map(([dateKey, count]) => {
+          const date = new Date(dateKey);
+          // Format date for display (e.g., "Jan 15", "Feb 20")
+          const month = date.toLocaleDateString("en-US", { month: "short" });
+          const day = date.getDate();
+          return {
+            name: `${month} ${day}`,
+            value: count,
+            date: date,
+          };
+        })
+        .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+      return timelineData;
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
+    }
+  }
+);

@@ -366,7 +366,8 @@ export async function getPropertyStats() {
     }
 
     return {
-      total: approvedCount,
+      total,
+      approvedCount,
       avgPricePerSqm: Math.round(avgPricePerSqm),
       addedLastWeek,
     };
