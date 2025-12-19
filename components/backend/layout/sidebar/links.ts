@@ -19,12 +19,6 @@ export const navigationLinks: SidebarLink[] = [
     adminOnly: false,
   },
   {
-    label: "Notifications",
-    href: "/notifications",
-    icon: "Bell",
-    adminOnly: true,
-  },
-  {
     label: "News",
     href: "/news-editor?sort=createdAt_desc",
     icon: "Book",
