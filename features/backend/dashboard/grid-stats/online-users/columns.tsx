@@ -16,7 +16,7 @@ export const getColumns = (): Column<OnlineUser>[] => [
     render: (user) => {
       return (
         <>
-          <h2 className="text-white max-w-[190px] line-clamp-2">
+          <h2 className="text-foreground max-w-[190px] line-clamp-2">
             {user.name || "N/A"}
           </h2>
         </>

@@ -8,7 +8,7 @@ import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 
 const GeneralStats = () => {
   return (
-    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 max-w-5xl">
+    <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl">
       <ErrorBoundary>
         <Suspense fallback={<StatBoxSkeleton />}>
           <TotalProperties />
