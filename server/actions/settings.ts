@@ -107,6 +107,9 @@ export const uploadLogo = async (
   file: File,
   type: "dark" | "light"
 ): Promise<string | null> => {
+  // Only admins can upload logos
+  await ensureAdminAccess();
+
   // Upload the image using the shared upload function
   const url = await uploadImagePinata(
     file,

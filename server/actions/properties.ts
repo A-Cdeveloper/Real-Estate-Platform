@@ -395,6 +395,22 @@ export async function uploadPropertyImages(
   files: File[],
   propertyId: string
 ): Promise<string[]> {
+  const user = await requireAuth();
+
+  // If propertyId is not "temp", check if user is owner or admin
+  if (propertyId !== "temp") {
+    const property = await prisma.property.findUnique({
+      where: { id: propertyId },
+      select: { ownerId: true },
+    });
+
+    if (!property) {
+      throw new Error("Property not found");
+    }
+
+    await requireOwnerOrAdmin(property, user);
+  }
+
   try {
     const timestamp = Date.now();
     const urls = await Promise.all(

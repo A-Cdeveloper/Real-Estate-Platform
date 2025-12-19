@@ -1,6 +1,6 @@
 "use server";
 
-import { ensureAdminAccess } from "@/server/auth/ensureAdminAccess";
+import { requireAuth } from "@/server/auth/ownership";
 import { pinata } from "@/server/pinata/config";
 
 /**
@@ -17,7 +17,9 @@ export const uploadImagePinata = async (
   maxFileSize: number,
   groupId: string
 ): Promise<string | null> => {
-  await ensureAdminAccess();
+  // Require authentication (any logged-in user can upload)
+  // Authorization should be checked in the calling function
+  await requireAuth();
 
   try {
     // Server-side validation

@@ -208,6 +208,9 @@ export const uploadNewsImage = async (
   file: File,
   newsId: string
 ): Promise<string | null> => {
+  // Only admins can upload news images
+  await ensureAdminAccess();
+
   // Upload the image to IPFS using the shared upload function
   const url = await uploadImagePinata(
     file,
