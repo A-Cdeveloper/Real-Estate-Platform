@@ -49,8 +49,8 @@ const DEFAULT_COLORS = [
 const PieChart = ({
   data,
   colors = DEFAULT_COLORS,
-  height = 300,
-  outerRadius = 80,
+  height = 350,
+  outerRadius = 100,
   innerRadius = 0,
   cx = "50%",
   cy = "50%",

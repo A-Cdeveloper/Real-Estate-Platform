@@ -9,7 +9,7 @@ type BarProprietesLocationProps = {
   data: BarChartData;
 };
 
-const MARGIN = { top: 20, right: 30, left: -10, bottom: 5 } as const;
+const MARGIN = { top: 30, right: 30, left: -10, bottom: 20 } as const;
 
 const BarProprietesLocation = ({ data }: BarProprietesLocationProps) => {
   return (

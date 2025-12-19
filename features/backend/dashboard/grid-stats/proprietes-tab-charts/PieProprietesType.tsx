@@ -19,7 +19,7 @@ const PieProprietesType = ({ data }: PieProprietesTypeProps) => {
   return (
     <PieChart
       data={data}
-      cx="50%"
+      cx="45%"
       cy="50%"
       label={labelFormatter}
       aria-label="Pie chart showing property type distribution"

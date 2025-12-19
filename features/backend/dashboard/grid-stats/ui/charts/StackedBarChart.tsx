@@ -82,6 +82,7 @@ const StackedBarChart = ({
         margin={margin}
         role="img"
         aria-label={ariaLabel || "Stacked bar chart"}
+        barCategoryGap="20%"
       >
         {showGrid && (
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -124,6 +125,7 @@ const StackedBarChart = ({
               dataKey={key}
               stackId="a"
               fill={colors[index % colors.length]}
+              isAnimationActive={false}
               {...(barSize ? { barSize } : {})}
             >
               {/* Show value label on each segment */}
