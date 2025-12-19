@@ -74,20 +74,22 @@ const MapDisplay = ({
         <span className="text-muted-foreground">Loading address...</span>
       </div>
     );
-  } else if (onRemove && address) {
+  } else if (address) {
     addressField = (
       <div className="flex items-center gap-2">
         <address>{address}</address>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={onRemove}
-          className="absolute right-1 top-1/2 -translate-y-1/2"
-          aria-label="Remove address from map"
-        >
-          <X className="size-4" aria-hidden="true" />
-        </Button>
+        {onRemove && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={onRemove}
+            className="absolute right-1 top-1/2 -translate-y-1/2"
+            aria-label="Remove address from map"
+          >
+            <X className="size-4" aria-hidden="true" />
+          </Button>
+        )}
       </div>
     );
   }
