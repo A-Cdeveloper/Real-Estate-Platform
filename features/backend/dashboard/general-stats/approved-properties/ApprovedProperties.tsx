@@ -7,11 +7,11 @@ import { PropertyStatus } from "@prisma/client";
 const getCachedPropertyStats = cache(getPropertyStats);
 
 const ApprovedProperties = async () => {
-  const { total } = await getCachedPropertyStats();
+  const { approvedCount } = await getCachedPropertyStats();
   return (
     <StatBox
       title="Approved properties"
-      count={total}
+      count={approvedCount}
       icon={<CheckCircle2 className="h-6 w-6" aria-hidden="true" />}
       extraText="Visible on frontend"
       className="bg-emerald-500/5"
