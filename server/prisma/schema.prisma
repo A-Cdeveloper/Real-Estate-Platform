@@ -28,18 +28,19 @@ enum Role {
 }
 
 model User {
-  id                       String     @id @default(cuid()) // unikatan string ID
-  email                    String     @unique
+  id                       String         @id @default(cuid()) // unikatan string ID
+  email                    String         @unique
   password                 String
   name                     String?
   role                     Role
-  isActive                 Boolean    @default(true)
-  isOnline                 Boolean    @default(false)
+  isActive                 Boolean        @default(true)
+  isOnline                 Boolean        @default(false)
   lastLogin                DateTime?
   passwordResetToken       String?
   passwordResetTokenExpiry DateTime?
-  createdAt                DateTime   @default(now())
+  createdAt                DateTime       @default(now())
   properties               Property[]
+  notifications            Notification[]
 
   @@map("user")
 }
@@ -110,4 +111,21 @@ model Settings {
   updatedAt      DateTime @updatedAt
 
   @@map("settings")
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  title     String
+  message   String    @db.Text
+  isRead    Boolean   @default(false)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link      String? // Optional link to related page (e.g., /proprietes-area/edit/{id})
+  createdAt DateTime  @default(now())
+  readAt    DateTime? // When notification was read
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@map("notification")
 }
