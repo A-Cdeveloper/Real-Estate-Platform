@@ -51,6 +51,7 @@ const PieProprietesStatus = ({ data }: PieProprietesStatusProps) => {
       label={labelFormatter}
       labelStyle={LABEL_STYLE}
       aria-label="Pie chart showing property status distribution"
+      showTooltip={false}
     />
   );
 };

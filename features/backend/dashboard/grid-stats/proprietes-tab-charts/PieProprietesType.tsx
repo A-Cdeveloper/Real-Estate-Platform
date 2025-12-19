@@ -23,6 +23,7 @@ const PieProprietesType = ({ data }: PieProprietesTypeProps) => {
       cy="50%"
       label={labelFormatter}
       aria-label="Pie chart showing property type distribution"
+      showTooltip={false}
     />
   );
 };

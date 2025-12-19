@@ -116,7 +116,11 @@ const BarChart = ({
           dataKey={dataKey}
           fill={color}
           radius={barRadius}
-          label={{ position: "right", fontSize: 12 }}
+          label={
+            isVertical
+              ? { position: "right", fontSize: 12 }
+              : { position: "top", fontSize: 12 }
+          }
           {...(barSize ? { barSize } : {})}
         />
       </RechartsBarChart>
