@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import GridCard from "../shared/GridCard";
 import PieProprietesStatus from "./PieProprietesStatus";
 import PieProprietesType from "./PieProprietesType";
@@ -16,6 +16,12 @@ type ProprietesChartsTabsProps = {
   locationData: ChartData;
 };
 
+const TABS = [
+  { value: "status", label: "Status" },
+  { value: "type", label: "Type" },
+  { value: "location", label: "Top Locations" },
+] as const;
+
 const ProprietesChartsTabs = ({
   statusData,
   typeData,
@@ -25,33 +31,30 @@ const ProprietesChartsTabs = ({
     "status"
   );
 
-  const tabs = [
-    { value: "status", label: "Status" },
-    { value: "type", label: "Type" },
-    { value: "location", label: "Top Locations" },
-  ] as const;
-
-  const tabsContent = [
-    {
-      value: "status" as const,
-      content: <PieProprietesStatus data={statusData} />,
-    },
-    {
-      value: "type" as const,
-      content: <PieProprietesType data={typeData} />,
-    },
-    {
-      value: "location" as const,
-      content: <BarProprietesLocation data={locationData} />,
-    },
-  ];
+  const tabsContent = useMemo(
+    () => [
+      {
+        value: "status" as const,
+        content: <PieProprietesStatus data={statusData} />,
+      },
+      {
+        value: "type" as const,
+        content: <PieProprietesType data={typeData} />,
+      },
+      {
+        value: "location" as const,
+        content: <BarProprietesLocation data={locationData} />,
+      },
+    ],
+    [statusData, typeData, locationData]
+  );
 
   return (
     <GridCard
       title="Properties statistics"
       headerExtra={
         <TabsButtons
-          tabs={tabs}
+          tabs={TABS}
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />

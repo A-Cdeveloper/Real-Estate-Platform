@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +14,41 @@ type TabsButtonsProps<T extends string> = {
   activeTab: T;
   onTabChange: (tab: T) => void;
 };
+
+/**
+ * Button component for individual tab with active state
+ */
+const TabButton = memo(
+  ({
+    active,
+    onClick,
+    children,
+    ariaLabel,
+  }: {
+    active: boolean;
+    onClick: () => void;
+    children: React.ReactNode;
+    ariaLabel?: string;
+  }) => {
+    return (
+      <Button
+        size="sm"
+        onClick={onClick}
+        role="tab"
+        aria-selected={active}
+        aria-label={ariaLabel}
+        className={cn(
+          "border border-border text-muted-foreground bg-secondary/40 hover:bg-secondary",
+          active && "bg-secondary text-foreground"
+        )}
+      >
+        {children}
+      </Button>
+    );
+  }
+);
+
+TabButton.displayName = "TabButton";
 
 /**
  * Generic tabs buttons component
@@ -41,37 +76,6 @@ const TabsButtons = <T extends string>({
         </TabButton>
       ))}
     </div>
-  );
-};
-
-/**
- * Button component for individual tab with active state
- */
-const TabButton = ({
-  active,
-  onClick,
-  children,
-  ariaLabel,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  ariaLabel?: string;
-}) => {
-  return (
-    <Button
-      size="sm"
-      onClick={onClick}
-      role="tab"
-      aria-selected={active}
-      aria-label={ariaLabel}
-      className={cn(
-        "border border-border text-muted-foreground bg-secondary/40 hover:bg-secondary",
-        active && "bg-secondary text-foreground"
-      )}
-    >
-      {children}
-    </Button>
   );
 };
 

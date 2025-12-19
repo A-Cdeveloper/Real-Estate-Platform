@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import PieChart from "./charts/PieChart";
 
 type PieChartData = { name: string; value: number }[];
@@ -10,14 +10,18 @@ type PieProprietesTypeProps = {
 };
 
 const PieProprietesType = ({ data }: PieProprietesTypeProps) => {
+  const labelFormatter = useCallback(
+    ({ name, percent }: { name?: string; percent?: number }) =>
+      `${name}: ${((percent || 0) * 100).toFixed(0)}%`,
+    []
+  );
+
   return (
     <PieChart
       data={data}
       cx="50%"
       cy="50%"
-      label={({ name, percent }) =>
-        `${name}: ${((percent || 0) * 100).toFixed(0)}%`
-      }
+      label={labelFormatter}
       aria-label="Pie chart showing property type distribution"
     />
   );
