@@ -8,8 +8,9 @@ import BarPriceRange from "./BarPriceRange";
 const PriceRangeChart = async () => {
   const data = await getPropertiesPriceRangeCount();
 
+  console.log(data);
+
   return <BarPriceRange data={data} />;
 };
 
 export default PriceRangeChart;
-

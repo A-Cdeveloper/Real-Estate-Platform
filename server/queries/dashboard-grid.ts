@@ -285,7 +285,7 @@ export const getPropertiesPriceRangeCount = cache(
       // Get all approved properties with prices
       const properties = await prisma.property.findMany({
         where: {
-          status: PropertyStatus.DELETED,
+          status: PropertyStatus.APPROVED,
         },
         select: {
           price: true,
