@@ -31,7 +31,7 @@ const BackHeader = ({ currentUser }: { currentUser: CurrentUser | null }) => {
         <LogoWithSettings />
       </div>
       <div className="flex items-center gap-1">
-        {isAdmin && <NotificationArea />}
+        <NotificationArea />
         <ThemeToggle />
         <UserArea currentUser={currentUser as CurrentUser} isAdmin={isAdmin} />
       </div>
