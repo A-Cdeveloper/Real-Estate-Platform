@@ -3,7 +3,7 @@
 import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { PropertyActionState } from "@/types/properties";
-import { PropertyType, PropertyStatus } from "@prisma/client";
+import { PropertyType, PropertyStatus, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
 import {
@@ -21,6 +21,10 @@ import {
 import { uploadImagePinata } from "./uploadImagePinata";
 import { deleteImagePinata } from "./deleteImagePinata";
 import { checkIsAdmin } from "../auth/checkIsAdmin";
+import {
+  createNotification,
+  createNotificationForAdmins,
+} from "../utils/notifications";
 
 /**
  * Helper function to parse property form data from FormData
@@ -114,6 +118,19 @@ export async function createProperty(
           order: typeof item.order === "number" ? item.order : idx,
           propertyId: property.id,
         })),
+      });
+    }
+
+    // Send notification to admins if agent created the property
+    if (user.role === Role.AGENT) {
+      const agentName = user.name || user.email;
+      createNotificationForAdmins(
+        "New Property Added",
+        `Agent ${agentName} added a new property: ${name}`,
+        `/proprietes-area/edit/${property.id}`
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+        // Don't fail the property creation if notification fails
       });
     }
 
@@ -254,6 +271,32 @@ export async function updateProperty(
       });
     }
 
+    // Send notifications
+    // If admin updated property, notify the agent (property owner)
+    // Skip if admin is the owner (happens when agent was deleted and properties transferred to superadmin)
+    if (isAdmin && user.id !== property.ownerId) {
+      createNotification(
+        property.ownerId,
+        "Property Updated",
+        `Your property "${name}" has been updated`,
+        `/proprietes-area/edit/${propertyId}`
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+      });
+    }
+
+    // If agent updated property, notify admins
+    if (user.role === Role.AGENT) {
+      const agentName = user.name || user.email;
+      createNotificationForAdmins(
+        "Property Updated",
+        `Agent ${agentName} updated property: ${name}`,
+        `/proprietes-area/edit/${propertyId}`
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+      });
+    }
+
     revalidatePath("/");
     revalidatePath("/proprietes");
     revalidatePath("/proprietes-area");
@@ -305,6 +348,10 @@ export async function deleteProperty(id: string) {
   await requireOwnerOrAdmin(property, user);
 
   try {
+    // Save property data before deleting (needed for notifications)
+    const propertyName = property.name;
+    const propertyOwnerId = property.ownerId;
+
     // Get all gallery images before deleting the property
     const galleryImages = await prisma.propertyImage.findMany({
       where: { propertyId: id },
@@ -315,6 +362,34 @@ export async function deleteProperty(id: string) {
     await prisma.property.delete({
       where: { id },
     });
+
+    // Send notifications after successful deletion
+    const isAdmin = await checkIsAdmin();
+
+    // If agent deleted property, notify admins
+    if (user.role === Role.AGENT) {
+      const agentName = user.name || user.email;
+      createNotificationForAdmins(
+        "Property Deleted",
+        `Agent ${agentName} deleted property: ${propertyName}`,
+        `/proprietes-area`
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+      });
+    }
+
+    // If admin deleted property, notify the agent (property owner)
+    // Skip if admin is the owner (happens when agent was deleted and properties transferred to superadmin)
+    if (isAdmin && user.id !== propertyOwnerId) {
+      createNotification(
+        propertyOwnerId,
+        "Property Deleted",
+        `Your property "${propertyName}" has been deleted`,
+        `/proprietes-area`
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+      });
+    }
 
     // Delete images from Pinata (don't block if this fails)
     if (galleryImages.length > 0) {
@@ -369,6 +444,21 @@ export async function promoteProperty(id: string) {
       where: { id },
       data: { promoted: newPromoted },
     });
+
+    // Send notification to agent if property was promoted (not unpromoted)
+    // Skip if admin is the owner (happens when agent was deleted and properties transferred to superadmin)
+    const isAdmin = await checkIsAdmin();
+    if (newPromoted && isAdmin && user.id !== property.ownerId) {
+      createNotification(
+        property.ownerId,
+        "Property Promoted",
+        `Your property "${property.name}" has been promoted`,
+        `/proprietes-area/edit/${id}`
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+      });
+    }
+
     revalidatePath("/");
     revalidatePath("/proprietes");
     revalidatePath(`/proprietes/${id}`);
