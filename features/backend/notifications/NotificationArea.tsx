@@ -1,18 +1,32 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import NotificationDropdown from "./NotificationDropdown";
+import { useNotifications } from "./hooks/useNotifications";
 
 /**
  * NotificationArea component
- * Placeholder component for email notifications
- * Will be implemented to display and handle email notifications in the future
+ * Displays notification dropdown with polling functionality
  */
 const NotificationArea = () => {
+  const {
+    notifications,
+    isLoading,
+    unreadCount,
+    handleNotificationClick,
+    handleMarkAllAsRead,
+  } = useNotifications();
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
-    <Button variant="ghost" size="icon" aria-label="Notifications">
-      <Bell className="size-4" aria-hidden="true" />
-    </Button>
+    <NotificationDropdown
+      notifications={notifications}
+      unreadCount={unreadCount}
+      onNotificationClick={handleNotificationClick}
+      onMarkAllAsRead={handleMarkAllAsRead}
+    />
   );
 };
 
