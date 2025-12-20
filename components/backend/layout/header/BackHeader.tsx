@@ -1,7 +1,7 @@
 import LogoWithSettings from "@/components/shared/ui/LogoWithSettings";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Role } from "@prisma/client";
-import NotificationArea from "./NotificationArea";
+import NotificationArea from "@/features/backend/notifications/NotificationArea";
 import UserArea from "./UserArea";
 import { CurrentUser } from "@/types/user";
 
