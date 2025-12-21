@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { markAsRead } from "@/server/actions/notifications";
 import { Notification } from "@prisma/client";
 import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 import NotificationButton from "./dropdown/NotificationButton";
 import NotificationItem from "./dropdown/NotificationItem";
 
@@ -48,6 +49,8 @@ const NotificationDropdown = ({
   onNotificationClick,
   onMarkAllAsRead,
 }: NotificationDropdownProps) => {
+  const router = useRouter();
+
   /**
    * Handles marking a single notification as read
    * Uses optimistic updates for immediate UI feedback
@@ -66,6 +69,8 @@ const NotificationDropdown = ({
         try {
           // Server action: mark notification as read in database
           await markAsRead(notification.id);
+          // Refresh notifications page to sync changes
+          router.refresh();
         } catch (error) {
           // If server action fails, refresh notifications to restore state
           console.error("Failed to mark notification as read:", error);
@@ -73,7 +78,7 @@ const NotificationDropdown = ({
         }
       }
     },
-    [onNotificationClick, onMarkAllAsRead]
+    [onNotificationClick, onMarkAllAsRead, router]
   );
 
   /**
@@ -84,6 +89,8 @@ const NotificationDropdown = ({
     await markAsRead();
     // Refresh notifications list to reflect changes
     onMarkAllAsRead?.();
+    // Refresh notifications page to sync changes
+    router.refresh();
   };
 
   return (
@@ -94,9 +101,10 @@ const NotificationDropdown = ({
       {/* Dropdown content */}
       <DropdownMenuContent
         align="start"
-        className="w-full max-w-[375px] min-w-[375px] z-60 mt-[7px] rounded-none"
+        className="w-full max-w-[375px] min-w-[375px] z-40 mt-[7px] rounded-none"
         sideOffset={8}
         // Prevent closing on outside click for better UX
+        // z-[100] ensures dropdown appears above modal backdrop (z-50)
         onInteractOutside={(e) => e.preventDefault()}
       >
         {/* Header with "Mark all as read" button */}

@@ -3,6 +3,7 @@
 import { getNotifications } from "@/server/actions/notifications";
 import { Notification } from "@prisma/client";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 /**
  * Custom hook for managing notifications with polling functionality
@@ -10,6 +11,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
  * @returns Object containing notifications state, unread count, and handler functions
  */
 export const useNotifications = () => {
+  const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -59,16 +61,33 @@ export const useNotifications = () => {
       }
     };
 
+    // Listen for notification deletion events to refresh dropdown
+    const handleNotificationDeleted = (event: Event) => {
+      const customEvent = event as CustomEvent<{ notificationId: string }>;
+      // Optimistically remove notification from dropdown immediately
+      setNotifications((prev) =>
+        prev.filter((n) => n.id !== customEvent.detail.notificationId)
+      );
+      // Then fetch fresh data to ensure sync
+      fetchNotifications();
+    };
+
     // Start polling initially
     startPolling();
 
     // Listen for visibility changes
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    // Listen for notification deletion events
+    window.addEventListener("notificationDeleted", handleNotificationDeleted);
 
     // Cleanup
     return () => {
       pausePolling();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener(
+        "notificationDeleted",
+        handleNotificationDeleted
+      );
     };
   }, [fetchNotifications, startPolling, pausePolling]);
 
@@ -85,7 +104,9 @@ export const useNotifications = () => {
   const handleMarkAllAsRead = useCallback(() => {
     // Refresh notifications after marking all as read
     fetchNotifications();
-  }, [fetchNotifications]);
+    // Refresh notifications page to sync changes
+    router.refresh();
+  }, [fetchNotifications, router]);
 
   return {
     notifications,
