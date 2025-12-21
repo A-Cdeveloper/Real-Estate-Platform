@@ -16,7 +16,8 @@ export const useNotifications = () => {
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const data = await getNotifications(true);
+      // Fetch only unread notifications for dropdown
+      const data = await getNotifications(false);
       setNotifications(data);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
@@ -77,12 +78,8 @@ export const useNotifications = () => {
   );
 
   const handleNotificationClick = useCallback((notificationId: string) => {
-    // Update local state to mark notification as read
-    setNotifications((prev) =>
-      prev.map((n) =>
-        n.id === notificationId ? { ...n, isRead: true, readAt: new Date() } : n
-      )
-    );
+    // Optimistically remove notification immediately
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
   }, []);
 
   const handleMarkAllAsRead = useCallback(() => {

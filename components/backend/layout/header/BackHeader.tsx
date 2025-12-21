@@ -30,7 +30,7 @@ const BackHeader = ({ currentUser }: { currentUser: CurrentUser | null }) => {
       <div className="flex items-center gap-3">
         <LogoWithSettings />
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         <NotificationArea />
         <ThemeToggle />
         <UserArea currentUser={currentUser as CurrentUser} isAdmin={isAdmin} />
