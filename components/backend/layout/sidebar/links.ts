@@ -14,7 +14,7 @@ export const navigationLinks: SidebarLink[] = [
   },
   {
     label: "Proprietes",
-    href: "/proprietes-area?sort=status_desc",
+    href: "/proprietes-area",
     icon: "List",
     adminOnly: false,
   },

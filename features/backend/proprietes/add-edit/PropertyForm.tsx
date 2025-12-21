@@ -70,7 +70,7 @@ const PropertyForm = ({
           ? "Property created successfully!"
           : "Property updated successfully!"
       );
-      router.push("/proprietes-area?sort=status_desc");
+      router.push("/proprietes-area");
     }
   }, [state, router, mode, isDirty]);
 

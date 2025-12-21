@@ -32,7 +32,7 @@ const ProprietesArea = async ({
     await getAllProperties({
       page: Number(params.page) || 1,
       limit: Number(params.limit) || 15,
-      sort: (params.sort as string) || "status_desc",
+      sort: (params.sort as string) || "createdAt_desc",
       includeRelations: true, // Include owner and gallery for backend table display
       // status not provided = shows all properties (APPROVED, IN_REVIEW, REJECTED)
       ownerId: isAdmin ? undefined : currentUser.id,
@@ -56,7 +56,7 @@ const ProprietesArea = async ({
         total={total}
         page={page}
         totalPages={totalPages}
-        sort={(params.sort as string) || "status_desc"}
+        sort={(params.sort as string) || "createdAt_desc"}
         isAdmin={isAdmin}
         filters={filters}
         ownersList={ownersList}
