@@ -248,8 +248,8 @@ export async function updateProperty(
         lat,
         lng,
         image: gallery[0]?.url ?? null,
-        promoted: status === PropertyStatus.APPROVED ? true : false,
         // Only update status if user is admin
+        // Note: promoted is managed separately via promoteProperty action
         ...(isAdmin && status && { status: status as PropertyStatus }),
       },
     });
