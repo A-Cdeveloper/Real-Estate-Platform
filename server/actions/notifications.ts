@@ -4,6 +4,7 @@ import prisma from "@/server/prisma";
 import { getPrismaErrorMessage } from "@/server/prisma-errors";
 import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
 import { Notification } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 /**
  * Server Action: Get notifications for current user
@@ -75,6 +76,9 @@ export async function markAsRead(
         },
       });
 
+      // Revalidate notifications page to sync with dropdown
+      revalidatePath("/notifications");
+
       return updatedNotification;
     }
 
@@ -90,9 +94,66 @@ export async function markAsRead(
       },
     });
 
+    // Revalidate notifications page to sync with dropdown
+    revalidatePath("/notifications");
+
     return result.count;
   } catch (error) {
     console.error("Database error:", error);
     throw new Error(getPrismaErrorMessage(error));
+  }
+}
+
+/**
+ * Server Action: Delete a notification
+ * @param notificationId - The ID of the notification to delete
+ * @returns The result of the deletion
+ */
+export async function deleteNotification(
+  notificationId: string
+): Promise<{ success: boolean; error?: string }> {
+  const user = await getCurrentUserFromSession();
+  if (!user) {
+    return {
+      success: false,
+      error: "Unauthorized. Please log in.",
+    };
+  }
+
+  if (!notificationId) {
+    return {
+      success: false,
+      error: "Notification ID is required.",
+    };
+  }
+
+  try {
+    // First check if notification exists and belongs to current user
+    const notification = await prisma.notification.findUnique({
+      where: { id: notificationId },
+    });
+
+    if (!notification || notification.userId !== user.id) {
+      return {
+        success: false,
+        error: "Notification not found or unauthorized.",
+      };
+    }
+
+    // Delete the notification
+    await prisma.notification.delete({
+      where: { id: notificationId },
+    });
+
+    // Revalidate notifications page to sync with dropdown
+    revalidatePath("/notifications");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Database error:", error);
+    return {
+      success: false,
+      error: getPrismaErrorMessage(error),
+    };
   }
 }
