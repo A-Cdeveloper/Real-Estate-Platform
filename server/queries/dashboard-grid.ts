@@ -276,7 +276,7 @@ export const getTopUsersByPropertiesCount = cache(
  * Cached to prevent duplicate queries in the same request
  * Only includes APPROVED properties
  * Returns data formatted for recharts BarChart component (name, value)
- * Used in: PriceRangeChart -> BarPriceRange
+ * Used in: PropertiesRangeChart -> BarPriceRange
  * @returns Array formatted for recharts: { name: string, value: number }[]
  */
 export const getPropertiesPriceRangeCount = cache(
@@ -327,6 +327,72 @@ export const getPropertiesPriceRangeCount = cache(
 
       // Convert to array format for recharts
       return priceRanges.map((range) => ({
+        name: range.label,
+        value: rangeCounts.get(range.label) || 0,
+      }));
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
+    }
+  }
+);
+
+/**
+ * Get properties count grouped by area size for dashboard bar chart
+ * Cached to prevent duplicate queries in the same request
+ * Only includes APPROVED properties
+ * Returns data formatted for recharts BarChart component (name, value)
+ * Used in: PropertiesRangeChart -> BarAreaSize
+ * @returns Array formatted for recharts: { name: string, value: number }[]
+ */
+export const getPropertiesAreaSizeCount = cache(
+  async (): Promise<{ name: string; value: number }[]> => {
+    try {
+      // Get all approved properties with area
+      const properties = await prisma.property.findMany({
+        where: {
+          status: PropertyStatus.APPROVED,
+        },
+        select: {
+          area: true,
+        },
+      });
+
+      // Filter out any properties with null area and ensure area is a number
+      const propertiesWithArea = properties
+        .filter((p) => p.area !== null && typeof p.area === "number")
+        .map((p) => ({ area: p.area as number }));
+
+      // Define area size ranges (in square meters)
+      const areaRanges = [
+        { min: 0, max: 50, label: "0-50 m²" },
+        { min: 50, max: 100, label: "50-100 m²" },
+        { min: 100, max: 150, label: "100-150 m²" },
+        { min: 150, max: 200, label: "150-200 m²" },
+        { min: 200, max: 300, label: "200-300 m²" },
+        { min: 300, max: Infinity, label: "300+ m²" },
+      ];
+
+      // Initialize count map for each range
+      const rangeCounts = new Map<string, number>();
+      areaRanges.forEach((range) => {
+        rangeCounts.set(range.label, 0);
+      });
+
+      // Count properties in each range
+      propertiesWithArea.forEach((property) => {
+        const area = property.area;
+        for (const range of areaRanges) {
+          if (area >= range.min && area < range.max) {
+            const currentCount = rangeCounts.get(range.label) || 0;
+            rangeCounts.set(range.label, currentCount + 1);
+            break;
+          }
+        }
+      });
+
+      // Convert to array format for recharts
+      return areaRanges.map((range) => ({
         name: range.label,
         value: rangeCounts.get(range.label) || 0,
       }));
