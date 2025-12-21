@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import InReviewProprietes from "./in-review-properties/InReviewProprietes";
 import LatestNews from "./latest-news/LatestNews";
 import OnlineUsers from "./online-users/OnlineUsers";
-import PriceRangeChart from "./proprietes-price-range/PriceRangeChart";
+import PropertiesRangeChart from "./proprietes-tab-range/PropertiesRangeChart";
 import ProprietesCharts from "./proprietes-tab-charts/ProprietesCharts";
 import PropertiesTimeline from "./proprietes-tab-timeline/PropertiesTimeline";
 import TopUsersChart from "./top-users/TopUsersChart";
@@ -37,7 +37,7 @@ const GridWrapper = () => {
 
           <ErrorBoundary>
             <Suspense fallback={<Skeleton className="h-full w-full" />}>
-              <PriceRangeChart />
+              <PropertiesRangeChart />
             </Suspense>
           </ErrorBoundary>
         </div>
