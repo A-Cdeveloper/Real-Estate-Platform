@@ -12,6 +12,7 @@ import { formatZodErrors } from "../utils/zod";
 import { PropertyStatus, Role } from "@prisma/client";
 import { MASTER_ADMIN_EMAIL } from "@/lib/constants";
 import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
+import { createNotificationForAdmins } from "../utils/notifications";
 
 //const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -142,6 +143,19 @@ export async function deleteProfile() {
   }
 
   try {
+    // Save user data before deleting (needed for notifications)
+    const userToDelete = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true, email: true, role: true },
+    });
+
+    if (!userToDelete) {
+      return {
+        success: false,
+        error: "User not found.",
+      };
+    }
+
     // Find master admin
     const masterAdmin = await prisma.user.findFirst({
       where: {
@@ -170,10 +184,22 @@ export async function deleteProfile() {
       },
     });
 
-    // 2. Delete session FIRST (before deleting user)
+    // 2. Send notification to admins if agent deleted their profile
+    if (userToDelete.role === Role.AGENT) {
+      const agentName = userToDelete.name || userToDelete.email;
+      createNotificationForAdmins(
+        "Profile Deleted",
+        `Agent ${agentName} deleted their profile`,
+        "/users"
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+      });
+    }
+
+    // 3. Delete session FIRST (before deleting user)
     await deleteSession();
 
-    // 3. Delete the user
+    // 4. Delete the user
     await prisma.user.delete({
       where: { id: userId },
     });

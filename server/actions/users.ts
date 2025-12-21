@@ -15,6 +15,7 @@ import {
 import { formatZodErrors } from "../utils/zod";
 import { ensureAdminAccess } from "../auth/ensureAdminAccess";
 import { getCurrentUserFromSession } from "../auth/getCurrentUserFromSession";
+import { createNotification } from "../utils/notifications";
 
 export type UserActionState<TData = unknown> =
   | { success: true; user?: CurrentUser }
@@ -245,6 +246,25 @@ export async function updateUser(
       where: { id: userId },
       data: updateData,
     });
+
+    // Send notification to agent if admin updated their profile
+    // Skip if admin is updating themselves
+    const currentAdmin = await getCurrentUserFromSession();
+    if (
+      updatedUser.role === Role.AGENT &&
+      currentAdmin &&
+      currentAdmin.id !== userId
+    ) {
+      const adminName = currentAdmin.name || currentAdmin.email;
+      createNotification(
+        userId,
+        "Profile Updated",
+        `Admin ${adminName} updated your profile`,
+        "/profile"
+      ).catch((error) => {
+        console.error("Error creating notification:", error);
+      });
+    }
 
     revalidatePath("/users");
 
