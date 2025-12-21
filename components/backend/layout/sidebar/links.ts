@@ -30,6 +30,12 @@ export const navigationLinks: SidebarLink[] = [
     icon: "Users",
     adminOnly: true,
   },
+  {
+    label: "Notifications",
+    href: "/notifications",
+    icon: "Bell",
+    adminOnly: true,
+  },
   { label: "Profile", href: "/profile", icon: "UserIcon", adminOnly: false },
   { label: "Settings", href: "/settings", icon: "Settings", adminOnly: true },
 ];
