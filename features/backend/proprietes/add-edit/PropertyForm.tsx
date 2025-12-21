@@ -79,7 +79,7 @@ const PropertyForm = ({
       <div className="w-full">
         <BackButton
           label="Back"
-          className="!bg-transparent !text-muted-foreground mb-3"
+          className="bg-transparent! text-muted-foreground! mb-3"
           onClick={() => {
             if (isDirty) {
               setShowWarning(true);
