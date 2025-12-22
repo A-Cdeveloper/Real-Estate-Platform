@@ -101,6 +101,7 @@ const LineChart = ({
         {showYAxis && <YAxis fontSize={12} />}
         {showTooltip && (
           <Tooltip
+            // @ts-expect-error - recharts Tooltip content prop type is not fully compatible with React.ComponentType
             content={tooltipContent}
             contentStyle={
               tooltipContentStyle || {
@@ -128,4 +129,3 @@ const LineChart = ({
 };
 
 export default memo(LineChart);
-
