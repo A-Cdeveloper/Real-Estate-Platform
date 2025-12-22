@@ -4,6 +4,7 @@ import Logo from "./Logo";
 type LogoWithSettingsProps = {
   width?: number;
   height?: number;
+  href?: string;
 };
 
 /**
@@ -13,6 +14,7 @@ type LogoWithSettingsProps = {
 const LogoWithSettings = async ({
   width = 100,
   height = 100,
+  href = "/",
 }: LogoWithSettingsProps) => {
   let settings = null;
   try {
@@ -28,6 +30,7 @@ const LogoWithSettings = async ({
       appName={settings?.appName || "Real Estate"}
       logoLight={settings?.logo_light || "/real-estate-logo.png"}
       logoDark={settings?.logo_dark || "/real-estate-logo_light.png"}
+      href={href}
     />
   );
 };

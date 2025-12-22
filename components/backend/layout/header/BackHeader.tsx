@@ -28,7 +28,7 @@ const BackHeader = ({ currentUser }: { currentUser: CurrentUser | null }) => {
       aria-label="Backend header"
     >
       <div className="flex items-center gap-3">
-        <LogoWithSettings />
+        <LogoWithSettings href="/dashboard" />
       </div>
       <div className="flex items-center gap-2">
         <NotificationArea />

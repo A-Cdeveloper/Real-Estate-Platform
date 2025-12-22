@@ -9,6 +9,7 @@ type LogoProps = {
   appName: string;
   logoLight: string;
   logoDark: string;
+  href?: string;
 };
 
 const Logo = ({
@@ -17,6 +18,7 @@ const Logo = ({
   appName,
   logoLight,
   logoDark,
+  href = "/",
 }: LogoProps) => {
   // Fallback to default logos if empty string or null/undefined
   const lightLogo = logoLight || "/real-estate-logo.png";
@@ -24,7 +26,7 @@ const Logo = ({
 
   return (
     <Link
-      href="/"
+      href={href}
       className="flex items-center gap-2"
       aria-label={`${appName} homepage`}
     >
