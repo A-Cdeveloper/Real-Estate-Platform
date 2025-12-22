@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import BarChart from "../ui/charts/BarChart";
 
 type BarChartData = { name: string; value: number }[];

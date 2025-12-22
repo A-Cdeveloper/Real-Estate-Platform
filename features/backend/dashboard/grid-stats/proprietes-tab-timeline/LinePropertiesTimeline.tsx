@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import LineChart from "../ui/charts/LineChart";
 
 type TimelineData = Array<{ name: string; value: number; date: Date }>;

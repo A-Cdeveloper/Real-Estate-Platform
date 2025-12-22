@@ -13,67 +13,72 @@ import {
 } from "@/types/properties";
 import { PropertyStatus } from "@prisma/client";
 import { requireAuth, requireOwnerOrAdmin } from "../auth/ownership";
+import { cache } from "react";
 
 /**
  * Get latest properties
+ * Cached to prevent duplicate queries in the same request
  * @param take - The number of properties to return
  * @returns The latest properties
  */
-export async function getLatestProperties(
-  take: number = LATEST_PROPERTIES_COUNT
-): Promise<LatestProperty[]> {
-  try {
-    const properties = await prisma.property.findMany({
-      take,
-      orderBy: { createdAt: "desc" },
-      where: { status: "APPROVED" },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        address: true,
-        area: true,
-        price: true,
-        status: true,
-      },
-    });
-    return properties;
-  } catch (error) {
-    console.error("Database error:", error);
-    throw new Error(getPrismaErrorMessage(error));
+export const getLatestProperties = cache(
+  async (take: number = LATEST_PROPERTIES_COUNT): Promise<LatestProperty[]> => {
+    try {
+      const properties = await prisma.property.findMany({
+        take,
+        orderBy: { createdAt: "desc" },
+        where: { status: "APPROVED" },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          address: true,
+          area: true,
+          price: true,
+          status: true,
+        },
+      });
+      return properties;
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
+    }
   }
-}
+);
 
 /**
  * Get promoted properties (where promoted: true, sorted by createdAt desc)
+ * Cached to prevent duplicate queries in the same request
  * @param take - The number of properties to return
  * @returns The promoted properties
  */
-export async function getPromotedProperties(
-  take: number = PROMOTED_PROPERTIES_COUNT
-): Promise<PromotedProperty[]> {
-  try {
-    const properties = await prisma.property.findMany({
-      where: { promoted: true, status: "APPROVED" },
-      take,
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        address: true,
-        area: true,
-        price: true,
-        status: true,
-        promoted: true,
-      },
-    });
-    return properties;
-  } catch (error) {
-    console.error("Database error:", error);
-    throw new Error(getPrismaErrorMessage(error));
+export const getPromotedProperties = cache(
+  async (
+    take: number = PROMOTED_PROPERTIES_COUNT
+  ): Promise<PromotedProperty[]> => {
+    try {
+      const properties = await prisma.property.findMany({
+        where: { promoted: true, status: "APPROVED" },
+        take,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          address: true,
+          area: true,
+          price: true,
+          status: true,
+          promoted: true,
+        },
+      });
+      return properties;
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
+    }
   }
-}
+);
 
 /**
  * Get all properties with pagination and filters
@@ -280,44 +285,48 @@ export async function getRecentPropertyIds(limit: number = 50) {
 
 /**
  * Get property by ID For Frontend Only
+ * Cached to prevent duplicate queries in the same request
  * @param id - The ID of the property
  * @returns The property
  */
-export async function getPropertyById(id: string): Promise<PropertyWithOwner> {
-  try {
-    const property = await prisma.property.findUnique({
-      where: { id, status: PropertyStatus.APPROVED },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+export const getPropertyById = cache(
+  async (id: string): Promise<PropertyWithOwner> => {
+    try {
+      const property = await prisma.property.findUnique({
+        where: { id, status: PropertyStatus.APPROVED },
+        include: {
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          gallery: {
+            orderBy: { order: "asc" },
           },
         },
-        gallery: {
-          orderBy: { order: "asc" },
-        },
-      },
-    });
+      });
 
-    if (!property) {
-      throw new Error("Property not found");
+      if (!property) {
+        throw new Error("Property not found");
+      }
+
+      return property;
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(getPrismaErrorMessage(error));
     }
-
-    return property;
-  } catch (error) {
-    console.error("Database error:", error);
-    throw new Error(getPrismaErrorMessage(error));
   }
-}
+);
 
 /**
  * Get property statistics
+ * Cached to prevent duplicate queries in the same request
  * Returns: total listings, average price per m², and count added in last week
  * @returns The property statistics
  */
-export async function getPropertyStats() {
+export const getPropertyStats = cache(async () => {
   try {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -375,7 +384,7 @@ export async function getPropertyStats() {
     console.error("Database error:", error);
     throw new Error(getPrismaErrorMessage(error));
   }
-}
+});
 
 /*
   Get property by ID For Backend Only

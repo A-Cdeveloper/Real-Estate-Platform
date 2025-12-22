@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import GridCard from "../shared/GridCard";
 import TabsButtons from "../ui/tabs/TabsButtons";
 import TabsContent from "../ui/tabs/TabsContent";

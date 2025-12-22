@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import GridCard from "../shared/GridCard";
 import BarPriceRange from "./BarPriceRange";
 import BarAreaSize from "./BarAreaSize";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import PieChart from "../ui/charts/PieChart";
 import { getStatusColor } from "../shared/statusColors";
 import { PropertyStatus } from "@prisma/client";

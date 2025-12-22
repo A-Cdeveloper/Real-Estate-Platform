@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import StackedBarChart from "../ui/charts/StackedBarChart";
 import GridCard from "../shared/GridCard";
 import { PropertyStatus } from "@prisma/client";
