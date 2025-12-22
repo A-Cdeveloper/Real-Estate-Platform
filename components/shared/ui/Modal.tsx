@@ -72,7 +72,7 @@ const Modal = ({
       role="dialog"
       aria-modal="true"
       aria-label="Modal dialog"
-      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+      className="fixed inset-0 bg-black/90 z-50 flex items-start pt-[130px] 2xl:pt-0 2xl:items-center justify-center"
       onClick={disableClose || disableBackdropClose ? undefined : onClose}
     >
       {showCloseButton && <CloseButton onClose={onClose} />}

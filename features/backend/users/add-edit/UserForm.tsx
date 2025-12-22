@@ -112,7 +112,7 @@ const UserForm = ({ onClose, mode, initialData }: UserFormProps) => {
   }, [state, mode, isDirty, handleClose]);
 
   return (
-    <Card className="min-w-full md:min-w-md border-primary/50 py-5">
+    <Card className="min-w-[90%] md:min-w-md max-w-[90%] md:max-w-md border-primary/50 py-5">
       <CardHeader className="relative">
         <IconButton
           type="button"

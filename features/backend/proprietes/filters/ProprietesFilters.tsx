@@ -43,7 +43,7 @@ const ProprietesFilters = ({
   const currentPromoted = searchParams.get("promoted") || "all";
   const currentOwnerId = searchParams.get("ownerId") || "all";
   return (
-    <div className="flex gap-4 items-end">
+    <div className="flex flex-wrap gap-4 items-end order-2 md:order-1">
       {/* Status Filter */}
       <CustomSelect
         id="status-filter"

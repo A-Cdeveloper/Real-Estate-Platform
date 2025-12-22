@@ -33,14 +33,14 @@ const AllProprietes = ({
   ownersList,
 }: AllProprietesProps) => {
   return (
-    <div className="space-y-4 w-full xl:w-3/4">
+    <div className="space-y-4 w-full 2xl:w-3/4">
       <div className="flex justify-end">
         <IconButton asChild icon={Building} label="Add Property">
           <Link href="/proprietes-area/add" />
         </IconButton>
       </div>
 
-      <div className="flex items-center justify-between border-y border-border/50 p-3">
+      <div className="flex flex-wrap gap-4 items-center justify-between border-y border-border/50 p-3">
         <ProprietesFilters isAdmin={isAdmin} ownersList={ownersList} />
         <TableRecordsCount total={total} />
       </div>
