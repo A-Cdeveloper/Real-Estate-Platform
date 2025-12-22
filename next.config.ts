@@ -5,7 +5,11 @@ const nextConfig: NextConfig = {
 
   // Optimizacija za brže učitavanje resursa
   experimental: {
-    optimizePackageImports: ["lucide-react", "@radix-ui/react-select"],
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-select",
+      "recharts",
+    ],
     serverActions: {
       bodySizeLimit: "10mb", // Increase limit for image uploads
     },
