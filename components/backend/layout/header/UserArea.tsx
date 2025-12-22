@@ -20,7 +20,7 @@ const UserArea = ({
   isAdmin: boolean;
 }) => {
   return (
-    <div className="flex items-center gap-3 px-3 py-1">
+    <div className="flex items-center gap-3 px-2 py-1 md:px-3 md:py-1">
       <UserAvatar user={currentUser} isAdmin={isAdmin} />
       <Logout userId={currentUser.id} />
     </div>

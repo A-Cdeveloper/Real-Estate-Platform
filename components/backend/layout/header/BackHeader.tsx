@@ -24,7 +24,7 @@ const BackHeader = ({ currentUser }: { currentUser: CurrentUser | null }) => {
   const isAdmin = currentUser?.role === Role.ADMIN;
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between border-b bg-background px-4 lg:px-8"
+      className="fixed top-0 left-0 z-50 flex h-16 items-center justify-between border-b bg-background px-4 lg:px-8 w-full"
       aria-label="Backend header"
     >
       <div className="flex items-center gap-3">
