@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     ...(await generatePageMetadata(
       "Terms & Conditions",
-      "Review our Terms & Conditions. Understand your rights and responsibilities when using our platform, including property listings, account usage, and intellectual property.",
+      "Review our Terms & Conditions for real estate agencies. Understand your rights and responsibilities when using our B2B platform, including property sharing, agency partnerships, account usage, and intellectual property.",
       `${SITE_URL}/terms`
     )),
     robots: {

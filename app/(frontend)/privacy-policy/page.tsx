@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     ...(await generatePageMetadata(
       "Privacy Policy",
-      "Read our Privacy Policy to understand how we collect, use, and protect your personal information when you use our platform.",
+      "Read our Privacy Policy to understand how we collect, use, and protect agency and user information when using our B2B real estate platform.",
       `${SITE_URL}/privacy-policy`
     )),
     robots: {
