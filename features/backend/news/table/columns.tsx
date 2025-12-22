@@ -17,7 +17,7 @@ export const getColumns = (): Column<News>[] => [
       <CustumImage
         src={news.image || DEFAULT_NEWS_IMAGE}
         alt={news.title}
-        className="w-20 h-20 rounded-none"
+        className="w-full h-56 md:w-20 md:h-20 rounded-none"
       />
     ),
   },
@@ -51,7 +51,7 @@ export const getColumns = (): Column<News>[] => [
     render: (news) => formatLongDate(news.updatedAt),
   },
   {
-    key: "edit/delete",
+    key: "actions",
     label: "",
     render: (news) => <ActionsCell news={news} />,
   },

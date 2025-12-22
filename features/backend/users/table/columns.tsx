@@ -110,11 +110,11 @@ export const getColumns = (
     ),
   },
   {
-    key: "edit/delete",
+    key: "actions",
     label: "",
     render: (user) => {
       return currentUserId === user.id ? (
-        <>
+        <div className="flex justify-end flex-1 md:justify-center">
           <Link
             href={`/profile`}
             className="text-sm hover:text-primary"
@@ -125,14 +125,16 @@ export const getColumns = (
               aria-hidden="true"
             />
           </Link>
-        </>
+        </div>
       ) : user.role !== Role.ADMIN ? (
         <ActionsCell key={user.id} user={user} />
       ) : (
-        <UserX
-          className="size-5 text-muted-foreground/30 mx-auto"
-          aria-hidden="true"
-        />
+        <div className="flex justify-end flex-1 md:justify-center">
+          <UserX
+            className="size-5 text-muted-foreground/30 md:mx-auto"
+            aria-hidden="true"
+          />
+        </div>
       );
     },
   },

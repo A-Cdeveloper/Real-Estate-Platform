@@ -26,7 +26,7 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
         <CustumImage
           src={property.image || DEFAULT_NEWS_IMAGE}
           alt={property.name}
-          className="w-17 h-17 rounded-none"
+          className="w-full h-56 md:w-17 md:h-17 rounded-none"
         />
       );
     },
@@ -102,7 +102,7 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
                     toast.error(result.error);
                   }
                 }}
-                className="cursor-pointer outline-none border-none mx-auto block"
+                className="cursor-pointer outline-none border-none mx-0 md:mx-0 block"
                 aria-label={
                   property.promoted
                     ? "Unpromote property"
@@ -121,7 +121,7 @@ export const getColumns = (isAdmin: boolean): Column<PropertyWithOwner>[] => [
     : []),
 
   {
-    key: "edit/delete",
+    key: "actions",
     label: "",
     render: (property) => <ActionsCell property={property} />,
   },
