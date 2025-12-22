@@ -1,13 +1,30 @@
 import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
+
+// Lazy load chart components to reduce initial bundle size
+// These components use recharts which is a large library (~200KB+)
+const PropertiesTimeline = dynamic(
+  () => import("./proprietes-tab-timeline/PropertiesTimeline"),
+  { ssr: true }
+);
+const ProprietesCharts = dynamic(
+  () => import("./proprietes-tab-charts/ProprietesCharts"),
+  { ssr: true }
+);
+const PropertiesRangeChart = dynamic(
+  () => import("./proprietes-tab-range/PropertiesRangeChart"),
+  { ssr: true }
+);
+const TopUsersChart = dynamic(() => import("./top-users/TopUsersChart"), {
+  ssr: true,
+});
+
+// Non-chart components can be imported normally
 import InReviewProprietes from "./in-review-properties/InReviewProprietes";
 import LatestNews from "./latest-news/LatestNews";
 import OnlineUsers from "./online-users/OnlineUsers";
-import PropertiesRangeChart from "./proprietes-tab-range/PropertiesRangeChart";
-import ProprietesCharts from "./proprietes-tab-charts/ProprietesCharts";
-import PropertiesTimeline from "./proprietes-tab-timeline/PropertiesTimeline";
-import TopUsersChart from "./top-users/TopUsersChart";
 const GridWrapper = () => {
   return (
     <section
