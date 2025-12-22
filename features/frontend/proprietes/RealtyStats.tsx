@@ -33,14 +33,14 @@ const StatWidget = ({
 
 const RealtyStats = async () => {
   const marketStats = await getPropertyStats();
-  const { total, avgPricePerSqm, addedLastWeek } = marketStats;
+  const { approvedCount, avgPricePerSqm, addedLastWeek } = marketStats;
 
   return (
     <div className="mt-0 lg:mt-15">
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 sm:grid-rows-1 lg:grid-cols-2 lg:grid-rows-2 h-full">
         <StatWidget
           label="Total Listings"
-          value={total.toString()}
+          value={approvedCount.toString()}
           className="from-blue-500 via-blue-600 to-indigo-500"
         />
         <StatWidget
