@@ -1,16 +1,17 @@
 # Real Estate App
 
-A modern, full-stack real estate listing platform built with Next.js 16, featuring property listings, news articles, image galleries, and a responsive design with dark/light mode support.
+A modern, full-stack B2B real estate platform built with Next.js 16, connecting real estate agencies and facilitating partnerships. Features include property listings, news articles, image galleries, notification system, comprehensive dashboard analytics, and a responsive design with dark/light mode support.
 
 ## Overview
 
-This project is a comprehensive real estate application that demonstrates modern web development practices using Next.js 16 App Router, React 19.2, TypeScript, and Prisma ORM. The application provides a complete solution for browsing properties, viewing detailed listings with image galleries, and staying updated with real estate news.
+This project is a comprehensive B2B real estate application that demonstrates modern web development practices using Next.js 16 App Router, React 19.2, TypeScript, and Prisma ORM. The application provides a complete solution for connecting real estate agencies, sharing properties between partners, managing listings, and staying updated with real estate news. The platform focuses on facilitating agency-to-agency connections and collaboration.
 
 ## Features
 
 **Property Management**
 
 **Frontend:**
+
 - Browse properties with server-side pagination
 - Detailed property pages with image galleries
 - Lightbox modal for viewing property photos
@@ -26,6 +27,7 @@ This project is a comprehensive real estate application that demonstrates modern
 - Property statistics (total listings, average price per m², recent additions)
 
 **Backend (Admin/Agent):**
+
 - Complete property management system with create, edit, and delete functionality
 - Server-side pagination for efficient data loading (default: 15 properties per page)
 - Server-side sorting by status, createdAt, and other fields with URL-based state management
@@ -160,6 +162,66 @@ This project is a comprehensive real estate application that demonstrates modern
   - Prevents accidental data loss when closing forms with unsaved changes
   - Disables backdrop close to force user interaction with warning
 
+**Notifications System**
+
+- Real-time notification system for property and user management events
+- Notification types:
+  - Property created (notifies admins when agent creates property)
+  - Property updated (notifies owner when admin updates, or admins when agent updates)
+  - Property deleted (notifies admins when agent deletes, or owner when admin deletes)
+  - Property promoted (notifies owner when admin promotes property)
+  - Profile updated (notifies agent when admin updates their profile)
+  - Profile deleted (notifies admins when agent deletes their profile)
+- Notification dropdown in header with unread count badge
+- Polling system: automatically fetches new notifications every 30 seconds when tab is active
+- Visibility API integration: pauses polling when tab is inactive
+- Optimistic UI updates for marking notifications as read
+- Notifications page (admin only) with table view:
+  - Server-side pagination and sorting
+  - Status column (Read/Unread) with badges
+  - Delete functionality with confirmation modal
+  - Synchronized with dropdown (actions in one place reflect in the other)
+- Custom event system for cross-component communication
+- Server actions: `getNotifications`, `markAsRead`, `deleteNotification`
+- Helper functions: `createNotification`, `createNotificationForAdmins`
+- Revalidation: `revalidatePath` ensures UI synchronization between dropdown and page
+
+**Dashboard Analytics**
+
+- Comprehensive dashboard with multiple chart types and statistics
+- Properties timeline chart with time period tabs (All time, Last 6 months, Last month, Last week)
+- Properties statistics tabs:
+  - Status distribution (pie chart)
+  - Type distribution (pie chart)
+  - Top locations (bar chart)
+- Properties range charts with tabs:
+  - Price range distribution (horizontal bar chart)
+  - Area size distribution (horizontal bar chart)
+- Price ranges: 0-50k, 50k-100k, 100k-200k, 200k-300k, 300k-500k, 500k+
+- Area size ranges: 0-50 m², 50-100 m², 100-150 m², 150-200 m², 200-300 m², 300+ m²
+- In-review properties table
+- Online users display
+- Top users by properties count
+- Latest news widget
+- General statistics cards
+- All charts use Recharts library with responsive design
+- Server-side data fetching with React `cache()` for request-level memoization
+- Error boundaries and Suspense for graceful error handling
+
+**SEO & Metadata**
+
+- Dynamic metadata generation for all pages
+- B2B-focused SEO optimization:
+  - Home page: Emphasizes B2B platform for connecting agencies
+  - Properties page: Highlights property sharing between partner agencies
+  - About page: Focuses on agency-to-agency connections and partnerships
+  - Contact page: Emphasizes B2B partnerships and agency connections
+  - News page: Includes B2B partnership insights
+- Fallback metadata with B2B platform description
+- OpenGraph support for social media sharing
+- Server-side metadata generation with `generatePageMetadata` helper
+- Settings-based app name and description for dynamic SEO
+
 **Performance**
 
 - Server Components for optimal performance
@@ -288,233 +350,40 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```
 ├── app/
-│   ├── (auth)/                   # Authentication routes
-│   │   ├── login/                # Login page
-│   │   ├── forgot-password/      # Password reset request
-│   │   ├── reset-password/       # Password reset form
-│   │   ├── inactive/             # Inactive user page (redirected from backend)
-│   │   ├── deleted/              # Deleted user page (redirected from backend)
-│   │   └── layout.tsx           # Auth layout
-│   ├── (backend)/                # Backend/admin routes
-│   │   ├── dashboard/            # Dashboard page
-│   │   ├── profile/               # User profile page
-│   │   ├── settings/             # Settings page
-│   │   ├── users/                # Users management
-│   │   ├── proprietes-area/      # Properties management
-│   │   ├── notifications/        # Notifications
-│   │   ├── news-editor/          # News editor page
-│   │   └── layout.tsx            # Backend layout
-│   ├── (frontend)/               # Frontend application routes
-│   │   ├── page.tsx              # Homepage
-│   │   ├── proprietes/           # Property routes
-│   │   │   ├── page.tsx          # Properties listing
-│   │   │   └── [id]/             # Property detail page
-│   │   ├── news/                 # News routes
-│   │   │   ├── page.tsx          # News listing
-│   │   │   └── [id]/             # News detail page
-│   │   ├── about/                # About page
-│   │   ├── contact/              # Contact page
-│   │   ├── terms/                # Terms of service
-│   │   ├── privacy-policy/       # Privacy policy
-│   │   └── layout.tsx            # Frontend layout
-│   ├── layout.tsx                # Root layout
-│   ├── loading.tsx               # Global loading UI
-│   ├── error.tsx                  # Global error boundary
-│   └── not-found.tsx             # 404 page
+│   ├── (auth)/                   # Authentication routes (login, password reset, etc.)
+│   ├── (backend)/                 # Backend/admin routes (dashboard, users, properties, etc.)
+│   ├── (frontend)/                # Frontend routes (homepage, properties, news, etc.)
+│   └── layout.tsx                 # Root layout
 ├── features/
-│   ├── frontend/                 # Frontend feature components
-│   │   ├── proprietes/           # Property components
-│   │   │   ├── hooks/            # Custom hooks (usePropertyFilters)
-│   │   │   ├── details/          # Property detail components
-│   │   │   ├── LatestProprietes.tsx
-│   │   │   ├── PromotedProprietes.tsx
-│   │   │   ├── ProprietesWrapper.tsx
-│   │   │   └── ...               # Other property components
-│   │   ├── news/                 # News components
-│   │   │   ├── detail/           # News detail components
-│   │   │   ├── LatestNews.tsx
-│   │   │   └── NewsGridtem.tsx
-│   │   ├── contact/              # Contact components
-│   │   │   ├── ContactData.tsx
-│   │   │   ├── ContactFormular.tsx
-│   │   │   └── ContactMap.tsx
-│   │   ├── about/                # About components
-│   │   ├── Hero.tsx              # Homepage hero section
-│   │   ├── CarouselCustum.tsx    # Custom carousel
-│   │   └── EmptyState.tsx        # Empty state component
-│   └── backend/                  # Backend feature components (admin panel)
-│       ├── profile/              # User profile management
-│       │   ├── edit/             # Edit profile form
-│       │   │   └── EditProfile.tsx
-│       │   ├── delete/           # Delete confirmation
-│       │   │   └── DeleteConfirm.tsx
-│       │   ├── ProfileCards.tsx
-│       │   ├── ProfileContent.tsx
-│       │   ├── ProfileActionsButtons.tsx
-│       │   └── ProfileView.tsx
-│       ├── users/                # User management
-│       │   ├── add-edit/         # Add/Edit user form
-│       │   │   ├── AddNewUser.tsx
-│       │   │   └── UserForm.tsx  # Generic form for create/edit
-│       │   ├── table/            # Users table components
-│       │   │   ├── columns.tsx   # Table column definitions
-│       │   │   ├── ActionsCell.tsx # Edit/Delete actions
-│       │   │   └── sortableColumns.ts # Sortable columns config
-│       │   └── AllUsers.tsx       # Main users list component
+│   ├── frontend/                  # Frontend feature components (properties, news, contact, etc.)
+│   └── backend/                   # Backend feature components (admin panel)
+│       ├── profile/               # User profile management
+│       ├── users/                 # User management
 │       ├── proprietes/            # Property management
-│       │   ├── add-edit/          # Shared add/edit property form
-│       │   │   └── PropertyForm.tsx # Generic form for create/edit
-│       │   ├── form/              # Reusable form components
-│       │   │   ├── DetailsCard.tsx # Property details form card
-│       │   │   ├── LocationCard.tsx # Location map form card
-│       │   │   ├── ImageGalleryCard.tsx # Image gallery card with upload and reordering
-│       │   │   ├── ImageGalleryList.tsx # Gallery list with drag & drop reordering
-│       │   │   └── ImageDropzone.tsx # Drag & drop upload zone
-│       │   ├── hooks/             # Custom hooks
-│       │   │   ├── usePropertyImageUpload.ts # Image upload logic hook
-│       │   │   └── useImageDragAndDrop.ts # Drag & drop reordering hook
-│       │   ├── table/             # Properties table components
-│       │   │   ├── columns.tsx    # Table column definitions
-│       │   │   ├── ActionsCell.tsx # Edit/Delete actions
-│       │   │   └── sortableColumns.ts # Sortable columns config
-│       │   ├── ui/                # Property UI components
-│       │   │   └── PropertyStatusBadge.tsx # Status badge component
-│       │   └── AllProprietes.tsx  # Main properties list component
-│       ├── news/                 # News management
-│       │   ├── add-edit/         # Add/Edit news form
-│       │   │   ├── AddNews.tsx
-│       │   │   ├── NewsForm.tsx  # Generic form for create/edit
-│       │   │   └── NewsImageUploader.tsx # News image upload component
-│       │   ├── table/            # News table components
-│       │   │   ├── columns.tsx   # Table column definitions
-│       │   │   ├── ActionsCell.tsx # Edit/Delete actions
-│       │   │   └── sortableColumns.ts # Sortable columns config
-│       │   ├── delete/           # Delete confirmation
-│       │   │   └── DeleteConfirm.tsx
-│       │   └── AllNews.tsx       # Main news list component
+│       ├── news/                  # News management
+│       ├── notifications/        # Notifications table (admin only)
+│       ├── notifications-area/   # Notification dropdown components
+│       ├── dashboard/            # Dashboard analytics components
 │       └── settings/             # Application settings
-│           ├── SettingsForm.tsx  # Settings form with auto-save
-│           ├── SettingsView.tsx  # Settings page view
-│           ├── logo/             # Logo uploader components
-│           │   ├── LogosUploader.tsx
-│           │   └── SingleLogoUploader.tsx # Single logo uploader with validation
-│           └── map/              # Map components
-│               └── MapClickHandler.tsx
 ├── components/
 │   ├── auth/                     # Authentication components
-│   │   ├── LoginForm.tsx
-│   │   ├── ForgotPasswordForm.tsx
-│   │   ├── ResetPasswordForm.tsx
-│   │   ├── PasswordInput.tsx
-│   │   └── FormWrapper.tsx
-│   ├── backend/                  # Backend-specific components
-│   │   └── layout/               # Backend layout components
-│   │       ├── header/           # Header components
-│   │       ├── sidebar/          # Sidebar components
-│   │       ├── PageHeader.tsx
-│   │       └── MainContent.tsx
-│   ├── frontend/                 # Frontend-specific components
-│   │   ├── layout/               # Layout components
-│   │   │   ├── header/           # Header components
-│   │   │   └── footer/           # Footer components
-│   │   └── skeletons/            # Loading skeletons
-│   ├── shared/                   # Shared reusable components
-│   │   ├── Modal.tsx
-│   │   ├── WarningModal.tsx        # Warning modal for unsaved changes
-│   │   ├── Spinner.tsx
-│   │   ├── CustomInput.tsx
-│   │   ├── CustomSelect.tsx
-│   │   ├── IconButton.tsx
-│   │   ├── ErrorFormMessages.tsx
-│   │   ├── BackButton.tsx
-│   │   ├── PaginationControls.tsx
-│   │   ├── GenericTable.tsx      # Generic reusable table component
-│   │   ├── TableRecordsCount.tsx # Component for displaying total records count
-│   │   └── table/
-│   │       └── TableActionButton.tsx # Reusable action button with modal wrapper
-│   │   ├── CustumImage.tsx
-│   │   ├── Logo.tsx
-│   │   ├── LogoWithSettings.tsx  # Server component wrapper for Logo
-│   │   ├── MapDisplay.tsx         # Shared Leaflet map component
-│   │   └── CustumMarkerIcon.tsx  # Custom Leaflet marker icon
-│   └── ui/                       # shadcn/ui components
-│       ├── button.tsx
-│       ├── card.tsx
-│       ├── input.tsx
-│       ├── select.tsx
-│       ├── textarea.tsx
-│       └── ...                   # Other UI components
+│   ├── backend/                   # Backend layout components
+│   ├── frontend/                  # Frontend layout components
+│   ├── shared/                    # Shared reusable components (Modal, Table, etc.)
+│   └── ui/                        # shadcn/ui components
 ├── server/
-│   ├── actions/                  # Server actions
-│   │   ├── auth.ts               # Authentication actions
-│   │   ├── properties.ts         # Property actions
-│   │   ├── profile.ts            # Profile management actions
-│   │   ├── settings.ts           # Settings update action
-│   │   ├── users.ts              # User management actions
-│   │   ├── news.ts               # News management actions
-│   │   ├── uploadImagePinata.ts  # Centralized IPFS image upload action
-│   │   ├── deleteImagePinata.ts  # IPFS image deletion (unpin) action
-│   │   └── sendMessage.ts       # Contact form action
-│   ├── queries/                  # Database query functions
-│   │   ├── properties.ts
-│   │   ├── news.ts
-│   │   ├── settings.ts          # Settings query function
-│   │   └── users.ts
-│   ├── auth/                     # Authentication utilities
-│   │   ├── session.ts            # Session management
-│   │   ├── password.ts           # Password hashing
-│   │   ├── resetToken.ts         # Password reset tokens
-│   │   ├── getCurrentUserFromSession.ts
-│   │   └── ownership.ts          # Property ownership authorization helpers
-│   ├── mail/                     # Email functionality
-│   │   ├── sendContactEmail.tsx
-│   │   ├── sendPasswordResetEmail.tsx
-│   │   ├── templates/           # Email templates
-│   │   └── transporter.ts
-│   ├── prisma/                   # Prisma configuration
-│   │   ├── schema.prisma         # Database schema
-│   │   ├── seed.ts               # Database seeder
-│   │   └── migrations/           # Database migrations
-│   ├── schemas/                  # Zod validation schemas
-│   │   ├── auth.ts               # Authentication schemas
-│   │   ├── contact.ts
-│   │   ├── profile.ts            # Profile validation schemas
-│   │   ├── property.ts           # Property validation schemas (create/update)
-│   │   ├── propertyFilters.ts
-│   │   ├── settings.ts           # Settings validation schemas
-│   │   ├── user.ts               # User validation schemas
-│   │   └── news.ts               # News validation schemas
-│   ├── utils/                    # Server utility functions
-│   │   └── zod.ts                # Zod error formatting
-│   ├── prisma.ts                 # Prisma client instance
-│   └── prisma-errors.ts          # Prisma error handling
-├── hooks/                        # Custom React hooks
-│   ├── useOutsideClick.ts
-│   └── useDirtyFormModal.ts      # Hook for unsaved changes warning in modals
-├── lib/
-│   ├── utils/                    # Utility functions
-│   │   ├── date.ts              # Date formatting
-│   │   ├── pagination.ts         # Pagination utilities
-│   │   ├── parseSearchParams.ts # URL search params parsing
-│   │   ├── social.ts            # Social media platform utilities
-│   │   └── file.ts              # File validation utilities
-│   ├── constants.ts              # Application constants
-│   ├── fonts.ts                  # Font configuration
-│   ├── utils.ts                  # General utilities
-│   ├── geocoding.ts              # Geocoding and reverse geocoding helpers
-│   └── metadata.ts              # Dynamic metadata generation helpers
-├── providers/                    # React context providers
-│   └── ThemeProvider.tsx
-├── types/                        # TypeScript type definitions
-│   ├── action-state.ts           # Generic action state type
-│   ├── auth.ts                   # Authentication types
-│   ├── profile.ts                # Profile types
-│   ├── properties.ts             # Property types
-│   ├── settings.ts               # Settings types
-│   ├── user.ts                   # User types
-│   └── news.ts                   # News types
-└── public/                       # Static assets
-    └── fonts/                    # Custom fonts
+│   ├── actions/                   # Server actions (auth, properties, users, etc.)
+│   ├── queries/                   # Database query functions
+│   ├── auth/                      # Authentication utilities
+│   ├── mail/                      # Email functionality
+│   ├── prisma/                    # Prisma configuration and migrations
+│   ├── schemas/                   # Zod validation schemas
+│   └── utils/                     # Server utility functions
+├── hooks/                          # Custom React hooks
+├── lib/                            # Utility functions and constants
+├── providers/                      # React context providers
+├── types/                          # TypeScript type definitions
+└── public/                         # Static assets
 ```
 
 ## Database Schema
@@ -546,7 +415,7 @@ Enum values:
 - `passwordResetToken` - Password reset token (optional)
 - `passwordResetTokenExpiry` - Password reset token expiry (optional)
 - `createdAt` - Account creation timestamp
-- Relations: `properties` (Property\[\])
+- Relations: `properties` (Property\[\]), `notifications` (Notification\[\])
 
 ### PropertyStatus
 
@@ -617,6 +486,19 @@ Enum values:
 - `updatedAt` - Settings last update timestamp
 - **Note**: Singleton pattern - only one settings record exists
 
+### Notification
+
+- `id` - Unique identifier
+- `title` - Notification title
+- `message` - Notification message content
+- `isRead` - Read status (default: false)
+- `userId` - Foreign key to User
+- `link` - Optional link to related page (e.g., /proprietes-area/edit/{id})
+- `createdAt` - Notification creation timestamp
+- `readAt` - Timestamp when notification was read (optional)
+- Relations: `user` (User)
+- Indexes: `userId`, `userId + isRead`, `createdAt`
+
 ## Available Scripts
 
 - `npm run dev` - Start development server
@@ -685,13 +567,15 @@ Constants are defined in `lib/constants.ts`:
 
 1. Ensure your production database schema matches your Prisma schema
 2. If migrations are out of sync:
+
    ```bash
    # Check migration status
    DATABASE_URL="your_production_url" npx prisma migrate status --schema=./server/prisma/schema.prisma
-   
+
    # Deploy migrations
    DATABASE_URL="your_production_url" npx prisma migrate deploy --schema=./server/prisma/schema.prisma
    ```
+
 3. If a migration failed:
    - Manually fix the database schema
    - Delete the failed migration entry from `_prisma_migrations` table
@@ -825,7 +709,7 @@ The application includes a comprehensive property management system for administ
 - **Server-Side Sorting**: Sortable by status, createdAt, and other fields with URL-based state management
 - **Generic Table Component**: Reuses `GenericTable` component with TypeScript generics for consistent UI
 - **Sortable Columns**: Configurable sortable columns with visual indicators (ChevronUp/ChevronDown icons)
-- **Property Status Management**: 
+- **Property Status Management**:
   - Five statuses: APPROVED, IN_REVIEW (default), REJECTED, INACTIVE, DELETED
   - Custom `PropertyStatusBadge` component with color-coded status display
   - Status can be changed in edit form (optional field in update schema)
@@ -898,7 +782,7 @@ The application includes a comprehensive property management system for administ
   - Used in server actions and queries for consistent authorization
 - **Owner-Based Filtering**: Agents see only their properties, admins see all properties
 - **Scroll Position Management**: Scroll position resets on navigation (similar to pagination behavior)
-- **Form Component Reusability**: 
+- **Form Component Reusability**:
   - `DetailsCard` and `LocationCard` support optional `property` prop
   - Consistent label margins between `CustomInput` and `CustomSelect` components
   - Responsive grid layout for price and area fields
