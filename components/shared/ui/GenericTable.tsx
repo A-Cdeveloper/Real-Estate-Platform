@@ -63,74 +63,128 @@ const GenericTable = <T extends { id: string }>({
     [sortOrder, router, searchParams]
   );
 
+  // Separate columns into regular and actions
+  const regularColumns = columns.filter((col) => col.key !== "actions");
+  const actionsColumn = columns.find((col) => col.key === "actions");
+
   return (
-    <div className="overflow-x-auto rounded-lg">
-      <table className={className} role="table" aria-label="Data table">
-        {showHeader && (
-          <thead>
-            <tr className="border-y bg-muted/50">
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="text-left py-3 px-4 font-semibold text-sm"
-                >
+    <>
+      {/* Mobile Card Layout (< md) */}
+      <div className="md:hidden space-y-4">
+        {data.map((item) => (
+          <div
+            key={item.id}
+            className={`border rounded-lg p-4 bg-card ${
+              currentUserId === item.id ? "bg-muted-foreground/20" : ""
+            }`}
+          >
+            <div className="grid grid-cols-2 gap-y-2.5">
+              {regularColumns.map((col) => {
+                const isImageColumn = col.key === "image";
+                const isOnlineColumn = col.key === "online";
+                return (
                   <div
-                    className={`flex items-center gap-2 ${isSortable(col.key) ? "cursor-pointer" : ""}`}
-                    onClick={
-                      isSortable(col.key)
-                        ? () => toggleSort(col.key)
-                        : undefined
-                    }
-                    role={isSortable(col.key) ? "button" : undefined}
-                    tabIndex={isSortable(col.key) ? 0 : undefined}
-                    aria-label={
-                      isSortable(col.key)
-                        ? `Sort by ${col.label} ${sortField === col.key && sortOrder === "asc" ? "descending" : "ascending"}`
-                        : undefined
-                    }
-                    onKeyDown={
-                      isSortable(col.key)
-                        ? (e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              toggleSort(col.key);
-                            }
-                          }
-                        : undefined
-                    }
+                    key={col.key}
+                    className={`${isImageColumn || isOnlineColumn ? "col-span-2" : "contents"}`}
                   >
-                    {col.label}
-                    <span className="block">
-                      {isSortable(col.key) &&
-                        sortField === col.key &&
-                        (sortOrder === "asc" ? (
-                          <ChevronUp size={16} aria-hidden="true" />
-                        ) : (
-                          <ChevronDown size={16} aria-hidden="true" />
-                        ))}
-                    </span>
+                    {!isImageColumn && (
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center">
+                        {col.label}
+                      </span>
+                    )}
+                    <div
+                      className={
+                        isImageColumn || isOnlineColumn
+                          ? ""
+                          : "text-sm text-foreground"
+                      }
+                    >
+                      {col.render(item)}
+                    </div>
                   </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-        )}
-        <tbody>
-          {data.map((item) => (
-            <tr
-              key={item.id}
-              className={`border-b hover:bg-muted/50 transition-colors ${currentUserId === item.id ? "bg-muted-foreground/20 hover:bg-muted-foreground/20" : ""}`}
-            >
-              {columns.map((col) => (
-                <td key={col.key} className="py-3 px-4">
-                  {col.render(item)}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                );
+              })}
+            </div>
+            {actionsColumn && (
+              <div className="flex flex-col gap-1 pt-2 mt-2 border-t">
+                <div className="text-sm text-foreground">
+                  {actionsColumn.render(item)}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table Layout (>= md) */}
+      <div className="hidden md:block overflow-x-auto rounded-lg">
+        <table className={className} role="table" aria-label="Data table">
+          {showHeader && (
+            <thead>
+              <tr className="border-y bg-muted/50">
+                {columns.map((col) => (
+                  <th
+                    key={col.key}
+                    className="text-left py-3 px-4 font-semibold text-sm"
+                  >
+                    <div
+                      className={`flex items-center gap-2 ${isSortable(col.key) ? "cursor-pointer" : ""}`}
+                      onClick={
+                        isSortable(col.key)
+                          ? () => toggleSort(col.key)
+                          : undefined
+                      }
+                      role={isSortable(col.key) ? "button" : undefined}
+                      tabIndex={isSortable(col.key) ? 0 : undefined}
+                      aria-label={
+                        isSortable(col.key)
+                          ? `Sort by ${col.label} ${sortField === col.key && sortOrder === "asc" ? "descending" : "ascending"}`
+                          : undefined
+                      }
+                      onKeyDown={
+                        isSortable(col.key)
+                          ? (e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                toggleSort(col.key);
+                              }
+                            }
+                          : undefined
+                      }
+                    >
+                      {col.label}
+                      <span className="block">
+                        {isSortable(col.key) &&
+                          sortField === col.key &&
+                          (sortOrder === "asc" ? (
+                            <ChevronUp size={16} aria-hidden="true" />
+                          ) : (
+                            <ChevronDown size={16} aria-hidden="true" />
+                          ))}
+                      </span>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {data.map((item) => (
+              <tr
+                key={item.id}
+                className={`border-b hover:bg-muted/50 transition-colors ${currentUserId === item.id ? "bg-muted-foreground/20 hover:bg-muted-foreground/20" : ""}`}
+              >
+                {columns.map((col) => (
+                  <td key={col.key} className="py-3 px-4">
+                    {col.render(item)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 
