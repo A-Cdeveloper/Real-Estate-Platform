@@ -38,7 +38,7 @@ const TabButton = memo(
         aria-selected={active}
         aria-label={ariaLabel}
         className={cn(
-          "border border-border text-muted-foreground bg-secondary/40 hover:bg-secondary",
+          "border border-border text-muted-foreground bg-secondary/40 hover:bg-secondary py-0.5 px-2 h-fit md:p-2 md:h-8",
           active && "bg-secondary text-foreground"
         )}
       >
@@ -61,7 +61,7 @@ const TabsButtons = <T extends string>({
 }: TabsButtonsProps<T>) => {
   return (
     <div
-      className="flex items-center gap-2"
+      className="flex flex-wrap items-center gap-x-2 gap-y-1"
       role="tablist"
       aria-label="Chart type tabs"
     >

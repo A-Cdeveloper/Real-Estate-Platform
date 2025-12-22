@@ -108,7 +108,9 @@ const StackedBarChart = ({
             wrapperStyle={{
               fontSize: "12px",
               fontWeight: "bold",
-              paddingTop: "10px",
+              paddingTop: "0px",
+              width: "100%",
+              marginLeft: "20px",
             }}
             iconSize={12}
             formatter={(value) => (

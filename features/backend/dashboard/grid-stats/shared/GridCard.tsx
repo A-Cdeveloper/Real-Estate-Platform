@@ -29,7 +29,7 @@ const GridCard = ({
     )}
   >
     <CardHeader className="px-6 py-2 pb-3 gap-0 bg-foreground/10 ">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <CardTitle className="text-[17px] font-medium text-foreground">
           {title}
           {subtitle && (
