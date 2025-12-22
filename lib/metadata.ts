@@ -5,9 +5,9 @@ import { SITE_URL } from "@/lib/constants";
 /**
  * Fallback values if settings are not available
  */
-const FALLBACK_APP_NAME = "Real Estate";
+const FALLBACK_APP_NAME = "Real Estate | B2B Platform for Real Estate Agents";
 const FALLBACK_APP_DESCRIPTION =
-  "Find your perfect property with Real Estate Pro. Browse listings, explore neighborhoods, and connect with expert agents.";
+  "Real Estate Pro is a B2B platform connecting real estate agencies. We facilitate partnerships between agencies, enabling seamless property sharing, collaboration, and business growth in the real estate industry.";
 
 /**
  * Get app settings with fallback values

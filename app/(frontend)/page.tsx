@@ -15,8 +15,8 @@ import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata(
-    "Find Your Perfect Property",
-    undefined,
+    "B2B Real Estate Platform - Connect Agencies",
+    "Connect with real estate agencies through our B2B platform. Share properties, collaborate with partners, and grow your real estate business together.",
     SITE_URL
   );
 }

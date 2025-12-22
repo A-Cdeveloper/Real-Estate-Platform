@@ -14,7 +14,7 @@ import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata(
     "News",
-    "Stay updated with the latest real estate news, market trends, and property insights.",
+    "Stay updated with the latest real estate industry news, B2B partnership insights, market trends, and property market updates for real estate agencies.",
     `${SITE_URL}/news`
   );
 }

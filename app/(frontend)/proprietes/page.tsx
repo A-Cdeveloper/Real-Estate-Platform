@@ -12,7 +12,7 @@ import ErrorBoundary from "@/components/shared/ui/ErrorBoundary";
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata(
     "Properties",
-    "Browse our extensive collection of properties for sale and rent. Find your perfect home, apartment, or investment property.",
+    "Browse properties shared by partner real estate agencies. Connect with other agencies, share listings, and expand your property portfolio through our B2B network.",
     `${SITE_URL}/proprietes`
   );
 }
