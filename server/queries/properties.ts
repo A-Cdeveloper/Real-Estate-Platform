@@ -381,8 +381,27 @@ export const getPropertyStats = cache(async () => {
       addedLastWeek,
     };
   } catch (error) {
+    // During build time, database might not be available
+    // Return default values to allow static generation
+    const errorMessage = getPrismaErrorMessage(error);
+    if (
+      errorMessage.includes("Can't reach database") ||
+      errorMessage.includes("Database is not available")
+    ) {
+      console.warn(
+        "Database not available during build, returning default stats:",
+        errorMessage
+      );
+      return {
+        total: 0,
+        approvedCount: 0,
+        avgPricePerSqm: 0,
+        addedLastWeek: 0,
+      };
+    }
+    // For other errors, still throw
     console.error("Database error:", error);
-    throw new Error(getPrismaErrorMessage(error));
+    throw new Error(errorMessage);
   }
 });
 
