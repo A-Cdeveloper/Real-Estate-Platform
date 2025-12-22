@@ -10,8 +10,8 @@ import { getSettings } from "@/server/queries/settings";
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   const description = settings
-    ? `Get in touch with ${settings.appName}. Visit our office, call us at ${settings.phone}, or send us a message. We're here to help with all your real estate needs.`
-    : "Get in touch with us. Visit our office, call us, or send us a message. We're here to help with all your real estate needs.";
+    ? `Get in touch with ${settings.appName}. Visit our office, call us at ${settings.phone}, or send us a message. Connect with us to learn how our B2B platform can help your real estate agency grow through partnerships.`
+    : "Get in touch with us. Visit our office, call us, or send us a message. Connect with us to learn how our B2B platform can help your real estate agency grow through partnerships.";
 
   return await generatePageMetadata(
     "Contact Us",
@@ -30,9 +30,10 @@ const ContactPage = async () => {
             Get in Touch
           </Typography>
           <Typography className="text-muted-foreground max-w-2xl">
-            Whether you are buying, selling, or just exploring the market, our
-            team is here to guide you. Reach out using the form below or visit
-            us at our office for a personal consultation.
+            Whether you&apos;re a real estate agency looking to connect with partners,
+            share properties, or grow your business through our B2B platform,
+            our team is here to help. Reach out using the form below or visit
+            us at our office for a consultation.
           </Typography>
         </header>
 

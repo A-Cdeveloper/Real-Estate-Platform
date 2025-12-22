@@ -9,7 +9,7 @@ import { generatePageMetadata } from "@/lib/metadata";
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata(
     "About Us",
-    "Learn about our mission, values, and team. With over 10 years of experience and 500+ satisfied clients, we're here to help you find your perfect property.",
+    "Learn about our mission to connect real estate agencies. We're a B2B platform facilitating partnerships between agencies, enabling property sharing, collaboration, and mutual growth in the real estate industry.",
     `${SITE_URL}/about`
   );
 }
@@ -24,28 +24,28 @@ const AboutPage = () => {
               Our Story
             </Typography>
             <Typography>
-              We started Real Estate Pro with a simple belief: finding and
-              selling property should feel transparent, guided, and personal.
-              Our team of experienced agents and analysts combines market
-              expertise with hands-on support to help you make confident
-              decisions at every step.
+              We started Real Estate Pro with a vision to connect real estate
+              agencies and facilitate meaningful partnerships. As a B2B platform,
+              we enable agencies to share properties, collaborate on listings,
+              and grow their businesses together through strategic partnerships.
             </Typography>
             <Typography>
-              From curated listings to in-depth neighborhood insights, we focus
-              on tailoring the buying and selling experience to your goals.
-              Whether you are purchasing your first home or expanding your
-              investment portfolio, we are here to build a lasting partnership.
+              Our platform provides agencies with the tools and network needed
+              to expand their reach, access a wider property portfolio, and
+              create mutually beneficial relationships. Whether you&apos;re a small
+              local agency or a large real estate firm, we&apos;re here to help you
+              connect with partners and grow your business.
             </Typography>
             <div className="grid gap-6 sm:grid-cols-2">
               <AboutWidget
                 title="10+ Years of Experience"
-                description="Navigating the real-estate market with data-driven insights and local expertise."
+                description="Connecting real estate agencies with proven expertise in B2B partnerships and network building."
                 icon={Award}
                 variant="primary"
               />
               <AboutWidget
-                title="500+ Satisfied Clients"
-                description="Families and investors we have supported through sales, rentals, and property management."
+                title="500+ Partner Agencies"
+                description="Real estate agencies connected through our platform, sharing properties and growing together."
                 icon={Users}
                 variant="secondary"
               />
