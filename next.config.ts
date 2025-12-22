@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       "lucide-react",
       "@radix-ui/react-select",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-switch",
+      "@radix-ui/react-separator",
+      "@radix-ui/react-slot",
       "recharts",
     ],
     serverActions: {
