@@ -18,7 +18,7 @@ type ActionsCellProps = {
 
 const ActionsCell = ({ news }: ActionsCellProps) => {
   return (
-    <div className="flex justify-center gap-0">
+    <div className="flex justify-end flex-1 md:justify-center gap-0">
       {/* Edit Action Button */}
       <TableActionButton
         icon={Pencil}

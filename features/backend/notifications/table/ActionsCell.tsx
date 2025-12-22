@@ -16,7 +16,7 @@ type ActionsCellProps = {
  */
 const ActionsCell = ({ notification }: ActionsCellProps) => {
   return (
-    <div className="flex justify-center gap-0">
+    <div className="flex justify-end flex-1 md:justify-center gap-0">
       {/* Delete Action Button */}
       <TableActionButton
         icon={Trash2}
